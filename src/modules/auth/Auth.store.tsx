@@ -4,12 +4,12 @@ import * as R from 'ramda';
 
 type User = { name: string; password: string };
 
-interface AuthStore {
+type AuthStore = {
 	isLoggedIn: boolean;
 	user: User | undefined;
 	login: (name: string, password: string) => void;
 	logout: () => void;
-}
+};
 
 export const useAuthStore = create<AuthStore>()(
 	devtools(

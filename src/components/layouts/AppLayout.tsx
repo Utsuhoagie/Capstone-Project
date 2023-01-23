@@ -3,7 +3,7 @@ import { AppNavbar } from '../molecules/navbar/AppNavbar';
 
 export const AppLayout = () => {
 	return (
-		<div className='flex h-screen w-screen flex-row bg-primary-bright2'>
+		<div className='flex h-screen w-screen flex-row gap-4 bg-primary-bright-2'>
 			<AppNavbar />
 			<Outlet />
 		</div>
