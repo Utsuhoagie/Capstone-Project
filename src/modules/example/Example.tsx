@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button } from '../../components/atoms/Button/Button';
+import { Tag } from '../../components/atoms/Tag/Tag';
 
 export const Example = () => {
 	const widths = ['full', 'small', 'medium', 'big'] as const;
@@ -18,6 +19,9 @@ export const Example = () => {
 			>
 				Click
 			</Button>
+			<Tag canClose={true} onClick={() => window.alert('aaaaaaa')}>
+				Toàn thời gian
+			</Tag>
 		</div>
 	);
 };

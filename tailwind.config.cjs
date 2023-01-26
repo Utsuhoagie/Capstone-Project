@@ -21,7 +21,7 @@ module.exports = {
 				h3: ['20px', { lineHeight: '24px' }],
 				h4: ['18px', { lineHeight: '22px' }],
 				body: ['16px', { lineHeight: '20px' }],
-				tag: ['14px', { lineHeight: '16px' }],
+				tag: ['14px', { lineHeight: '14px' }],
 			},
 			fontWeight: {},
 			colors: {
@@ -37,8 +37,8 @@ module.exports = {
 					},
 				},
 				secondary: {
-					dark: colors.violet[700],
-					normal: colors.violet[500],
+					dark: colors.violet[600],
+					normal: colors.violet[400],
 					bright: colors.violet[300],
 				},
 				accent: {
