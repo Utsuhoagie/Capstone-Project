@@ -1,6 +1,4 @@
-type IconProps = React.HTMLAttributes<SVGElement> & {
-	size: 16 | 24 | 40;
-};
+import { IconProps } from './Icon.type';
 
 export const XIcon = ({ size, ...props }: IconProps) => {
 	return (
