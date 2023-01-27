@@ -1,9 +1,9 @@
 import { XIcon } from '../../../assets/icons/XIcon';
 
-type TagProps = React.HTMLAttributes<HTMLButtonElement> & {
+interface TagProps extends React.HTMLAttributes<HTMLButtonElement> {
 	children: React.ReactNode;
 	canClose?: boolean;
-};
+}
 
 export const Tag = ({ children, canClose, onClick, ...props }: TagProps) => {
 	return (

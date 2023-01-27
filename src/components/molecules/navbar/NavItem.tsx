@@ -1,9 +1,9 @@
 import React from 'react';
 
-type NavItemProps = {
+interface NavItemProps {
 	children: React.ReactNode;
 	onClick?: () => void;
-};
+}
 
 export const NavItem = ({ children, onClick }: NavItemProps) => {
 	function handleClick() {

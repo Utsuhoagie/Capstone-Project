@@ -1,11 +1,11 @@
 import { buttonMapping } from './ButtonMapping';
 
-type ButtonProps = React.HTMLAttributes<HTMLButtonElement> & {
+interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
 	children: React.ReactNode;
 	width: 'full' | 'small' | 'medium' | 'big';
 	secondary?: boolean;
 	ref?: React.RefObject<HTMLButtonElement>;
-};
+}
 
 export const Button = ({
 	children,

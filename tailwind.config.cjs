@@ -13,7 +13,7 @@ module.exports = {
 				'button-small': 100,
 				'button-medium': 140,
 				'button-big': 180,
-				'button-full': 'full',
+				'input-medium': 300,
 			},
 			fontSize: {
 				h1: ['32px', { lineHeight: '36px' }],
@@ -21,7 +21,7 @@ module.exports = {
 				h3: ['20px', { lineHeight: '24px' }],
 				h4: ['18px', { lineHeight: '22px' }],
 				body: ['16px', { lineHeight: '20px' }],
-				tag: ['14px', { lineHeight: '14px' }],
+				tag: ['13px', { lineHeight: '13px' }],
 			},
 			fontWeight: {},
 			colors: {
@@ -34,6 +34,7 @@ module.exports = {
 					bright: {
 						1: colors.blue[400],
 						2: colors.blue[100],
+						3: colors.blue[50],
 					},
 				},
 				secondary: {

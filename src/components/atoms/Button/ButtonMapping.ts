@@ -14,7 +14,7 @@ export const buttonMapping = {
 	secondary:
 		' bg-neutral-gray-1 text-neutral-gray-9 border border-primary-normal active:bg-primary-bright-2 ',
 
-	full: { width: ' w-button-full ' },
+	full: { width: ' w-full ' },
 	small: { width: ' w-button-small ' },
 	medium: { width: ' w-button-medium ' },
 	big: { width: ' w-button-big ' },
