@@ -2,6 +2,7 @@ import { isNil } from 'ramda';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ErrorIcon } from '../../../assets/icons/ErrorIcon';
+import { Label } from './Label';
 
 interface TextInputProps extends React.ComponentPropsWithRef<'input'> {
 	name: string;
@@ -16,11 +17,8 @@ export const TextInput = ({
 	type,
 	...props
 }: TextInputProps) => {
-	const {
-		register,
-		formState: { errors },
-	} = useFormContext();
-	const error = errors[name];
+	const { register, formState } = useFormContext();
+	const error = formState.errors[name];
 	const [text, setText] = useState<string>('');
 
 	const hasLabel: boolean = !isNil(label);
@@ -28,14 +26,10 @@ export const TextInput = ({
 
 	return (
 		<div className='flex flex-row items-center gap-2'>
-			{hasLabel && (
-				<p className='w-40 whitespace-normal break-words text-body text-neutral-gray-9'>
-					{label}
-				</p>
-			)}
+			{hasLabel && <Label label={label} />}
 			<input
 				className={
-					' h-10 rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
+					' h-input-single rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
 					` ${error ? 'border-state-error' : 'border-primary-normal'} ` +
 					' hover:shadow focus:shadow ' +
 					` ${width === 'full' ? 'w-full' : 'w-input-medium'} `
