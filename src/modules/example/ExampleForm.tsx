@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { WarningIcon } from '../../assets/icons/WarningIcon';
 import { SuccessIcon } from '../../assets/icons/SuccessIcon';
 import { ErrorIcon } from '../../assets/icons/ErrorIcon';
+import { TextAreaInput } from '../../components/atoms/Input/TextAreaInput';
 
 interface FormValues {
 	field1: string;
@@ -15,7 +16,12 @@ interface FormValues {
 
 export const ExampleForm = () => {
 	const schema = z.object({
-		field1: z.string().max(5, { message: 'Không được dài hơn 5 kí tự' }).min(2),
+		fullName: z
+			.string()
+			.min(2)
+			.max(10, { message: 'Không được dài hơn 5 kí tự' }),
+		bio: z.string().min(10),
+		age: z.number().gte(18, { message: 'Không được dưới 18t' }),
 	});
 
 	const methods = useForm<FormValues>({
@@ -34,11 +40,13 @@ export const ExampleForm = () => {
 		<FormProvider {...methods}>
 			<form
 				onSubmit={methods.handleSubmit(handleSubmit)}
-				className='flex flex-col gap-14 pt-20'
+				className='flex w-full flex-col gap-14 pt-20'
 			>
 				<p>Example 2</p>
-				<div>
-					<TextInput name='field1' width='medium' />
+				<div className='flex flex-col gap-2'>
+					<TextInput label='Họ Tên' name='fullName' width='medium' />
+					<TextAreaInput label='Bio' name='bio' width='medium' rows={5} />
+					<TextInput label='Tuổi' type='number' name='age' width='medium' />
 					<SuccessIcon size={24} />
 					<WarningIcon size={24} />
 					<ErrorIcon size={24} />

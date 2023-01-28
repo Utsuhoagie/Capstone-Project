@@ -3,19 +3,20 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ErrorIcon } from '../../../assets/icons/ErrorIcon';
 
-interface TextInputProps extends React.ComponentPropsWithRef<'input'> {
+interface TextAreaInputProps extends React.ComponentPropsWithRef<'textarea'> {
 	name: string;
 	label?: string;
 	width: 'full' | 'medium';
 }
 
-export const TextInput = ({
+export const TextAreaInput = ({
 	name,
 	label,
 	width,
-	type,
+	rows,
+	cols,
 	...props
-}: TextInputProps) => {
+}: TextAreaInputProps) => {
 	const {
 		register,
 		formState: { errors },
@@ -24,7 +25,6 @@ export const TextInput = ({
 	const [text, setText] = useState<string>('');
 
 	const hasLabel: boolean = !isNil(label);
-	const isNumber: boolean = type === 'number';
 
 	return (
 		<div className='flex flex-row items-center gap-2'>
@@ -33,15 +33,16 @@ export const TextInput = ({
 					{label}
 				</p>
 			)}
-			<input
+			<textarea
+				rows={rows ?? 3}
 				className={
-					' h-10 rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
+					' resize-none rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
+					` ${width === 'full' ? 'flex-1' : 'w-input-medium'} ` +
 					` ${error ? 'border-state-error' : 'border-primary-normal'} ` +
-					' hover:shadow focus:shadow ' +
-					` ${width === 'full' ? 'w-full' : 'w-input-medium'} `
+					' hover:shadow focus:shadow '
 				}
 				{...props}
-				{...register(name, { valueAsNumber: isNumber })}
+				{...register(name)}
 			/>
 
 			{error && (
