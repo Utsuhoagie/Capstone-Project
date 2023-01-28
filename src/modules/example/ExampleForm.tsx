@@ -5,6 +5,9 @@ import { TextInput } from '../../components/atoms/Input/TextInput';
 import { Tag } from '../../components/atoms/Tag/Tag';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { WarningIcon } from '../../assets/icons/WarningIcon';
+import { SuccessIcon } from '../../assets/icons/SuccessIcon';
+import { ErrorIcon } from '../../assets/icons/ErrorIcon';
 
 interface FormValues {
 	field1: string;
@@ -36,6 +39,9 @@ export const ExampleForm = () => {
 				<p>Example 2</p>
 				<div>
 					<TextInput name='field1' width='medium' />
+					<SuccessIcon size={24} />
+					<WarningIcon size={24} />
+					<ErrorIcon size={24} />
 				</div>
 				{JSON.stringify(methods.formState.errors.field1?.message)}
 				<Button
