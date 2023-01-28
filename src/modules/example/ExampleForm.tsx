@@ -15,7 +15,7 @@ interface FormValues {
 
 export const ExampleForm = () => {
 	const schema = z.object({
-		field1: z.string().max(5).min(2),
+		field1: z.string().max(5, { message: 'Không được dài hơn 5 kí tự' }).min(2),
 	});
 
 	const methods = useForm<FormValues>({
@@ -43,7 +43,6 @@ export const ExampleForm = () => {
 					<WarningIcon size={24} />
 					<ErrorIcon size={24} />
 				</div>
-				{JSON.stringify(methods.formState.errors.field1?.message)}
 				<Button
 					width='small'
 					onClick={() => {
