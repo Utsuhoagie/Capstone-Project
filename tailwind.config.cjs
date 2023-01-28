@@ -62,6 +62,11 @@ module.exports = {
 					},
 					white: '#ffffff',
 				},
+				state: {
+					success: colors.green[500],
+					warning: colors.yellow[400],
+					error: colors.red[600],
+				},
 			},
 		},
 	},
