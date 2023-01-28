@@ -15,6 +15,12 @@ module.exports = {
 				'button-big': 180,
 				'input-medium': 300,
 			},
+			height: {
+				'input-single': 40,
+			},
+			top: {
+				'input-single': '40px',
+			},
 			fontSize: {
 				h1: ['32px', { lineHeight: '36px' }],
 				h2: ['24px', { lineHeight: '28px' }],
@@ -70,5 +76,5 @@ module.exports = {
 			},
 		},
 	},
-	plugins: [],
+	plugins: [require('@headlessui/tailwindcss')],
 };
