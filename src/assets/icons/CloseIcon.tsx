@@ -1,6 +1,6 @@
 import { IconProps } from './Icon.interface';
 
-export const XIcon = ({ size, ...props }: IconProps) => {
+export const CloseIcon = ({ size, ...props }: IconProps) => {
 	return (
 		<svg
 			width={size}

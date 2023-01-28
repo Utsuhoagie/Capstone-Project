@@ -1,4 +1,4 @@
-import { XIcon } from '../../../assets/icons/XIcon';
+import { CloseIcon } from '../../../assets/icons/CloseIcon';
 
 interface TagProps extends React.HTMLAttributes<HTMLButtonElement> {
 	children: React.ReactNode;
@@ -20,7 +20,7 @@ export const Tag = ({ children, canClose, onClick, ...props }: TagProps) => {
 			{...props}
 		>
 			{children}
-			{canClose && <XIcon size={16} />}
+			{canClose && <CloseIcon size={16} />}
 		</button>
 	);
 };
