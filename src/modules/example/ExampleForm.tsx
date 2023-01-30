@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Button } from '../../components/atoms/Button/Button';
 import { TextInput } from '../../components/atoms/Input/TextInput';
-import { Tag } from '../../components/atoms/Tag/Tag';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { WarningIcon } from '../../assets/icons/WarningIcon';
@@ -10,23 +9,48 @@ import { SuccessIcon } from '../../assets/icons/SuccessIcon';
 import { ErrorIcon } from '../../assets/icons/ErrorIcon';
 import { TextAreaInput } from '../../components/atoms/Input/TextAreaInput';
 import { SelectInput } from '../../components/atoms/Input/SelectInput';
+import { isNil } from 'ramda';
 
 interface FormValues {
 	fullName: string;
 	bio: string;
 	age: string;
-	sex: 'male' | 'female';
+	sex: 'male' | 'female' | 'other' | 'non';
 }
 
 export const ExampleForm = () => {
+	const SEXES = ['male', 'female', 'other', 'non'];
+
 	const schema = z.object({
 		fullName: z
 			.string()
 			.min(2)
 			.max(10, { message: 'Không được dài hơn 5 kí tự' }),
-		bio: z.union([z.literal(''), z.string().min(10)]),
+		// bio: z.union([z.literal(''), z.string().min(10)]),
+		bio: z.preprocess(
+			(val) => (val === '' ? undefined : val),
+			z.string().min(10).optional()
+		),
 		age: z.coerce.number().int().gte(0, { message: 'Không được dưới 0t' }),
 		sex: z.string(),
+		// sex: z.string().refine(
+		// 	(val) => {
+		// 		const SMALL_SEXES = SEXES.slice(0, -1);
+		// 		const isValid = SMALL_SEXES.includes(val);
+
+		// 		if (!isValid)
+		// 			methods.setError(
+		// 				'sex',
+		// 				{ type: 'not_in_array', message: 'Type is not in array (RHF)' },
+		// 				{ shouldFocus: true }
+		// 			);
+
+		// 		return isValid;
+		// 	},
+		// 	{
+		// 		message: 'Type is not in array (Zod)',
+		// 	}
+		// ),
 		// sex: z.union([z.literal('male'), z.literal('female')]),
 		// sex: z.union(sexes.map((sex) => z.literal(sex.type))),
 	});
@@ -62,11 +86,7 @@ export const ExampleForm = () => {
 					<TextInput name='fullName' label='Họ Tên' width='medium' />
 					<TextInput name='age' label='Tuổi' width='medium' />
 					<TextAreaInput name='bio' label='Bio' width='medium' rows={5} />
-					<SelectInput
-						name='sex'
-						label='Giới tính'
-						options={['male', 'female', 'other', 'non']}
-					/>
+					<SelectInput name='sex' label='Giới tính' options={SEXES} />
 					<SuccessIcon size={24} />
 					<WarningIcon size={24} />
 					<ErrorIcon size={24} />
