@@ -12,7 +12,7 @@ export const buttonMapping = {
 
 	primary: ' bg-primary-normal text-neutral-gray-1 active:bg-primary-dark-2 ',
 	secondary:
-		' bg-neutral-gray-1 text-neutral-gray-9 border border-primary-normal active:bg-primary-bright-2 ',
+		' bg-neutral-gray-1 text-neutral-gray-9 border border-primary-normal active:bg-primary-bright-4 ',
 
 	full: { width: ' w-full ' },
 	small: { width: ' w-button-small ' },

@@ -1,4 +1,4 @@
-import { IconProps } from './Icon.interface';
+import { IconProps } from './_Icon.interface';
 
 export const CloseIcon = ({ size, ...props }: IconProps) => {
 	return (
