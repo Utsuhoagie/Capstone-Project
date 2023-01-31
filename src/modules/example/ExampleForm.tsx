@@ -11,6 +11,7 @@ import { TextAreaInput } from '../../components/atoms/Input/TextAreaInput';
 import { SelectInput } from '../../components/atoms/Input/SelectInput';
 import { isNil } from 'ramda';
 import { CheckboxIcon } from '../../assets/icons/CheckboxIcon';
+import { RadioGroupInput } from '../../components/atoms/Input/RadioGroupInput';
 
 interface PresubmitFormValues {
 	fullName: string;
@@ -18,6 +19,7 @@ interface PresubmitFormValues {
 	age: string;
 	sex: '' | 'male' | 'female' | 'other' | 'non';
 	skills: ('react' | 'asp' | 'godot')[];
+	level: 'junior' | 'senior' | 'lead';
 }
 
 export const ExampleForm = () => {
@@ -42,6 +44,10 @@ export const ExampleForm = () => {
 		skills: z
 			.union([z.literal('react'), z.literal('asp'), z.literal('godot')])
 			.array(),
+		level: z.preprocess(
+			(val) => (val === '' ? undefined : val),
+			z.string().optional()
+		),
 		// sex: z.string().refine(
 		// 	(val) => {
 		// 		const SMALL_SEXES = SEXES.slice(0, -1);
@@ -73,6 +79,7 @@ export const ExampleForm = () => {
 			age: '',
 			sex: '',
 			skills: [],
+			level: 'junior',
 		},
 	});
 
@@ -109,6 +116,12 @@ export const ExampleForm = () => {
 						label='Kĩ năng'
 						multiple
 						options={SKILLS}
+					/>
+					<RadioGroupInput
+						name='level'
+						label='Trình độ'
+						direction='horizontal'
+						options={['junior', 'senior', 'lead']}
 					/>
 
 					<p>Icons</p>
