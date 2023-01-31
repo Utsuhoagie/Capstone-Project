@@ -10,16 +10,19 @@ import { ErrorIcon } from '../../assets/icons/ErrorIcon';
 import { TextAreaInput } from '../../components/atoms/Input/TextAreaInput';
 import { SelectInput } from '../../components/atoms/Input/SelectInput';
 import { isNil } from 'ramda';
+import { CheckboxIcon } from '../../assets/icons/CheckboxIcon';
 
-interface FormValues {
+interface PresubmitFormValues {
 	fullName: string;
 	bio: string;
 	age: string;
-	sex: 'male' | 'female' | 'other' | 'non';
+	sex: '' | 'male' | 'female' | 'other' | 'non';
+	skills: ('react' | 'asp' | 'godot')[];
 }
 
 export const ExampleForm = () => {
 	const SEXES = ['male', 'female', 'other', 'non'];
+	const SKILLS = ['react', 'asp', 'godot'];
 
 	const schema = z.object({
 		fullName: z
@@ -32,7 +35,13 @@ export const ExampleForm = () => {
 			z.string().min(10).optional()
 		),
 		age: z.coerce.number().int().gte(0, { message: 'Không được dưới 0t' }),
-		sex: z.string(),
+		sex: z.preprocess(
+			(val) => (val === '' ? undefined : val),
+			z.string().optional()
+		),
+		skills: z
+			.union([z.literal('react'), z.literal('asp'), z.literal('godot')])
+			.array(),
 		// sex: z.string().refine(
 		// 	(val) => {
 		// 		const SMALL_SEXES = SEXES.slice(0, -1);
@@ -55,21 +64,22 @@ export const ExampleForm = () => {
 		// sex: z.union(sexes.map((sex) => z.literal(sex.type))),
 	});
 
-	const methods = useForm<FormValues>({
+	const methods = useForm<PresubmitFormValues>({
 		resolver: zodResolver(schema),
 		mode: 'onSubmit',
 		defaultValues: {
 			fullName: '',
 			bio: '',
 			age: '',
-			sex: 'male',
+			sex: '',
+			skills: [],
 		},
 	});
 
-	console.log({
-		formData: methods.getValues(),
-		formErrors: methods.formState.errors,
-	});
+	console.log(
+		methods.getValues()
+		// formErrors: methods.formState.errors,
+	);
 
 	function handleSubmit(data: any) {
 		console.log({ submitData: data });
@@ -83,13 +93,30 @@ export const ExampleForm = () => {
 			>
 				<p>Example 2</p>
 				<div className='flex flex-col gap-2'>
-					<TextInput name='fullName' label='Họ Tên' width='medium' />
+					<TextInput name='fullName' label='Họ Tên' width='medium' required />
 					<TextInput name='age' label='Tuổi' width='medium' />
 					<TextAreaInput name='bio' label='Bio' width='medium' rows={5} />
-					<SelectInput name='sex' label='Giới tính' options={SEXES} />
+
+					<SelectInput
+						name='sex'
+						placeholder='Hãy chọn 1...'
+						label='Giới tính'
+						options={SEXES}
+					/>
+					<SelectInput
+						name='skills'
+						placeholder='Hãy chọn nhiều...'
+						label='Kĩ năng'
+						multiple
+						options={SKILLS}
+					/>
+
+					<p>Icons</p>
 					<SuccessIcon size={24} />
 					<WarningIcon size={24} />
 					<ErrorIcon size={24} />
+					<CheckboxIcon size={24} />
+					<CheckboxIcon checked size={24} />
 				</div>
 				<Button
 					width='small'
@@ -101,6 +128,9 @@ export const ExampleForm = () => {
 					}}
 				>
 					Submit
+				</Button>
+				<Button width='full' secondary type='button'>
+					Secondary
 				</Button>
 			</form>
 		</FormProvider>
