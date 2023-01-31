@@ -38,11 +38,13 @@ module.exports = {
 					},
 					normal: colors.blue[700],
 					bright: {
-						1: colors.blue[500],
-						2: colors.blue[400],
-						3: colors.blue[300],
-						4: colors.blue[100],
-						5: colors.blue[50],
+						1: colors.indigo[600],
+						2: colors.blue[500],
+						3: colors.blue[400],
+						4: colors.blue[300],
+						5: colors.blue[200],
+						6: colors.blue[100],
+						7: colors.blue[50],
 					},
 				},
 				secondary: {

@@ -1,6 +1,6 @@
 import { buttonMapping } from './ButtonMapping';
 
-interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
 	children: React.ReactNode;
 	width: 'full' | 'small' | 'medium' | 'big';
 	secondary?: boolean;

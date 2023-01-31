@@ -15,6 +15,7 @@ export const TextInput = ({
 	label,
 	width,
 	type,
+	required,
 	...props
 }: TextInputProps) => {
 	const { register, formState } = useFormContext();
@@ -26,7 +27,7 @@ export const TextInput = ({
 
 	return (
 		<div className='flex flex-row items-center gap-2'>
-			{hasLabel && <Label label={label} />}
+			{hasLabel && <Label label={label} required={required} />}
 			<input
 				className={
 					' h-input-single rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +

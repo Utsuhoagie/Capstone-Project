@@ -10,9 +10,9 @@ export const buttonMapping = {
 		' active:shadow active:shadow-primary-normal ' +
 		' disabled:opacity-50 disabled:cursor-not-allowed ',
 
-	primary: ' bg-primary-normal text-neutral-gray-1 active:bg-primary-dark-2 ',
+	primary: ' bg-primary-dark-1 text-neutral-gray-1 active:bg-primary-dark-2 ',
 	secondary:
-		' bg-neutral-gray-1 text-neutral-gray-9 border border-primary-normal active:bg-primary-bright-4 ',
+		' bg-neutral-gray-1 text-neutral-gray-9 border border-primary-normal active:bg-primary-bright-6 ',
 
 	full: { width: ' w-full ' },
 	small: { width: ' w-button-small ' },
