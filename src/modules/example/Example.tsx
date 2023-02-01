@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { useDialogStore } from '../../app/App.store';
 import { Button } from '../../components/atoms/Button/Button';
 import { TextInput } from '../../components/atoms/Input/TextInput';
 import { Tag } from '../../components/atoms/Tag/Tag';
+import { ExampleForm } from './ExampleForm';
 
 export const Example = () => {
+	const openDialog = useDialogStore((state) => state.openDialog);
 	const [index, setIndex] = useState<number>(0);
 	const widths = ['full', 'small', 'medium', 'big'] as const;
 
@@ -22,6 +25,22 @@ export const Example = () => {
 					}}
 				>
 					Click
+				</Button>
+
+				<Button
+					width='medium'
+					onClick={() =>
+						openDialog({
+							isClosable: true,
+							content: (
+								<div className='h-3/4 w-3/4'>
+									<ExampleForm />
+								</div>
+							),
+						})
+					}
+				>
+					Open Dialog
 				</Button>
 			</div>
 
