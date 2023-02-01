@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, devtools } from 'zustand/middleware';
-import * as R from 'ramda';
+import { clone } from 'ramda';
 
 interface User {
 	name: string;
@@ -22,14 +22,14 @@ export const useAuthStore = create<AuthStore>()(
 				user: undefined,
 				login: (name: string, password: string) =>
 					set((prev) => {
-						let next = R.clone(prev);
+						let next = clone(prev);
 						next.isLoggedIn = true;
 						next.user = { name, password };
 						return next;
 					}),
 				logout: () =>
 					set((prev) => {
-						let next = R.clone(prev);
+						let next = clone(prev);
 						next.isLoggedIn = false;
 						next.user = undefined;
 						return next;

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes as ReactRouterRoutes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '../../components/layouts/AppLayout';
 import { AuthLayout } from '../../components/layouts/AuthLayout';
 import { useAuthStore } from '../../modules/auth/Auth.store';
@@ -8,11 +8,11 @@ import { Example } from '../../modules/example/Example';
 import { ExampleForm } from '../../modules/example/ExampleForm';
 import { ProtectedRoute } from './ProtectedRoute';
 
-export const RoutesAll = () => {
+export const Routes = () => {
 	const { isLoggedIn } = useAuthStore((state) => state);
 
 	return (
-		<Routes>
+		<ReactRouterRoutes>
 			<Route
 				path='*'
 				element={<Navigate replace to={isLoggedIn ? 'app' : 'auth'} />}
@@ -27,6 +27,6 @@ export const RoutesAll = () => {
 				<Route path='ex' element={<Example />} />
 				<Route path='ex-form' element={<ExampleForm />} />
 			</Route>
-		</Routes>
+		</ReactRouterRoutes>
 	);
 };

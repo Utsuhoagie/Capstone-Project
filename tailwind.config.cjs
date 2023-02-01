@@ -17,6 +17,7 @@ module.exports = {
 			},
 			height: {
 				'input-single': 40,
+				'dialog-title': 40,
 			},
 			top: {
 				'input-single': '40px',
