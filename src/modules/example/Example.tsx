@@ -14,7 +14,6 @@ export const Example = () => {
 		<div className='flex flex-col gap-14 pt-20'>
 			<p>Example</p>
 
-			{/* Button test */}
 			<div className='flex flex-col'>
 				{widths[index]}
 				<Button
