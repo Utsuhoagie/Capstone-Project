@@ -6,6 +6,7 @@ import { Login } from '../../modules/auth/Login/Login';
 import { Dashboard } from '../../modules/dashboard/Dashboard';
 import { Example } from '../../modules/example/Example';
 import { ExampleForm } from '../../modules/example/ExampleForm';
+import { ExampleTable } from '../../modules/example/ExampleTable';
 import { ProtectedRoute } from './ProtectedRoute';
 
 export const Routes = () => {
@@ -26,6 +27,7 @@ export const Routes = () => {
 				<Route path='' element={<Dashboard />} />
 				<Route path='ex' element={<Example />} />
 				<Route path='ex-form' element={<ExampleForm />} />
+				<Route path='ex-table' element={<ExampleTable />} />
 			</Route>
 		</ReactRouterRoutes>
 	);

@@ -12,6 +12,7 @@
     "@headlessui/react": "^1.7.7",
     "@headlessui/tailwindcss": "^0.1.2",
     "@hookform/resolvers": "^2.9.10",
+    "@tanstack/react-table": "^8.7.9",
     "@types/luxon": "^3.2.0",
     "@types/prettier": "^2.7.2",
     "@types/ramda": "^0.28.21",
