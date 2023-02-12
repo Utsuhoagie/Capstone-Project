@@ -26,7 +26,6 @@ export const Table = ({
 				header: () => columnConfigs[field].header,
 				cell: (ctx) => {
 					const { displayType, formatter } = columnConfigs[field] ?? {};
-					// return formatter ? formatter(ctx.getValue()) : ctx.getValue();
 					const value = ctx.getValue();
 
 					if (value === undefined) {

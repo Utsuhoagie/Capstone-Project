@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 
 const FAKE_DATA: Applicant[] = [
 	{
-		NationalId: '01232103',
+		NationalId: '012345678000',
 		FullName: 'Abc Foo',
 		Gender: 'male',
 		BirthDate: dayjs().toDate(),
@@ -19,7 +19,7 @@ const FAKE_DATA: Applicant[] = [
 		AskingSalary: 5_000_000,
 	},
 	{
-		NationalId: '01232103',
+		NationalId: '012345678000',
 		FullName: 'Abc Foo',
 		Gender: 'male',
 		BirthDate: dayjs().toDate(),
