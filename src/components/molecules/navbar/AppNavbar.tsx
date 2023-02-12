@@ -12,7 +12,7 @@ export const AppNavbar = () => {
 	}
 
 	return (
-		<nav className='h-screen w-48 bg-primary-dark2 py-4 text-primary-bright2'>
+		<nav className='bg-primary-dark2 text-primary-bright2 h-screen w-[200px] min-w-[200px]'>
 			<ul className='flex flex-col items-start'>
 				<NavItem onClick={handleLogout}>Logout</NavItem>
 				<NavItem>Link 2</NavItem>
