@@ -1,6 +1,7 @@
 import { Routes as ReactRouterRoutes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '../../components/layouts/AppLayout';
 import { AuthLayout } from '../../components/layouts/AuthLayout';
+import { ApplicantTracking } from '../../modules/applicant-tracking/ApplicantTracking';
 import { useAuthStore } from '../../modules/auth/Auth.store';
 import { Login } from '../../modules/auth/Login/Login';
 import { Dashboard } from '../../modules/dashboard/Dashboard';
@@ -25,6 +26,7 @@ export const Routes = () => {
 
 			<Route path='app' element={<ProtectedRoute element={<AppLayout />} />}>
 				<Route path='' element={<Dashboard />} />
+				<Route path='applicant-tracking' element={<ApplicantTracking />} />
 				<Route path='ex' element={<Example />} />
 				<Route path='ex-form' element={<ExampleForm />} />
 				<Route path='ex-table' element={<ExampleTable />} />

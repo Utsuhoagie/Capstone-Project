@@ -3,13 +3,10 @@ import {
 	flexRender,
 	getCoreRowModel,
 	useReactTable,
-	ColumnDef,
 } from '@tanstack/react-table';
-import {
-	mapValueToDisplay,
-	MAPPING,
-	mapHeaderToDisplay,
-} from '../../../app/App.mapping';
+import { mapValueToDisplay, MAPPING } from '../../../app/App.mapping';
+import { l } from '../../../app/App.utils';
+import { EmptyText } from '../../atoms/EmptyText/EmptyText';
 import { TableProps } from './Table.interface';
 
 export const Table = ({
@@ -19,25 +16,29 @@ export const Table = ({
 	columnConfigs,
 }: TableProps) => {
 	// Column configs
-	const fields = Object.keys(data[0]);
+	const fields = Object.keys(columnConfigs);
 	const helper = createColumnHelper<any>();
 	const columns = fields.map((field: string) =>
 		helper.accessor(
 			(singleObject) => singleObject[field as keyof typeof singleObject],
 			{
 				id: field,
-				header: () => mapHeaderToDisplay({ module, field }),
+				header: () => columnConfigs[field].header,
 				cell: (ctx) => {
 					const { displayType, formatter } = columnConfigs[field] ?? {};
 					// return formatter ? formatter(ctx.getValue()) : ctx.getValue();
 					const value = ctx.getValue();
+
+					if (value === undefined) {
+						return <EmptyText />;
+					}
 
 					switch (displayType) {
 						case 'formatted':
 							return formatter && formatter(value); // NOTE: should always be true
 						case 'mapped':
 							return mapValueToDisplay({ module, field, value });
-						case 'none':
+						case 'normal':
 							return value;
 					}
 				},
@@ -54,17 +55,21 @@ export const Table = ({
 	});
 
 	return (
-		<div className='overflow-clip rounded-md border-2 border-primary-bright-1'>
-			<table className='bg-neutral-white' style={{ width: tableConfig?.width }}>
+		<div
+			className='overflow-x-auto overflow-y-clip rounded border-2 border-primary-bright-1'
+			style={{ width: tableConfig.width }}
+		>
+			<table className='table-fixed bg-neutral-white'>
 				<thead>
-					<tr>
+					<tr className='flex flex-row'>
 						{table.getFlatHeaders().map((header) => {
 							const columnConfig = columnConfigs[header.id];
+
 							return (
 								<th
 									key={header.id}
 									className={
-										' border-x border-neutral-gray-5 bg-primary-bright-4 px-1 py-1 text-left ' +
+										' flex flex-col justify-center border-x border-neutral-gray-5 bg-primary-bright-4 px-1 py-1 text-left font-medium ' +
 										' first:border-l-0 ' +
 										' last:border-r-0 '
 									}
@@ -82,9 +87,10 @@ export const Table = ({
 				<tbody>
 					{table.getRowModel().rows.map((row) => {
 						return (
-							<tr key={row.id}>
+							<tr key={row.id} className='flex flex-row'>
 								{row.getVisibleCells().map((cell) => {
-									const columnConfig = columnConfigs[cell.id];
+									const columnConfig = columnConfigs[cell.column.id];
+
 									return (
 										<td
 											key={cell.id}

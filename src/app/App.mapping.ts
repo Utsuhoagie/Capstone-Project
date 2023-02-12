@@ -5,63 +5,70 @@ interface MappableValue {
 
 interface Mapping {
 	[module: string]: {
-		[field: string]: {
-			header: string;
-			values?: MappableValue[];
-		};
+		[field: string]: MappableValue[];
 	};
 }
 
 export const MAPPING: Mapping = {
 	example: {
-		fullName: {
-			header: 'Full Name',
-		},
-		age: {
-			header: 'Age',
-		},
-		position: {
-			header: 'Position',
-			values: [
-				{
-					value: 'dev',
-					display: 'Developer',
-				},
-				{
-					value: 'marketing',
-					display: 'Marketing',
-				},
-				{
-					value: 'finance',
-					display: 'Financing',
-				},
-			],
-		},
-		isCringe: {
-			header: 'Is Cringe',
-			values: [
-				{
-					value: true,
-					display: 'tru af',
-				},
-				{
-					value: false,
-					display: 'L lmao',
-				},
-			],
-		},
+		fullName: [],
+		age: [],
+		position: [
+			{
+				value: 'dev',
+				display: 'Developer',
+			},
+			{
+				value: 'marketing',
+				display: 'Marketing',
+			},
+			{
+				value: 'finance',
+				display: 'Financing',
+			},
+		],
+		isCringe: [
+			{
+				value: true,
+				display: 'tru af',
+			},
+			{
+				value: false,
+				display: 'L lmao',
+			},
+		],
+	},
+
+	'applicant-tracking': {
+		NationalId: [],
+		FullName: [],
+		Gender: [
+			{
+				value: 'male',
+				display: 'Nam',
+			},
+			{
+				value: 'female',
+				display: 'Nữ',
+			},
+			{
+				value: 'other',
+				display: 'Khác',
+			},
+		],
+		BirthDate: [],
+		Phone: [],
+		Email: [],
+		AppliedPosition: [
+			{
+				value: 'developer',
+				display: 'Developer',
+			},
+		],
+		AppliedDate: [],
+		AskingSalary: [],
 	},
 };
-
-export function mapHeaderToDisplay({
-	module,
-	field,
-}: {
-	module: string;
-	field: string;
-}) {
-	return MAPPING[module][field].header;
-}
 
 export function mapValueToDisplay({
 	module,
@@ -72,7 +79,7 @@ export function mapValueToDisplay({
 	field: string;
 	value: any;
 }) {
-	return MAPPING[module][field].values!.find(
+	return MAPPING[module][field].find(
 		(mappableValue) => mappableValue.value === value
 	)?.display;
 }

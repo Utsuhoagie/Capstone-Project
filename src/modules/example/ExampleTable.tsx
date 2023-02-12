@@ -4,14 +4,14 @@ import {
 	TableConfig,
 } from '../../components/organisms/Table/Table.interface';
 
-interface Applicant {
+interface Person {
 	fullName: string;
 	age: number;
 	position: string;
 	isCringe: boolean;
 }
 
-const DEFAULT_DATA: Applicant[] = [
+const DEFAULT_DATA: Person[] = [
 	{
 		fullName: 'Foo',
 		age: 20,
@@ -39,16 +39,20 @@ export const ExampleTable = () => {
 
 	const columnConfigs: ColumnConfigs = {
 		fullName: {
-			displayType: 'none',
+			header: 'Full Name',
+			displayType: 'normal',
 		},
 		age: {
+			header: 'Age',
 			displayType: 'formatted',
 			formatter: (value) => `${value} years old`,
 		},
 		position: {
+			header: 'Position',
 			displayType: 'mapped',
 		},
 		isCringe: {
+			header: 'Is Cringe',
 			displayType: 'mapped',
 			width: 500,
 		},
