@@ -39,7 +39,7 @@ module.exports = {
 					},
 					normal: colors.blue[700],
 					bright: {
-						1: colors.indigo[600],
+						1: '#4657e5',
 						2: colors.blue[500],
 						3: colors.blue[400],
 						4: colors.blue[300],
@@ -51,7 +51,11 @@ module.exports = {
 				secondary: {
 					dark: colors.violet[600],
 					normal: colors.violet[400],
-					bright: colors.violet[300],
+					bright: {
+						1: colors.violet[300],
+						2: colors.violet[200],
+						3: colors.violet[100],
+					},
 				},
 				accent: {
 					dark: colors.emerald[600],

@@ -9,32 +9,38 @@ export const tableConfig: TableConfig = {
 };
 
 export const columnConfigs: ColumnConfigs = {
-	NationalId: { header: 'CMND / CCCD', displayType: 'normal', width: 130 },
-	FullName: { header: 'Họ tên', displayType: 'normal', width: 280 },
-	Gender: { header: 'Giới tính', displayType: 'normal', width: 100 },
+	NationalId: {
+		header: 'CMND / CCCD',
+		displayMode: 'formatted',
+		width: 140,
+	},
+	FullName: { header: 'Họ tên', displayMode: 'normal', width: 280 },
+	Gender: { header: 'Giới tính', displayMode: 'mapped', width: 100 },
 	BirthDate: {
 		header: 'Ngày sinh',
-		displayType: 'formatted',
+		displayMode: 'formatted',
 		width: 120,
-		formatter: (value: Date) => dayjs(value).format('D-MM-YYYY'),
 	},
-	Address: { header: 'Địa chỉ', displayType: 'normal', width: 300 },
-	Phone: { header: 'Số điện thoại', displayType: 'normal', width: 120 },
-	Email: { header: 'Email', displayType: 'normal', width: 140 },
+	Address: { header: 'Địa chỉ', displayMode: 'normal', width: 300 },
+	Phone: {
+		header: 'Số điện thoại',
+		displayMode: 'formatted',
+		width: 120,
+	},
+	Email: { header: 'Email', displayMode: 'normal', width: 140 },
 	AppliedPosition: {
 		header: 'Vị trí ứng tuyển',
-		displayType: 'normal',
+		displayMode: 'mapped',
 		width: 140,
 	},
 	AppliedDate: {
 		header: 'Ngày ứng tuyển',
-		displayType: 'formatted',
+		displayMode: 'formatted',
 		width: 150,
-		formatter: (value: Date) => dayjs(value).format('D-MM-YYYY'),
 	},
 	AskingSalary: {
 		header: 'Mức lương đề nghị',
-		displayType: 'normal',
+		displayMode: 'formatted',
 		width: 150,
 	},
 };

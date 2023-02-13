@@ -40,20 +40,20 @@ export const ExampleTable = () => {
 	const columnConfigs: ColumnConfigs = {
 		fullName: {
 			header: 'Full Name',
-			displayType: 'normal',
+			displayMode: 'normal',
 		},
 		age: {
 			header: 'Age',
-			displayType: 'formatted',
+			displayMode: 'formatted',
 			formatter: (value) => `${value} years old`,
 		},
 		position: {
 			header: 'Position',
-			displayType: 'mapped',
+			displayMode: 'mapped',
 		},
 		isCringe: {
 			header: 'Is Cringe',
-			displayType: 'mapped',
+			displayMode: 'mapped',
 			width: 500,
 		},
 	};

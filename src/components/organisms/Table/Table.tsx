@@ -4,7 +4,7 @@ import {
 	getCoreRowModel,
 	useReactTable,
 } from '@tanstack/react-table';
-import { mapValueToDisplay, MAPPING } from '../../../app/App.mapping';
+import { getDisplayForFieldValue } from '../../../app/App.display';
 import { l } from '../../../app/App.utils';
 import { EmptyText } from '../../atoms/EmptyText/EmptyText';
 import { TableProps } from './Table.interface';
@@ -25,21 +25,14 @@ export const Table = ({
 				id: field,
 				header: () => columnConfigs[field].header,
 				cell: (ctx) => {
-					const { displayType, formatter } = columnConfigs[field] ?? {};
+					const { displayMode } = columnConfigs[field] ?? {};
 					const value = ctx.getValue();
 
 					if (value === undefined) {
-						return <EmptyText />;
+						return <EmptyText canHover />;
 					}
 
-					switch (displayType) {
-						case 'formatted':
-							return formatter && formatter(value); // NOTE: should always be true
-						case 'mapped':
-							return mapValueToDisplay({ module, field, value });
-						case 'normal':
-							return value;
-					}
+					return getDisplayForFieldValue({ displayMode, field, value });
 				},
 			}
 		)
@@ -60,7 +53,7 @@ export const Table = ({
 		>
 			<table className='table-fixed bg-neutral-white'>
 				<thead>
-					<tr className='flex flex-row'>
+					<tr className='flex flex-row bg-primary-normal'>
 						{table.getFlatHeaders().map((header) => {
 							const columnConfig = columnConfigs[header.id];
 
@@ -68,7 +61,7 @@ export const Table = ({
 								<th
 									key={header.id}
 									className={
-										' flex flex-col justify-center border-x border-neutral-gray-5 bg-primary-bright-4 px-1 py-1 text-left font-medium ' +
+										' flex flex-col justify-center border-x border-neutral-gray-5 px-1 py-1 text-left font-medium text-neutral-gray-1 ' +
 										' first:border-l-0 ' +
 										' last:border-r-0 '
 									}
@@ -86,7 +79,10 @@ export const Table = ({
 				<tbody>
 					{table.getRowModel().rows.map((row) => {
 						return (
-							<tr key={row.id} className='flex flex-row'>
+							<tr
+								key={row.id}
+								className='group flex cursor-pointer flex-row odd:bg-primary-bright-5 hover:bg-primary-bright-1 hover:text-neutral-gray-1'
+							>
 								{row.getVisibleCells().map((cell) => {
 									const columnConfig = columnConfigs[cell.column.id];
 

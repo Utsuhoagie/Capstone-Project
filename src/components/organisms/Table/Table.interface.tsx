@@ -24,9 +24,9 @@ export interface ColumnConfig {
 	header: string;
 	width?: number;
 
-	/** If 'formatted', MUST include 'formatter' function \n
-	 * If 'mapped', MUST include values in MAPPING[module][field].values
+	/** If 'mapped' or 'formatted',
+	 * MUST include values
+	 * in MAPPER / FORMATTER
 	 */
-	displayType?: 'mapped' | 'formatted' | 'normal';
-	formatter?: (value: any) => string;
+	displayMode: 'mapped' | 'formatted' | 'normal';
 }
