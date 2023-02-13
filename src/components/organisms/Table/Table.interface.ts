@@ -1,5 +1,8 @@
+import { DisplayConfigs } from '../../../app/App.display';
+
 export interface TableProps {
 	data: any[];
+	displayConfigs: DisplayConfigs;
 	tableConfig: TableConfig;
 	columnConfigs: ColumnConfigs;
 }
@@ -14,12 +17,5 @@ export interface ColumnConfigs {
 }
 
 export interface ColumnConfig {
-	header: string;
 	width?: number;
-
-	/** If 'mapped' or 'formatted',
-	 * MUST include values
-	 * in MAPPER / FORMATTER
-	 */
-	displayMode: 'mapped' | 'formatted' | 'normal';
 }

@@ -4,12 +4,23 @@ import {
 	getCoreRowModel,
 	useReactTable,
 } from '@tanstack/react-table';
-import { getDisplayForFieldValue } from '../../../app/App.display';
+import {
+	getDisplayForFieldValue,
+	getLabelForField,
+} from '../../../app/App.display';
 import { l } from '../../../app/App.utils';
 import { EmptyText } from '../../atoms/EmptyText/EmptyText';
 import { TableProps } from './Table.interface';
 
-export const Table = ({ data, tableConfig, columnConfigs }: TableProps) => {
+export const Table = ({
+	data,
+	displayConfigs,
+	tableConfig,
+	columnConfigs,
+}: TableProps) => {
+	// Display configs
+	const { labellers, displayModeMappers, mappers, formatters } = displayConfigs;
+
 	// Column configs
 	const fields = Object.keys(columnConfigs);
 	const helper = createColumnHelper<any>();
@@ -18,16 +29,15 @@ export const Table = ({ data, tableConfig, columnConfigs }: TableProps) => {
 			(singleObject) => singleObject[field as keyof typeof singleObject],
 			{
 				id: field,
-				header: () => columnConfigs[field].header,
+				header: () => getLabelForField({ labellers, field }),
 				cell: (ctx) => {
-					const { displayMode } = columnConfigs[field] ?? {};
 					const value = ctx.getValue();
 
 					if (value === undefined) {
 						return <EmptyText canHover />;
 					}
 
-					return getDisplayForFieldValue({ displayMode, field, value });
+					return getDisplayForFieldValue({ displayConfigs, field, value });
 				},
 			}
 		)

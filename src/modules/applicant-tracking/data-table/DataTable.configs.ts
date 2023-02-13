@@ -9,38 +9,14 @@ export const tableConfig: TableConfig = {
 };
 
 export const columnConfigs: ColumnConfigs = {
-	NationalId: {
-		header: 'CMND / CCCD',
-		displayMode: 'formatted',
-		width: 140,
-	},
-	FullName: { header: 'Họ tên', displayMode: 'normal', width: 280 },
-	Gender: { header: 'Giới tính', displayMode: 'mapped', width: 100 },
-	BirthDate: {
-		header: 'Ngày sinh',
-		displayMode: 'formatted',
-		width: 120,
-	},
-	Address: { header: 'Địa chỉ', displayMode: 'normal', width: 300 },
-	Phone: {
-		header: 'Số điện thoại',
-		displayMode: 'formatted',
-		width: 120,
-	},
-	Email: { header: 'Email', displayMode: 'normal', width: 140 },
-	AppliedPosition: {
-		header: 'Vị trí ứng tuyển',
-		displayMode: 'mapped',
-		width: 140,
-	},
-	AppliedDate: {
-		header: 'Ngày ứng tuyển',
-		displayMode: 'formatted',
-		width: 150,
-	},
-	AskingSalary: {
-		header: 'Mức lương đề nghị',
-		displayMode: 'formatted',
-		width: 150,
-	},
+	NationalId: { width: 140 },
+	FullName: { width: 280 },
+	Gender: { width: 100 },
+	BirthDate: { width: 120 },
+	Address: { width: 300 },
+	Phone: { width: 120 },
+	Email: { width: 140 },
+	AppliedPosition: { width: 140 },
+	AppliedDate: { width: 150 },
+	AskingSalary: { width: 150 },
 };
