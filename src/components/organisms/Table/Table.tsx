@@ -9,12 +9,7 @@ import { l } from '../../../app/App.utils';
 import { EmptyText } from '../../atoms/EmptyText/EmptyText';
 import { TableProps } from './Table.interface';
 
-export const Table = ({
-	module,
-	data,
-	tableConfig,
-	columnConfigs,
-}: TableProps) => {
+export const Table = ({ data, tableConfig, columnConfigs }: TableProps) => {
 	// Column configs
 	const fields = Object.keys(columnConfigs);
 	const helper = createColumnHelper<any>();

@@ -34,7 +34,6 @@ export const DataTable = () => {
 	return (
 		<div className='w-full'>
 			<Table
-				module='applicant-tracking'
 				data={FAKE_DATA}
 				tableConfig={tableConfig}
 				columnConfigs={columnConfigs}

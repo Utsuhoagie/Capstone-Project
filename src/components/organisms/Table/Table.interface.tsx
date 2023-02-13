@@ -1,14 +1,7 @@
-import { Module } from '../../../app/App.modules';
-
 export interface TableProps {
-	module: Module;
 	data: any[];
 	tableConfig: TableConfig;
 	columnConfigs: ColumnConfigs;
-}
-
-export interface ModuleContext {
-	module: Module;
 }
 
 export interface TableConfig {
