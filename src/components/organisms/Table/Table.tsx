@@ -71,12 +71,12 @@ export const Table = ({
 
 	return (
 		<div
-			className='overflow-x-auto overflow-y-clip rounded border-2 border-primary-bright-1'
+			className='overflow-x-auto overflow-y-clip rounded border-2 border-secondary-dark-1 shadow-md'
 			style={{ width: tableConfig.width }}
 		>
 			<table className='table-fixed bg-neutral-white'>
 				<thead>
-					<tr className='flex flex-row bg-primary-normal'>
+					<tr className='flex flex-row bg-primary-dark-1'>
 						{table.getFlatHeaders().map((header) => {
 							const columnConfig = columnConfigs[header.id];
 

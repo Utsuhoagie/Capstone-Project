@@ -49,12 +49,12 @@ module.exports = {
 					},
 				},
 				secondary: {
-					dark: colors.violet[600],
-					normal: colors.violet[400],
+					dark: { 2: colors.violet[800], 1: colors.indigo[600] },
+					normal: colors.indigo[400],
 					bright: {
-						1: colors.violet[300],
-						2: colors.violet[200],
-						3: colors.violet[100],
+						1: colors.indigo[300],
+						2: colors.indigo[200],
+						3: colors.indigo[100],
 					},
 				},
 				accent: {

@@ -25,7 +25,7 @@ export const DetailSection = () => {
 	};
 
 	return (
-		<div className='rounded border border-secondary-dark p-2'>
+		<div className='rounded border border-secondary-dark-1 p-2'>
 			<Heading text='Chi tiết hồ sơ ứng tuyển' />
 			{selectedApplicant && (
 				<List
