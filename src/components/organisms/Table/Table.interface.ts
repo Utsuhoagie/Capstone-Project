@@ -1,14 +1,6 @@
-import { DisplayConfigs } from '../../../app/App.display';
-
-export interface TableProps {
-	data: any[];
-	displayConfigs: DisplayConfigs;
-	tableConfig: TableConfig;
-	columnConfigs: ColumnConfigs;
-}
-
 export interface TableConfig {
 	width?: '100%' | number;
+	// onRowSelected: (index: number) => void;
 }
 
 /** Specify a ColumnConfig for each column in table */

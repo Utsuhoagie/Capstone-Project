@@ -5,12 +5,21 @@ import {
 	useReactTable,
 } from '@tanstack/react-table';
 import {
+	DisplayConfigs,
 	getDisplayForFieldValue,
 	getLabelForField,
 } from '../../../app/App.display';
 import { l } from '../../../app/App.utils';
 import { EmptyText } from '../../atoms/EmptyText/EmptyText';
-import { TableProps } from './Table.interface';
+import { ColumnConfigs, TableConfig } from './Table.interface';
+import { useTableStore } from './Table.store';
+
+export interface TableProps {
+	data: any[];
+	displayConfigs: DisplayConfigs;
+	tableConfig: TableConfig;
+	columnConfigs: ColumnConfigs;
+}
 
 export const Table = ({
 	data,
@@ -18,8 +27,16 @@ export const Table = ({
 	tableConfig,
 	columnConfigs,
 }: TableProps) => {
+	// Row state management
+	const selectedRowIndex = useTableStore((state) => state.selectedRowIndex);
+	const setSelectedRowIndex = useTableStore(
+		(state) => state.setSelectedRowIndex
+	);
+
+	l({ selectedRowIndex });
+
 	// Display configs
-	const { labellers, displayModeMappers, mappers, formatters } = displayConfigs;
+	const { labellers } = displayConfigs;
 
 	// Column configs
 	const fields = Object.keys(columnConfigs);
@@ -34,7 +51,8 @@ export const Table = ({
 					const value = ctx.getValue();
 
 					if (value === undefined) {
-						return <EmptyText canHover />;
+						// return <EmptyText canHover />;
+						return undefined;
 					}
 
 					return getDisplayForFieldValue({ displayConfigs, field, value });
@@ -81,15 +99,25 @@ export const Table = ({
 						})}
 					</tr>
 				</thead>
+
 				<tbody>
-					{table.getRowModel().rows.map((row) => {
+					{table.getRowModel().rows.map((row, index) => {
 						return (
 							<tr
 								key={row.id}
-								className='group flex cursor-pointer flex-row odd:bg-primary-bright-5 hover:bg-primary-bright-1 hover:text-neutral-gray-1'
+								className={
+									' group flex cursor-pointer flex-row ' +
+									' hover:bg-primary-bright-1 hover:text-neutral-gray-1 ' +
+									(selectedRowIndex === index
+										? ' bg-primary-bright-1 text-neutral-gray-1'
+										: 'odd:bg-primary-bright-5')
+								}
+								onClick={() => setSelectedRowIndex(index)}
 							>
 								{row.getVisibleCells().map((cell) => {
 									const columnConfig = columnConfigs[cell.column.id];
+
+									const value = cell.getContext().getValue();
 
 									return (
 										<td
@@ -101,9 +129,16 @@ export const Table = ({
 											}
 											style={{ width: columnConfig?.width ?? undefined }}
 										>
-											{flexRender(
-												cell.column.columnDef.cell,
-												cell.getContext()
+											{value === undefined ? (
+												<EmptyText
+													canHover
+													isHovered={selectedRowIndex === index}
+												/>
+											) : (
+												flexRender(
+													cell.column.columnDef.cell,
+													cell.getContext()
+												)
 											)}
 										</td>
 									);

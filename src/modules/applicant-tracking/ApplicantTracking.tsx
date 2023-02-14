@@ -1,8 +1,9 @@
 import dayjs from 'dayjs';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Applicant } from './ApplicantTracking.interface';
+import { useApplicantTrackingStore } from './ApplicantTracking.store';
 import { DataTable } from './data-table/DataTable';
-import { Detail } from './detail-section/DetailSection';
+import { DetailSection } from './detail-section/DetailSection';
 
 const FAKE_DATA: Applicant[] = [
 	{
@@ -28,12 +29,21 @@ const FAKE_DATA: Applicant[] = [
 ];
 
 export const ApplicantTracking = () => {
+	const { setApplicants, setSelectedApplicant } = useApplicantTrackingStore(
+		(state) => state
+	);
+
+	useEffect(() => {
+		setApplicants(FAKE_DATA);
+		setSelectedApplicant(FAKE_DATA[0]);
+	}, []);
+
 	return (
 		<div className='flex-1 pt-2 pl-2'>
 			<h2 className='w-full text-h2'>Quản lý hồ sơ Ứng viên</h2>
-			<DataTable data={FAKE_DATA} />
+			<DataTable />
 			<div className='flex flex-row gap-4'>
-				<Detail data={FAKE_DATA[0]} />
+				<DetailSection />
 			</div>
 		</div>
 	);

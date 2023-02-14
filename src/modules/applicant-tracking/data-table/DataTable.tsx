@@ -17,12 +17,11 @@ import {
 	APPLICANT_TRACKING_LABELLERS,
 	APPLICANT_TRACKING_MAPPERS,
 } from '../ApplicantTracking.display';
+import { useApplicantTrackingStore } from '../ApplicantTracking.store';
 
-interface DataTableProps {
-	data: any[];
-}
+export const DataTable = () => {
+	const applicants = useApplicantTrackingStore((state) => state.applicants);
 
-export const DataTable = ({ data }: DataTableProps) => {
 	const displayConfigs: DisplayConfigs = {
 		labellers: APPLICANT_TRACKING_LABELLERS,
 		displayModeMappers: APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
@@ -32,13 +31,11 @@ export const DataTable = ({ data }: DataTableProps) => {
 	};
 
 	return (
-		<div className='w-full'>
-			<Table
-				data={data}
-				displayConfigs={displayConfigs}
-				tableConfig={APPLICANT_TRACKING_TABLE_CONFIGS}
-				columnConfigs={APPLICANT_TRACKING_COLUMN_CONFIGS}
-			/>
-		</div>
+		<Table
+			data={applicants}
+			displayConfigs={displayConfigs}
+			tableConfig={APPLICANT_TRACKING_TABLE_CONFIGS}
+			columnConfigs={APPLICANT_TRACKING_COLUMN_CONFIGS}
+		/>
 	);
 };
