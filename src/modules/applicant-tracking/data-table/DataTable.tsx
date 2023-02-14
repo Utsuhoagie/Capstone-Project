@@ -4,7 +4,10 @@ import {
 	TableConfig,
 } from '../../../components/organisms/Table/Table.interface';
 import { Applicant } from '../ApplicantTracking.interface';
-import { tableConfig, columnConfigs } from './DataTable.configs';
+import {
+	APPLICANT_TRACKING_TABLE_CONFIGS,
+	APPLICANT_TRACKING_COLUMN_CONFIGS,
+} from './DataTable.config';
 import dayjs from 'dayjs';
 import { DisplayConfigs } from '../../../app/App.display';
 import {
@@ -15,30 +18,11 @@ import {
 	APPLICANT_TRACKING_MAPPERS,
 } from '../ApplicantTracking.display';
 
-const FAKE_DATA: Applicant[] = [
-	{
-		NationalId: '012345678000',
-		FullName: 'Abc Foo',
-		Gender: 'male',
-		BirthDate: dayjs().toDate(),
-		Phone: '0135095087',
-		AppliedPosition: 'developer',
-		AppliedDate: dayjs().toDate(),
-		AskingSalary: 5_000_000,
-	},
-	{
-		NationalId: '012345678000',
-		FullName: 'Abc Foo',
-		Gender: 'male',
-		BirthDate: dayjs().toDate(),
-		Phone: '0135095087',
-		AppliedPosition: 'hr',
-		AppliedDate: dayjs().toDate(),
-		AskingSalary: 5_000_000,
-	},
-];
+interface DataTableProps {
+	data: any[];
+}
 
-export const DataTable = () => {
+export const DataTable = ({ data }: DataTableProps) => {
 	const displayConfigs: DisplayConfigs = {
 		labellers: APPLICANT_TRACKING_LABELLERS,
 		displayModeMappers: APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
@@ -46,13 +30,14 @@ export const DataTable = () => {
 		formattableFieldMappers: APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS,
 		formatters: APPLICANT_TRACKING_FORMATTERS,
 	};
+
 	return (
 		<div className='w-full'>
 			<Table
-				data={FAKE_DATA}
+				data={data}
 				displayConfigs={displayConfigs}
-				tableConfig={tableConfig}
-				columnConfigs={columnConfigs}
+				tableConfig={APPLICANT_TRACKING_TABLE_CONFIGS}
+				columnConfigs={APPLICANT_TRACKING_COLUMN_CONFIGS}
 			/>
 		</div>
 	);

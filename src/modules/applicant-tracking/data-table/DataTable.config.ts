@@ -1,14 +1,13 @@
-import dayjs, { Dayjs } from 'dayjs';
 import {
 	ColumnConfigs,
 	TableConfig,
 } from '../../../components/organisms/Table/Table.interface';
 
-export const tableConfig: TableConfig = {
-	width: 1300,
+export const APPLICANT_TRACKING_TABLE_CONFIGS: TableConfig = {
+	width: 1200,
 };
 
-export const columnConfigs: ColumnConfigs = {
+export const APPLICANT_TRACKING_COLUMN_CONFIGS: ColumnConfigs = {
 	NationalId: { width: 140 },
 	FullName: { width: 280 },
 	Gender: { width: 100 },

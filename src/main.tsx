@@ -7,7 +7,9 @@ import './index.css';
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<React.StrictMode>
 		<BrowserRouter>
-			<App />
+			<div className='overflow-x-clip bg-primary-bright-7'>
+				<App />
+			</div>
 		</BrowserRouter>
 	</React.StrictMode>
 );
