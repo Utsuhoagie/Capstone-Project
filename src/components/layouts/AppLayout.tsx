@@ -8,9 +8,11 @@ export const AppLayout = () => {
 		(state) => state
 	);
 	return (
-		<div className='mr-4 flex h-full min-h-screen w-[100vw_-_0px] flex-row'>
+		<div className='mr-4 flex h-full min-h-screen w-screen flex-row'>
 			<AppNavbar />
-			<Outlet />
+			<div className='flex-1 p-4'>
+				<Outlet />
+			</div>
 			<Dialog
 				isOpen={isOpen}
 				isClosable={isClosable}

@@ -9,7 +9,6 @@ import {
 	getDisplayForFieldValue,
 	getLabelForField,
 } from '../../../app/App.display';
-import { l } from '../../../app/App.utils';
 import { EmptyText } from '../../atoms/EmptyText/EmptyText';
 import { ColumnConfigs, TableConfig } from './Table.interface';
 import { useTableStore } from './Table.store';
@@ -32,8 +31,6 @@ export const Table = ({
 	const setSelectedRowIndex = useTableStore(
 		(state) => state.setSelectedRowIndex
 	);
-
-	l({ selectedRowIndex });
 
 	// Display configs
 	const { labellers } = displayConfigs;
@@ -112,7 +109,11 @@ export const Table = ({
 										? ' bg-primary-bright-1 text-neutral-gray-1'
 										: 'odd:bg-primary-bright-5')
 								}
-								onClick={() => setSelectedRowIndex(index)}
+								onClick={() =>
+									setSelectedRowIndex(
+										selectedRowIndex === index ? undefined : index
+									)
+								}
 							>
 								{row.getVisibleCells().map((cell) => {
 									const columnConfig = columnConfigs[cell.column.id];

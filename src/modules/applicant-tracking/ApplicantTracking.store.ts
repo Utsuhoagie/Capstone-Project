@@ -9,8 +9,8 @@ interface ApplicantTrackingStore {
 	setApplicants: (_applicants: Applicant[]) => void;
 
 	// Client state
-	selectedApplicant: Applicant | undefined;
-	setSelectedApplicant: (_applicant: Applicant) => void;
+	// selectedApplicant: Applicant | undefined;
+	// setSelectedApplicant: (_applicant: Applicant) => void;
 }
 
 export const useApplicantTrackingStore = create<ApplicantTrackingStore>()(
@@ -25,12 +25,12 @@ export const useApplicantTrackingStore = create<ApplicantTrackingStore>()(
 			}),
 
 		// Client state
-		selectedApplicant: undefined,
-		setSelectedApplicant: (_applicant: Applicant) =>
-			set((prev) => {
-				let next = clone(prev);
-				next.selectedApplicant = _applicant;
-				return next;
-			}),
+		// selectedApplicant: undefined,
+		// setSelectedApplicant: (_applicant: Applicant) =>
+		// 	set((prev) => {
+		// 		let next = clone(prev);
+		// 		next.selectedApplicant = _applicant;
+		// 		return next;
+		// 	}),
 	}))
 );

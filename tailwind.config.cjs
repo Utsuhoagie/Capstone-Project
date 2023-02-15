@@ -49,7 +49,11 @@ module.exports = {
 					},
 				},
 				secondary: {
-					dark: { 2: colors.violet[800], 1: colors.indigo[600] },
+					dark: {
+						3: colors.violet[900],
+						2: colors.violet[800],
+						1: colors.indigo[600],
+					},
 					normal: colors.indigo[400],
 					bright: {
 						1: colors.indigo[300],

@@ -1,18 +1,12 @@
-import dayjs from 'dayjs';
-import { Applicant } from '../../../modules/applicant-tracking/ApplicantTracking.interface';
-import { ListProps } from './List.interface';
+import { DisplayConfigs } from '../../../app/App.display';
+import { ListItemConfigs } from './List.interface';
 import { ListItem } from './ListItem';
 
-const FAKE_DATA: Applicant = {
-	NationalId: '012345678000',
-	FullName: 'Abc Foo',
-	Gender: 'male',
-	BirthDate: dayjs().toDate(),
-	Phone: '0135095087',
-	AppliedPosition: 'developer',
-	AppliedDate: dayjs().toDate(),
-	AskingSalary: 5_000_000,
-};
+export interface ListProps {
+	data: any;
+	displayConfigs: DisplayConfigs;
+	listItemConfigs: ListItemConfigs;
+}
 
 export const List = ({ data, displayConfigs }: ListProps) => {
 	return (

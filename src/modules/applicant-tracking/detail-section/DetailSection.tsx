@@ -1,6 +1,7 @@
 import { DisplayConfigs } from '../../../app/App.display';
 import { Heading } from '../../../components/atoms/Heading/Heading';
 import { List } from '../../../components/organisms/List/List';
+import { useTableStore } from '../../../components/organisms/Table/Table.store';
 import {
 	APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
 	APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS,
@@ -12,9 +13,14 @@ import { useApplicantTrackingStore } from '../ApplicantTracking.store';
 import { APPLICANT_TRACKING_LIST_ITEM_CONFIGS } from './DetailSection.config';
 
 export const DetailSection = () => {
-	const selectedApplicant = useApplicantTrackingStore(
-		(state) => state.selectedApplicant
+	const visibleApplicants = useApplicantTrackingStore(
+		(state) => state.applicants
 	);
+	const selectedRowIndex = useTableStore((state) => state.selectedRowIndex);
+	const selectedApplicant =
+		selectedRowIndex === undefined
+			? undefined
+			: visibleApplicants[selectedRowIndex];
 
 	const displayConfigs: DisplayConfigs = {
 		labellers: APPLICANT_TRACKING_LABELLERS,
@@ -25,8 +31,14 @@ export const DetailSection = () => {
 	};
 
 	return (
-		<div className='rounded border border-secondary-dark-1 p-2'>
-			<Heading text='Chi tiết hồ sơ ứng tuyển' />
+		<div className='flex-1 rounded border border-secondary-dark-1 p-2 shadow-md'>
+			<Heading
+				text={
+					selectedApplicant
+						? 'Chi tiết hồ sơ ứng tuyển'
+						: 'Chọn 1 hồ sơ để hiển thị chi tiết...'
+				}
+			/>
 			{selectedApplicant && (
 				<List
 					data={selectedApplicant}
