@@ -99,20 +99,19 @@ export const Table = ({
 
 				<tbody>
 					{table.getRowModel().rows.map((row, index) => {
+						const isRowSelected = selectedRowIndex === index;
 						return (
 							<tr
 								key={row.id}
 								className={
 									' group flex cursor-pointer flex-row ' +
-									' hover:bg-primary-bright-1 hover:text-neutral-gray-1 ' +
-									(selectedRowIndex === index
-										? ' bg-primary-bright-1 text-neutral-gray-1'
-										: 'odd:bg-primary-bright-5')
+									' hover:bg-accent-bright-1' /*  hover:text-neutral-gray-1 ' + */ +
+									(isRowSelected
+										? ' bg-accent-bright-1 ' /* ' text-neutral-gray-1 ' */
+										: ' odd:bg-primary-bright-6 ')
 								}
 								onClick={() =>
-									setSelectedRowIndex(
-										selectedRowIndex === index ? undefined : index
-									)
+									setSelectedRowIndex(isRowSelected ? undefined : index)
 								}
 							>
 								{row.getVisibleCells().map((cell) => {
@@ -131,10 +130,7 @@ export const Table = ({
 											style={{ width: columnConfig?.width ?? undefined }}
 										>
 											{value === undefined ? (
-												<EmptyText
-													canHover
-													isHovered={selectedRowIndex === index}
-												/>
+												<EmptyText canHover isHovered={isRowSelected} />
 											) : (
 												flexRender(
 													cell.column.columnDef.cell,

@@ -3,7 +3,7 @@
 // Other styles are state styles. e.g: hover, disabled
 // and can be included always
 
-export const buttonMapping = {
+export const buttonStyleMapping = {
 	all:
 		' rounded cursor-pointer px-6 py-2 ' +
 		' hover:shadow hover:shadow-primary-normal ' +
@@ -15,7 +15,7 @@ export const buttonMapping = {
 		' bg-neutral-gray-1 text-neutral-gray-9 border border-primary-normal active:bg-primary-bright-6 ',
 
 	full: { width: ' w-full ' },
-	small: { width: ' w-button-small ' },
-	medium: { width: ' w-button-medium ' },
-	big: { width: ' w-button-big ' },
+	small: { width: ' w-w-button-small ' },
+	medium: { width: ' w-w-button-medium ' },
+	big: { width: ' w-w-button-big ' },
 };

@@ -4,12 +4,12 @@ import {
 } from '../../../components/organisms/Table/Table.interface';
 
 export const APPLICANT_TRACKING_TABLE_CONFIGS: TableConfig = {
-	width: 1200,
+	width: '94.05%',
 };
 
 export const APPLICANT_TRACKING_COLUMN_CONFIGS: ColumnConfigs = {
 	NationalId: { width: 140 },
-	FullName: { width: 280 },
+	FullName: { width: 250 },
 	Gender: { width: 100 },
 	BirthDate: { width: 120 },
 	Address: { width: 300 },

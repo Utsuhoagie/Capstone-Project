@@ -9,18 +9,14 @@ module.exports = {
 			notoSans: ['Noto Sans'],
 		},
 		extend: {
-			width: {
-				'button-small': 100,
-				'button-medium': 140,
-				'button-big': 180,
-				'input-medium': 300,
-			},
-			height: {
-				'input-single': 40,
-				'dialog-title': 40,
-			},
-			top: {
-				'input-single': '40px',
+			spacing: {
+				'w-button-small': 100,
+				'w-button-medium': 140,
+				'w-button-big': 180,
+				'w-input-medium': 300,
+				'w-navbar': 240,
+				'h-input': 40,
+				'h-dialog-title': 40,
 			},
 			fontSize: {
 				h1: ['32px', { lineHeight: '36px' }],
@@ -30,7 +26,6 @@ module.exports = {
 				body: ['16px', { lineHeight: '20px' }],
 				tag: ['13px', { lineHeight: '13px' }],
 			},
-			fontWeight: {},
 			colors: {
 				primary: {
 					dark: {
@@ -50,7 +45,7 @@ module.exports = {
 				},
 				secondary: {
 					dark: {
-						3: colors.violet[900],
+						3: '#3f1a99',
 						2: colors.violet[800],
 						1: colors.indigo[600],
 					},
@@ -64,7 +59,10 @@ module.exports = {
 				accent: {
 					dark: colors.emerald[600],
 					normal: colors.emerald[400],
-					bright: colors.emerald[200],
+					bright: {
+						1: colors.emerald[300],
+						2: colors.emerald[200],
+					},
 				},
 				neutral: {
 					black: '#000000',

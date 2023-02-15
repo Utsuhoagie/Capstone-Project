@@ -1,4 +1,4 @@
-import { buttonMapping } from './ButtonMapping';
+import { buttonStyleMapping } from './ButtonStyleMapping';
 
 interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
 	children: React.ReactNode;
@@ -14,9 +14,9 @@ export const Button = ({
 	...props
 }: ButtonProps) => {
 	const classes =
-		buttonMapping.all +
-		(secondary ? buttonMapping.secondary : buttonMapping.primary) +
-		buttonMapping[width].width;
+		buttonStyleMapping.all +
+		(secondary ? buttonStyleMapping.secondary : buttonStyleMapping.primary) +
+		buttonStyleMapping[width].width;
 
 	return (
 		<button className={classes} {...props}>

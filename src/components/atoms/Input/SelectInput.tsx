@@ -44,7 +44,7 @@ export const SelectInput = ({
 						</Listbox.Label>
 
 						<div className='flex flex-col'>
-							<Listbox.Button className='flex h-input-single w-input-medium flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ui-open:rounded-t ui-not-open:rounded'>
+							<Listbox.Button className='flex h-h-input w-w-input-medium flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ui-open:rounded-t ui-not-open:rounded'>
 								<p className='overflow-ellipsis'>
 									{selectedOptions.length > 0
 										? selectedOptions.join(', ')
@@ -54,13 +54,13 @@ export const SelectInput = ({
 							</Listbox.Button>
 
 							<div className='relative'>
-								<Listbox.Options className='absolute box-border w-input-medium divide-y divide-neutral-gray-4 overflow-hidden rounded-b border-x border-b border-primary-normal'>
+								<Listbox.Options className='absolute box-border w-w-input-medium divide-y divide-neutral-gray-4 overflow-hidden rounded-b border-x border-b border-primary-normal'>
 									{options.map((option) => (
 										<Listbox.Option
 											key={option}
 											value={option}
 											className={
-												' flex h-input-single w-input-medium cursor-pointer flex-row items-center gap-2 bg-neutral-white px-2 py-1.5 text-neutral-gray-9 ' +
+												' flex h-h-input w-w-input-medium cursor-pointer flex-row items-center gap-2 bg-neutral-white px-2 py-1.5 text-neutral-gray-9 ' +
 												' hover:bg-primary-bright-3 ui-selected:bg-primary-bright-3 '
 											}
 										>
@@ -95,7 +95,7 @@ export const SelectInput = ({
 						</Listbox.Label>
 
 						<div className='flex flex-col'>
-							<Listbox.Button className='flex h-input-single w-input-medium flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ui-open:rounded-t ui-not-open:rounded'>
+							<Listbox.Button className='flex h-h-input w-w-input-medium flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ui-open:rounded-t ui-not-open:rounded'>
 								<p className='overflow-ellipsis'>
 									{selectedOption !== '' ? selectedOption : placeholder}
 								</p>
@@ -103,13 +103,13 @@ export const SelectInput = ({
 							</Listbox.Button>
 
 							<div className='relative'>
-								<Listbox.Options className='absolute box-border w-input-medium divide-y divide-neutral-gray-4 overflow-hidden rounded-b border-x border-b border-primary-normal'>
+								<Listbox.Options className='absolute box-border w-w-input-medium divide-y divide-neutral-gray-4 overflow-hidden rounded-b border-x border-b border-primary-normal'>
 									{options.map((option) => (
 										<Listbox.Option
 											key={option}
 											value={option}
 											className={
-												' h-input-single w-input-medium cursor-pointer bg-neutral-white px-2 py-1.5 text-neutral-gray-9 ' +
+												' h-h-input w-w-input-medium cursor-pointer bg-neutral-white px-2 py-1.5 text-neutral-gray-9 ' +
 												' hover:bg-primary-bright-3 ui-selected:bg-primary-bright-3 '
 											}
 										>

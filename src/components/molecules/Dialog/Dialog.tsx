@@ -24,7 +24,7 @@ export const Dialog = ({ isOpen, isClosable, title, content }: DialogProps) => {
 					as='div'
 					className='HuiTitle relative flex flex-row items-center justify-center'
 				>
-					<h2 className='h-dialog-title py-2 font-bold text-primary-dark-2'>
+					<h2 className='h-h-dialog-title py-2 font-bold text-primary-dark-2'>
 						{title ?? 'adasdas'}
 					</h2>
 					{isClosable && (

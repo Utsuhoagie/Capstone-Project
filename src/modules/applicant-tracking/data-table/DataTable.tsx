@@ -1,14 +1,8 @@
 import { Table } from '../../../components/organisms/Table/Table';
 import {
-	ColumnConfigs,
-	TableConfig,
-} from '../../../components/organisms/Table/Table.interface';
-import { Applicant } from '../ApplicantTracking.interface';
-import {
 	APPLICANT_TRACKING_TABLE_CONFIGS,
 	APPLICANT_TRACKING_COLUMN_CONFIGS,
 } from './DataTable.config';
-import dayjs from 'dayjs';
 import { DisplayConfigs } from '../../../app/App.display';
 import {
 	APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
@@ -18,6 +12,8 @@ import {
 	APPLICANT_TRACKING_MAPPERS,
 } from '../ApplicantTracking.display';
 import { useApplicantTrackingStore } from '../ApplicantTracking.store';
+import { ColumnConfigs } from '../../../components/organisms/Table/Table.interface';
+import { omit } from 'ramda';
 
 export const DataTable = () => {
 	const applicants = useApplicantTrackingStore((state) => state.applicants);
@@ -30,12 +26,17 @@ export const DataTable = () => {
 		formatters: APPLICANT_TRACKING_FORMATTERS,
 	};
 
+	const subsetColumnConfigs = omit(
+		['NationalId', 'Address'],
+		APPLICANT_TRACKING_COLUMN_CONFIGS
+	);
+
 	return (
 		<Table
 			data={applicants}
 			displayConfigs={displayConfigs}
 			tableConfig={APPLICANT_TRACKING_TABLE_CONFIGS}
-			columnConfigs={APPLICANT_TRACKING_COLUMN_CONFIGS}
+			columnConfigs={subsetColumnConfigs}
 		/>
 	);
 };

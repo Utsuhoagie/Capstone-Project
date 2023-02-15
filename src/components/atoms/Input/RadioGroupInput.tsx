@@ -29,7 +29,7 @@ export const RadioGroupInput = ({
 			render={({ field, fieldState, formState }) => (
 				<RadioGroup
 					className={`${
-						isVertical ? 'h-fit' : 'h-input-single items-center'
+						isVertical ? 'h-fit' : 'h-h-input items-center'
 					} flex flex-row gap-1`}
 					value={field.value}
 					onChange={field.onChange}
@@ -45,7 +45,7 @@ export const RadioGroupInput = ({
 					>
 						{options.map((option) => (
 							<RadioGroup.Option
-								className='flex h-input-single cursor-pointer flex-row items-center gap-1 pr-2'
+								className='flex h-h-input cursor-pointer flex-row items-center gap-1 pr-2'
 								key={option}
 								value={option}
 							>

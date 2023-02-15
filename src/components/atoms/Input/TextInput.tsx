@@ -30,10 +30,10 @@ export const TextInput = ({
 			{hasLabel && <Label label={label} required={required} />}
 			<input
 				className={
-					' h-input-single rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
+					' h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
 					` ${error ? 'border-state-error' : 'border-primary-normal'} ` +
 					' hover:shadow focus:shadow ' +
-					` ${width === 'full' ? 'w-full' : 'w-input-medium'} `
+					` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
 				}
 				{...props}
 				{...register(name, { valueAsNumber: isNumber })}

@@ -29,7 +29,7 @@ export const TextAreaInput = ({
 				rows={rows ?? 3}
 				className={
 					' resize-none rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
-					` ${width === 'full' ? 'flex-1' : 'w-input-medium'} ` +
+					` ${width === 'full' ? 'flex-1' : 'w-w-input-medium'} ` +
 					` ${error ? 'border-state-error' : 'border-primary-normal'} ` +
 					' hover:shadow focus:shadow '
 				}
