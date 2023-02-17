@@ -14,29 +14,42 @@ import {
 import { useApplicantTrackingStore } from '../ApplicantTracking.store';
 import { ColumnConfigs } from '../../../components/organisms/Table/Table.interface';
 import { omit } from 'ramda';
+import { Button } from '../../../components/atoms/Button/Button';
+import { useNavigate } from 'react-router';
 
 export const DataTable = () => {
-	const applicants = useApplicantTrackingStore((state) => state.applicants);
+	const navigate = useNavigate();
 
-	const displayConfigs: DisplayConfigs = {
-		labellers: APPLICANT_TRACKING_LABELLERS,
-		displayModeMappers: APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
-		mappers: APPLICANT_TRACKING_MAPPERS,
-		formattableFieldMappers: APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS,
-		formatters: APPLICANT_TRACKING_FORMATTERS,
-	};
+	const displayConfigs = useApplicantTrackingStore(
+		(state) => state.displayConfigs
+	);
+	const applicants = useApplicantTrackingStore((state) => state.applicants);
 
 	const subsetColumnConfigs = omit(
 		['NationalId', 'Address'],
 		APPLICANT_TRACKING_COLUMN_CONFIGS
 	);
 
+	function handleClickCreate() {
+		navigate('create');
+	}
+
 	return (
-		<Table
-			data={applicants}
-			displayConfigs={displayConfigs}
-			tableConfig={APPLICANT_TRACKING_TABLE_CONFIGS}
-			columnConfigs={subsetColumnConfigs}
-		/>
+		<div className='flex flex-col gap-4'>
+			<div className='flex flex-row gap-4'>
+				<Button width='small' onClick={handleClickCreate}>
+					Thêm
+				</Button>
+				<Button secondary width='small'>
+					Bộ Lọc
+				</Button>
+			</div>
+			<Table
+				data={applicants}
+				displayConfigs={displayConfigs}
+				tableConfig={APPLICANT_TRACKING_TABLE_CONFIGS}
+				columnConfigs={subsetColumnConfigs}
+			/>
+		</div>
 	);
 };

@@ -1,5 +1,4 @@
 import { DisplayConfigs } from '../../../app/App.display';
-import { Heading } from '../../../components/atoms/Heading/Heading';
 import { List } from '../../../components/organisms/List/List';
 import { useTableStore } from '../../../components/organisms/Table/Table.store';
 import {
@@ -31,14 +30,13 @@ export const DetailSection = () => {
 	};
 
 	return (
-		<div className='flex-1 rounded border border-secondary-dark-1 p-2 shadow-md'>
-			<Heading
-				text={
-					selectedApplicant
-						? 'Chi tiết hồ sơ ứng tuyển'
-						: 'Chọn 1 hồ sơ để hiển thị chi tiết...'
-				}
-			/>
+		<div className='flex-1 rounded border border-semantic-section-border p-2 shadow-md'>
+			<h3 className='text-h3 font-medium text-secondary-dark-1'>
+				{selectedApplicant
+					? 'Chi tiết hồ sơ ứng tuyển'
+					: 'Chọn 1 hồ sơ để hiển thị chi tiết...'}
+			</h3>
+
 			{selectedApplicant && (
 				<List
 					data={selectedApplicant}

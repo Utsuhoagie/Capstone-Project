@@ -15,6 +15,7 @@ export const APPLICANT_TRACKING_LABELLERS: Labellers = {
 	Address: 'Địa chỉ',
 	Phone: 'Số điện thoại',
 	Email: 'Email',
+	ExperienceYears: 'Năm kinh nghiệm',
 	AppliedPosition: 'Vị trí ứng tuyển',
 	AppliedDate: 'Ngày ứng tuyển',
 	AskingSalary: 'Mức lương đề nghị',
@@ -28,6 +29,7 @@ export const APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
 	Address: 'normal',
 	Phone: 'formatted',
 	Email: 'normal',
+	ExperienceYears: 'formatted',
 	AppliedPosition: 'mapped',
 	AppliedDate: 'formatted',
 	AskingSalary: 'formatted',
@@ -69,6 +71,7 @@ export const APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS: FormattableFieldMappe
 		NationalId: 'NationalId',
 		Phone: 'Phone',
 		BirthDate: 'Date',
+		ExperienceYears: 'ExperienceYears',
 		AppliedDate: 'Date',
 		AskingSalary: 'Money',
 	};
@@ -86,4 +89,5 @@ export const APPLICANT_TRACKING_FORMATTERS: Formatters = {
 		].join(' '),
 	Phone: (value: string) =>
 		[value.slice(0, 4), value.slice(4, 7), value.slice(7)].join(' '),
+	ExperienceYears: (value: number) => `${value} năm`,
 };
