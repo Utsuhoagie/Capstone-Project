@@ -1,5 +1,4 @@
 import { isNil } from 'ramda';
-import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { ErrorIcon } from '../../../assets/icons/ErrorIcon';
 import { Label } from './Label';
@@ -20,7 +19,6 @@ export const TextInput = ({
 }: TextInputProps) => {
 	const { register, formState } = useFormContext();
 	const error = formState.errors[name];
-	const [text, setText] = useState<string>('');
 
 	const hasLabel: boolean = !isNil(label);
 	const isNumber: boolean = type === 'number';

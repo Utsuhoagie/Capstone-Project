@@ -27,6 +27,9 @@ module.exports = {
 				tag: ['13px', { lineHeight: '13px' }],
 			},
 			colors: {
+				semantic: {
+					'section-border': colors.indigo[600],
+				},
 				primary: {
 					dark: {
 						2: colors.indigo[900],

@@ -75,7 +75,7 @@ export function getDisplayForFieldValue({
 	displayConfigs,
 	field,
 	value,
-}: DisplayArgs): string | number {
+}: DisplayArgs): string {
 	const displayMode = displayConfigs.displayModeMappers[field];
 
 	switch (displayMode) {

@@ -68,7 +68,7 @@ export const Table = ({
 
 	return (
 		<div
-			className='overflow-x-auto overflow-y-clip rounded border-2 border-secondary-dark-1 shadow-md'
+			className='overflow-x-auto overflow-y-clip rounded border-2 border-semantic-section-border shadow-md'
 			style={{ width: tableConfig.width }}
 		>
 			<table className='table-fixed bg-neutral-white'>
@@ -81,7 +81,7 @@ export const Table = ({
 								<th
 									key={header.id}
 									className={
-										' flex flex-col justify-center border-x border-neutral-gray-5 px-1 py-1 text-left font-medium text-neutral-gray-1 ' +
+										' flex flex-col justify-center border-x border-neutral-gray-5 px-1.5 py-1 text-left font-medium text-neutral-gray-1 ' +
 										' first:border-l-0 ' +
 										' last:border-r-0 '
 									}
@@ -123,7 +123,7 @@ export const Table = ({
 										<td
 											key={cell.id}
 											className={
-												' border-x border-t border-neutral-gray-5 px-1 py-1 text-left ' +
+												' text-ellipsis whitespace-nowrap border-x border-t border-neutral-gray-5 px-1.5 py-1 text-left ' +
 												' first:border-l-0 ' +
 												' last:border-r-0 '
 											}
