@@ -4,6 +4,7 @@ import {
 	getDisplayForFieldValue,
 	getLabelForField,
 } from '../../../app/App.display';
+import { EmptyText } from '../../atoms/EmptyText/EmptyText';
 import { Label } from '../../atoms/Input/Label';
 
 interface ListItemProps {
@@ -29,9 +30,9 @@ export const ListItem = ({
 	});
 
 	return (
-		<div className='flex w-full flex-row items-end justify-between gap-2'>
+		<div className='flex w-full flex-row items-center justify-between'>
 			<Label label={label} />
-			{displayValue}
+			<p className=''>{displayValue === '' ? <EmptyText /> : displayValue}</p>
 		</div>
 	);
 };

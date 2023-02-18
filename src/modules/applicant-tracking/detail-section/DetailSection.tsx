@@ -1,13 +1,6 @@
-import { DisplayConfigs } from '../../../app/App.display';
 import { List } from '../../../components/organisms/List/List';
 import { useTableStore } from '../../../components/organisms/Table/Table.store';
-import {
-	APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
-	APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS,
-	APPLICANT_TRACKING_FORMATTERS,
-	APPLICANT_TRACKING_LABELLERS,
-	APPLICANT_TRACKING_MAPPERS,
-} from '../ApplicantTracking.display';
+import { Applicant } from '../ApplicantTracking.interface';
 import { useApplicantTrackingStore } from '../ApplicantTracking.store';
 import { APPLICANT_TRACKING_LIST_ITEM_CONFIGS } from './DetailSection.config';
 
@@ -15,22 +8,17 @@ export const DetailSection = () => {
 	const visibleApplicants = useApplicantTrackingStore(
 		(state) => state.applicants
 	);
+	const displayConfigs = useApplicantTrackingStore(
+		(state) => state.displayConfigs
+	);
 	const selectedRowIndex = useTableStore((state) => state.selectedRowIndex);
-	const selectedApplicant =
+	const selectedApplicant: Applicant | undefined =
 		selectedRowIndex === undefined
 			? undefined
 			: visibleApplicants[selectedRowIndex];
 
-	const displayConfigs: DisplayConfigs = {
-		labellers: APPLICANT_TRACKING_LABELLERS,
-		displayModeMappers: APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
-		mappers: APPLICANT_TRACKING_MAPPERS,
-		formattableFieldMappers: APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS,
-		formatters: APPLICANT_TRACKING_FORMATTERS,
-	};
-
 	return (
-		<div className='flex-1 rounded border border-semantic-section-border p-2 shadow-md'>
+		<div className='flex-1 rounded border border-semantic-section-border p-4 shadow-md'>
 			<h3 className='text-h3 font-medium text-secondary-dark-1'>
 				{selectedApplicant
 					? 'Chi tiết hồ sơ ứng tuyển'
@@ -38,11 +26,19 @@ export const DetailSection = () => {
 			</h3>
 
 			{selectedApplicant && (
-				<List
-					data={selectedApplicant}
-					displayConfigs={displayConfigs}
-					listItemConfigs={APPLICANT_TRACKING_LIST_ITEM_CONFIGS}
-				/>
+				<div className='flex flex-row items-stretch gap-4 p-2'>
+					<div className='w-w-list-section rounded-lg border border-neutral-gray-5 bg-neutral-white px-4 py-2'>
+						<List
+							data={selectedApplicant}
+							displayConfigs={displayConfigs}
+							listItemConfigs={APPLICANT_TRACKING_LIST_ITEM_CONFIGS}
+						/>
+					</div>
+
+					<div className='flex-1 rounded-lg border border-neutral-gray-5 bg-neutral-white p-4'>
+						<div className='h-h-image-section w-full bg-red-300'></div>
+					</div>
+				</div>
 			)}
 		</div>
 	);

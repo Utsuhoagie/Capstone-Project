@@ -14,9 +14,12 @@ module.exports = {
 				'w-button-medium': 140,
 				'w-button-big': 180,
 				'w-input-medium': 300,
+				'w-list-section': 550,
+				// 'w-attachment-section':
 				'w-navbar': 240,
 				'h-input': 40,
 				'h-dialog-title': 40,
+				'h-image-section': 250,
 			},
 			fontSize: {
 				h1: ['32px', { lineHeight: '36px' }],

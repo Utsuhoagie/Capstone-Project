@@ -10,8 +10,8 @@ export interface ListProps {
 
 export const List = ({ data, displayConfigs }: ListProps) => {
 	return (
-		<div className='flex w-full flex-col gap-2 divide-y divide-yellow-900 bg-red-50'>
-			{Object.keys(data).map((field) => (
+		<div className='flex w-full flex-col divide-y divide-neutral-gray-5'>
+			{displayConfigs.fields.map((field) => (
 				<ListItem
 					key={field}
 					displayConfigs={displayConfigs}
