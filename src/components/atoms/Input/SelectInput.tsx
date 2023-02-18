@@ -7,13 +7,13 @@ import { CheckboxIcon } from '../../../assets/icons/CheckboxIcon';
 import {
 	DisplayConfigs,
 	getDisplayForFieldValue,
+	getLabelForField,
 } from '../../../app/App.display';
 import { useApplicantTrackingStore } from '../../../modules/applicant-tracking/ApplicantTracking.store';
 
 interface SelectInputProps extends React.ComponentPropsWithRef<'select'> {
 	name: string;
 	options: any[];
-	label?: string;
 	displayConfigs: DisplayConfigs;
 }
 
@@ -36,7 +36,6 @@ interface SelectInputMultipleProps extends SelectInputProps {
 const SelectInputSingle = ({
 	name,
 	options,
-	label,
 	displayConfigs,
 	selectedValue,
 	multiple,
@@ -62,7 +61,13 @@ const SelectInputSingle = ({
 					onChange={field.onChange}
 				>
 					<Listbox.Label className='block'>
-						<Label label={label} required={required} />
+						<Label
+							label={getLabelForField({
+								labellers: displayConfigs.labellers,
+								field: name,
+							})}
+							required={required}
+						/>
 					</Listbox.Label>
 
 					<div className='flex flex-col'>
@@ -109,7 +114,6 @@ const SelectInputSingle = ({
 const SelectInputMultiple = ({
 	name,
 	options,
-	label,
 	displayConfigs,
 	selectedValues,
 	multiple,
@@ -130,7 +134,13 @@ const SelectInputMultiple = ({
 					onChange={field.onChange}
 				>
 					<Listbox.Label className='block'>
-						<Label label={label} required={required} />
+						<Label
+							label={getLabelForField({
+								labellers: displayConfigs.labellers,
+								field: name,
+							})}
+							required={required}
+						/>
 					</Listbox.Label>
 
 					<div className='flex flex-col'>

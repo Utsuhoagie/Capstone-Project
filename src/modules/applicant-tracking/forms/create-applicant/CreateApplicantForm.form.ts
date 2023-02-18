@@ -5,13 +5,13 @@ export interface CreateApplicantFormIntermediateValues {
 	NationalId: string;
 	FullName: string;
 	Gender: 'male' | 'female' | 'other';
-	BirthDate?: string;
+	BirthDate?: Date;
 	Address?: string;
 	Phone: string;
 	Email?: string;
 	ExperienceYears: string;
 	AppliedPosition: string;
-	AppliedDate: string;
+	AppliedDate: Date;
 	AskingSalary: string;
 }
 
@@ -27,26 +27,47 @@ export const createApplicantFormSchema = z.object({
 
 	Gender: z.union([z.literal('male'), z.literal('female'), z.literal('other')]),
 
-	BirthDate: z.coerce
+	BirthDate: z
 		.date()
-		.min(dayjs().subtract(65, 'year').toDate(), { message: 'Tối đa 65 tuổi.' })
+		.min(dayjs().subtract(55, 'year').toDate(), { message: 'Tối đa 55 tuổi.' })
 		.max(dayjs().subtract(18, 'year').toDate(), {
 			message: 'Tối thiểu 18 tuổi.',
 		})
 		.optional(),
 
-	Address: z.string().max(200, { message: 'Địa chỉ quá dài.' }),
+	Address: z
+		.string()
+		.min(5, { message: 'Địa chỉ quá ngắn.' })
+		.max(200, { message: 'Địa chỉ quá dài.' }),
 
 	Phone: z
 		.string()
 		.regex(/^\d{10,11}$/, { message: 'Số điện thoại phải có 10 hoặc 11 số.' }),
 
-	Email: z.string().email({ message: 'Email không hợp lệ.' }).optional(),
+	Email: z.preprocess(
+		(val) => (val === '' ? undefined : val),
+		z.string().email({ message: 'Email không hợp lệ.' }).optional()
+	),
 
-	ExperienceYears: z.coerce
-		.number({ invalid_type_error: 'Số năm kinh nghiệm phải là số nguyên.' })
-		.int({ message: 'Số năm kinh nghiệm phải là số nguyên.' })
-		.nonnegative({ message: 'Số năm kinh nghiệm ít nhất là 0.' }),
+	// ExperienceYears: z.coerce
+	// 	.number({ invalid_type_error: 'Số năm kinh nghiệm phải là số nguyên.' })
+	// 	.int({ message: 'Số năm kinh nghiệm phải là số nguyên.' })
+	// 	.nonnegative({ message: 'Số năm kinh nghiệm ít nhất là 0.' }),
+	// ExperienceYears: z.string().regex(/^[0-47]$/, { message: 'Số năm kinh nghiệm'}),
+	ExperienceYears: z.custom(
+		(val) => {
+			const _val = val as string;
+			const isValidInt = !!_val.match(/^\d{1,2}$/);
+
+			if (!isValidInt) return false;
+
+			const int = Number(_val);
+			const isExperienceValid = int >= 0 && int <= 37;
+
+			return isExperienceValid;
+		},
+		{ message: 'Số năm kinh nghiệm không hợp lệ.' }
+	),
 
 	AppliedPosition: z
 		.string()
@@ -57,17 +78,33 @@ export const createApplicantFormSchema = z.object({
 	// 	.date({ invalid_type_error: 'Not a real date' })
 	// 	.max(dayjs().toDate(), { message: 'Thời điểm nộp hồ sơ không hợp lệ.' }),
 	AppliedDate: z.preprocess(
-		(val) => dayjs(val as string),
-		z
-			.date()
-			.max(dayjs().toDate(), { message: 'Thời điểm nộp hồ sơ không hợp lệ.' })
+		(val) => dayjs(val as string).toDate(),
+		z.date().max(dayjs().add(1, 'day').toDate(), {
+			message: 'Thời điểm nộp hồ sơ không hợp lệ.',
+		})
 	),
 
 	// AskingSalary: z.coerce
 	// 	.number({ invalid_type_error: 'Mức lương đề nghị phải là số nguyên.' })
 	// 	.int({ message: 'Mức lương đề nghị phải là số nguyên.' })
 	// 	.positive({ message: 'Mức lương đề nghị phải lớn hơn 0.' }),
-	AskingSalary: z.string().regex(/^\d{1,10}$/, {
-		message: 'Mức lương đề nghị phải là số nguyên lớn hơn 0.',
-	}),
+	// AskingSalary: z.string().regex(/^\d{1,10}$/, {
+	// 	message: 'Mức lương đề nghị phải là số nguyên lớn hơn 0.',
+	// }),
+	AskingSalary: z.custom(
+		(val) => {
+			const _val = val as string;
+			const isValidInt = !!_val.match(/^\d{1,9}$/);
+
+			if (!isValidInt) return false;
+
+			const int = Number(_val);
+			const isAskingSalaryValid = int >= 0 && int <= 999_000_000;
+			return isAskingSalaryValid;
+		},
+		{
+			message:
+				'Mức lương đề nghị phải là số nguyên lớn hơn 0, nhỏ hơn 999 triệu.',
+		}
+	),
 });

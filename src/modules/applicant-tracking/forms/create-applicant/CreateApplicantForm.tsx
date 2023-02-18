@@ -1,5 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
@@ -11,19 +13,21 @@ import {
 } from './CreateApplicantForm.form';
 
 export const CreateApplicantForm = () => {
+	const navigate = useNavigate();
+
 	const methods = useForm<CreateApplicantFormIntermediateValues>({
 		mode: 'onSubmit',
 		defaultValues: {
 			NationalId: '',
 			FullName: '',
 			Gender: 'male',
-			BirthDate: '',
+			BirthDate: undefined,
 			Address: '',
 			Phone: '',
 			Email: '',
 			ExperienceYears: '',
 			AppliedPosition: '',
-			AppliedDate: '',
+			AppliedDate: dayjs().toDate(),
 			AskingSalary: '',
 		},
 		resolver: zodResolver(createApplicantFormSchema),
@@ -46,85 +50,96 @@ export const CreateApplicantForm = () => {
 		<div className='flex flex-col gap-4'>
 			<h1 className='text-h1'>Thêm hồ sơ Ứng viên mới</h1>
 			<FormProvider {...methods}>
-				<form onSubmit={methods.handleSubmit(handleSubmit, handleError)}>
+				<form
+					className='flex flex-col gap-2'
+					onSubmit={methods.handleSubmit(handleSubmit, handleError)}
+				>
 					<TextInput
+						required
 						name='NationalId'
-						label='Số CMND/CCCD'
 						placeholder='Nhập 9 hoặc 12 số.'
 						width='medium'
+						displayConfigs={displayConfigs}
 					/>
 
 					<TextInput
+						required
 						name='FullName'
-						label='Họ tên'
 						placeholder='Nhập họ tên đầy đủ.'
 						width='medium'
+						displayConfigs={displayConfigs}
 					/>
 
 					<SelectInput
+						required
 						name='Gender'
-						label='Giới tính'
 						placeholder='Chọn 1.'
 						options={['male', 'female', 'other']}
 						displayConfigs={displayConfigs}
 					/>
 
-					{/* <TextInput
+					<DateInput
 						name='BirthDate'
-						label='Họ tên'
-						placeholder='Nhập họ tên đầy đủ.'
+						placeholder='Chọn ngày sinh.'
 						width='medium'
-					/> */}
-
-					<DateInput name='BirthDate' label='Ngày sinh' width='medium' />
-
-					<TextInput
-						name='Address'
-						label='Địa chỉ'
-						placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
-						width='medium'
+						displayConfigs={displayConfigs}
 					/>
 
 					<TextInput
+						required
+						name='Address'
+						placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
+						width='medium'
+						displayConfigs={displayConfigs}
+					/>
+
+					<TextInput
+						required
 						name='Phone'
-						label='Số điện thoại'
 						placeholder='Nhập số điện thoại.'
 						width='medium'
+						displayConfigs={displayConfigs}
 					/>
 
 					<TextInput
 						name='Email'
-						label='Email'
 						placeholder='Nhập địa chỉ email.'
 						width='medium'
+						displayConfigs={displayConfigs}
 					/>
 
 					<TextInput
+						required
+						type='number'
 						name='ExperienceYears'
-						label='Số năm kinh nghiệm'
 						placeholder='Nhập số năm kinh nghiệm.'
 						width='medium'
+						displayConfigs={displayConfigs}
 					/>
 
 					<TextInput
+						required
 						name='AppliedPosition'
-						label='Vị trí ứng tuyển'
 						placeholder='Nhập vị trí ứng tuyển.'
 						width='medium'
+						displayConfigs={displayConfigs}
 					/>
 
-					{/* <TextInput
+					<DateInput
+						required
 						name='AppliedDate'
-						label='Số điện thoại'
-						placeholder='Nhập số điện thoại.'
+						placeholder='Chọn ngày nộp hồ sơ ứng tuyển.'
 						width='medium'
-					/> */}
+						displayConfigs={displayConfigs}
+					/>
 
 					<TextInput
+						required
+						type='number'
 						name='AskingSalary'
-						label='Mức lương đề nghị'
-						placeholder='Nhập mức lương đề nghị.'
 						width='medium'
+						placeholder='Nhập mức lương đề nghị.'
+						displayConfigs={displayConfigs}
 					/>
 
 					<Button type='submit' width='medium'>
@@ -134,6 +149,7 @@ export const CreateApplicantForm = () => {
 						type='button'
 						secondary
 						width='medium'
+						// onClick={() => navigate('/app/applicant-tracking')}
 						onClick={() => console.log(methods.getValues())}
 					>
 						Thoát

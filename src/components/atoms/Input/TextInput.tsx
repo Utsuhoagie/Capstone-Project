@@ -1,18 +1,18 @@
-import { isNil } from 'ramda';
 import { useFormContext } from 'react-hook-form';
+import { DisplayConfigs, getLabelForField } from '../../../app/App.display';
 import { ErrorIcon } from '../../../assets/icons/ErrorIcon';
 import { Label } from './Label';
 
 interface TextInputProps extends React.ComponentPropsWithRef<'input'> {
 	name: string;
-	label?: string;
 	width: 'full' | 'medium';
+	displayConfigs: DisplayConfigs;
 }
 
 export const TextInput = ({
 	name,
-	label,
 	width,
+	displayConfigs,
 	type,
 	required,
 	...props
@@ -20,12 +20,20 @@ export const TextInput = ({
 	const { register, formState } = useFormContext();
 	const error = formState.errors[name];
 
-	const hasLabel: boolean = !isNil(label);
-	const isNumber: boolean = type === 'number';
+	// const hasLabel: boolean = !isNil(label);
+	// const isNumber: boolean = type === 'number';
 
 	return (
 		<div className='flex flex-row items-center gap-2'>
-			{hasLabel && <Label label={label} required={required} />}
+			{/* {hasLabel && <Label label={label} required={required} />} */}
+			<Label
+				label={getLabelForField({
+					labellers: displayConfigs.labellers,
+					field: name,
+				})}
+				required={required}
+			/>
+
 			<input
 				className={
 					' h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
@@ -34,7 +42,7 @@ export const TextInput = ({
 					` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
 				}
 				{...props}
-				{...register(name, { valueAsNumber: isNumber })}
+				{...register(name, { valueAsNumber: false /* isNumber */ })}
 			/>
 
 			{error && (
