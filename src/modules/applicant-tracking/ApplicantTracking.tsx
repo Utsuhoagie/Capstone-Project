@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
+import { useQuery } from 'react-query';
 import { Applicant } from './ApplicantTracking.interface';
 import { useApplicantTrackingStore } from './ApplicantTracking.store';
 import { ButtonSection } from './button-section/ButtonSection';
@@ -124,9 +125,26 @@ export const ApplicantTracking = () => {
 		(state) => state.setApplicants
 	);
 
-	useEffect(() => {
-		setApplicants(FAKE_DATA);
-	}, []);
+	const { isLoading, error, data } = useQuery(
+		'applicant-tracking',
+		async () => {
+			const res = await fetch('https://localhost:5000/api/ApplicantTracking');
+
+			const data = await res.json();
+
+			console.log({ data });
+
+			setApplicants(data);
+		}
+	);
+
+	if (isLoading) return <p>'Loading...'</p>;
+
+	if (error) return <p>Error! {JSON.stringify(error)}</p>;
+
+	// useEffect(() => {
+	// 	setApplicants(FAKE_DATA);
+	// }, []);
 
 	return (
 		<div className='flex flex-col gap-4'>

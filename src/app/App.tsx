@@ -1,7 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import { QueryClientProvider } from 'react-query';
+import { QueryClient } from 'react-query';
 import { Routes } from '../config/router/Routes';
-import { useAuthStore } from '../modules/auth/Auth.store';
+
+const queryClient = new QueryClient();
 
 export const App = () => {
-	return <Routes />;
+	return (
+		<QueryClientProvider client={queryClient}>
+			<Routes />
+		</QueryClientProvider>
+	);
 };

@@ -31,6 +31,7 @@ export const Table = ({
 	const setSelectedRowIndex = useTableStore(
 		(state) => state.setSelectedRowIndex
 	);
+	const firstIndexWithoutData = data.findIndex((row) => row === undefined);
 
 	// Display configs
 	const { labellers } = displayConfigs;
@@ -40,7 +41,12 @@ export const Table = ({
 	const helper = createColumnHelper<any>();
 	const columns = fields.map((field: string) =>
 		helper.accessor(
-			(singleObject) => singleObject[field as keyof typeof singleObject],
+			(singleObject) => {
+				if (singleObject === undefined) {
+					return undefined;
+				}
+				return singleObject[field as keyof typeof singleObject];
+			},
 			{
 				id: field,
 				header: () => getLabelForField({ labellers, field }),
@@ -48,7 +54,6 @@ export const Table = ({
 					const value = ctx.getValue();
 
 					if (value === undefined) {
-						// return <EmptyText canHover />;
 						return undefined;
 					}
 
@@ -98,26 +103,33 @@ export const Table = ({
 				</thead>
 
 				<tbody>
-					{table.getRowModel().rows.map((row, index) => {
-						const isRowSelected = selectedRowIndex === index;
+					{table.getRowModel().rows.map((row, rowIndex) => {
+						const isRowSelected = selectedRowIndex === rowIndex;
+						const isRowWithData = rowIndex < firstIndexWithoutData;
+
 						return (
 							<tr
 								key={row.id}
 								className={
-									' group flex cursor-pointer flex-row ' +
-									' hover:bg-accent-bright-1' /*  hover:text-neutral-gray-1 ' + */ +
-									(isRowSelected
-										? ' bg-accent-bright-1 ' /* ' text-neutral-gray-1 ' */
-										: ' odd:bg-primary-bright-6 ')
+									isRowWithData
+										? ' group flex cursor-pointer flex-row ' +
+										  ' hover:bg-accent-bright-1' /*  hover:text-neutral-gray-1 ' + */ +
+										  (isRowSelected
+												? ' bg-accent-bright-1 ' /* ' text-neutral-gray-1 ' */
+												: ' odd:bg-primary-bright-6 ')
+										: ' flex flex-row odd:bg-primary-bright-6 '
 								}
 								onClick={() =>
-									setSelectedRowIndex(isRowSelected ? undefined : index)
+									isRowWithData
+										? setSelectedRowIndex(isRowSelected ? undefined : rowIndex)
+										: undefined
 								}
 							>
 								{row.getVisibleCells().map((cell) => {
 									const columnConfig = columnConfigs[cell.column.id];
 
 									const value = cell.getContext().getValue();
+									const isValueUndefined = value === undefined;
 
 									return (
 										<td
@@ -129,8 +141,12 @@ export const Table = ({
 											}
 											style={{ width: columnConfig?.width ?? undefined }}
 										>
-											{value === undefined ? (
-												<EmptyText canHover isHovered={isRowSelected} />
+											{isValueUndefined ? (
+												isRowWithData ? (
+													<EmptyText canHover isHovered={isRowSelected} />
+												) : (
+													<span className='select-none whitespace-pre'> </span>
+												)
 											) : (
 												flexRender(
 													cell.column.columnDef.cell,

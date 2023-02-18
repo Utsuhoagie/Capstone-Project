@@ -7,6 +7,21 @@ import {
 	Mappers,
 } from '../../app/App.display';
 
+// NOTE: This changes together with Applicant
+export const APPLICANT_TRACKING_FIELDS: string[] = [
+	'NationalId',
+	'FullName',
+	'Gender',
+	'BirthDate',
+	'Address',
+	'Phone',
+	'Email',
+	'ExperienceYears',
+	'AppliedPosition',
+	'AppliedDate',
+	'AskingSalary',
+];
+
 export const APPLICANT_TRACKING_LABELLERS: Labellers = {
 	NationalId: 'CMND / CCCD',
 	FullName: 'Họ tên',
@@ -30,7 +45,7 @@ export const APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
 	Phone: 'formatted',
 	Email: 'normal',
 	ExperienceYears: 'formatted',
-	AppliedPosition: 'mapped',
+	AppliedPosition: 'normal',
 	AppliedDate: 'formatted',
 	AskingSalary: 'formatted',
 };
@@ -50,20 +65,20 @@ export const APPLICANT_TRACKING_MAPPERS: Mappers = {
 			display: 'Khác',
 		},
 	],
-	AppliedPosition: [
-		{
-			value: 'developer',
-			display: 'Developer',
-		},
-		{
-			value: 'marketing',
-			display: 'Marketing',
-		},
-		{
-			value: 'hr',
-			display: 'Human Resources',
-		},
-	],
+	// AppliedPosition: [
+	// 	{
+	// 		value: 'developer',
+	// 		display: 'Developer',
+	// 	},
+	// 	{
+	// 		value: 'marketing',
+	// 		display: 'Marketing',
+	// 	},
+	// 	{
+	// 		value: 'hr',
+	// 		display: 'Human Resources',
+	// 	},
+	// ],
 };
 
 export const APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS: FormattableFieldMappers =
@@ -77,7 +92,7 @@ export const APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS: FormattableFieldMappe
 	};
 
 export const APPLICANT_TRACKING_FORMATTERS: Formatters = {
-	Date: (value: Date) => dayjs(value).format('D-MM-YYYY'),
+	Date: (value: Date) => dayjs(value).format('DD/MM/YYYY'),
 	Money: (value: number) => value.toLocaleString('vi-VN'),
 
 	NationalId: (value: string) =>

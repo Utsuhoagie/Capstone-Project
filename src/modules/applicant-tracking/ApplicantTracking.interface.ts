@@ -11,18 +11,3 @@ export interface Applicant {
 	AppliedDate: Date;
 	AskingSalary: number;
 }
-
-// NOTE: This changes together with Applicant
-export const APPLICANT_COLUMNS = [
-	'NationalId',
-	'FullName',
-	'Gender',
-	'BirthDate',
-	'Address',
-	'Phone',
-	'Email',
-	'ExperienceYears',
-	'AppliedPosition',
-	'AppliedDate',
-	'AskingSalary',
-];

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 // ====== Table of contents ======
+// TODO:
 // 1. Labels (for getting the label or column header)
 // 2. Display mode (for getting ...)
 
@@ -8,6 +9,7 @@ import dayjs from 'dayjs';
 
 /** Used once per module */
 export interface DisplayConfigs {
+	fields: string[];
 	labellers: Labellers;
 	displayModeMappers: DisplayModeMappers;
 	mappers: Mappers;

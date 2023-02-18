@@ -4,6 +4,7 @@ import { clone } from 'ramda';
 import { Applicant } from './ApplicantTracking.interface';
 import { DisplayConfigs } from '../../app/App.display';
 import {
+	APPLICANT_TRACKING_FIELDS,
 	APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
 	APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS,
 	APPLICANT_TRACKING_FORMATTERS,
@@ -43,6 +44,7 @@ export const useApplicantTrackingStore = create<ApplicantTrackingStore>()(
 		// 		return next;
 		// 	}),
 		displayConfigs: {
+			fields: APPLICANT_TRACKING_FIELDS,
 			labellers: APPLICANT_TRACKING_LABELLERS,
 			displayModeMappers: APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
 			mappers: APPLICANT_TRACKING_MAPPERS,
