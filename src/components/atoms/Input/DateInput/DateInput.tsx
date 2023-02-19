@@ -4,6 +4,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { ErrorIcon } from '../../../../assets/icons/ErrorIcon';
 import { Label } from '../Label';
 import { DisplayConfigs, getLabelForField } from '../../../../app/App.display';
+import { CalendarIcon } from '../../../../assets/icons/CalendarIcon';
 
 interface DateInputProps {
 	name: string;
@@ -58,20 +59,29 @@ export const DateInput = ({
 				name={name}
 				render={({ field, fieldState, formState }) => {
 					return (
-						<ReactDatePicker
-							className={
-								' mx-2 h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none' +
-								` ${error ? 'border-state-error' : 'border-primary-normal'} ` +
-								' hover:shadow focus:shadow ' +
-								` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
-							}
-							placeholderText={placeholder}
-							dateFormat='dd/MM/yyyy'
-							selected={field.value}
-							// onChange={(date) => setValue(name, date ?? dayjs().toDate())}
-							onChange={field.onChange}
-							ref={field.ref}
-						/>
+						<div className='relative'>
+							<ReactDatePicker
+								className={
+									' mx-2 h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none' +
+									` ${
+										error ? 'border-state-error' : 'border-primary-normal'
+									} ` +
+									' hover:shadow focus:shadow ' +
+									` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
+								}
+								placeholderText={placeholder}
+								dateFormat='dd/MM/yyyy'
+								selected={field.value}
+								// onChange={(date) => setValue(name, date ?? dayjs().toDate())}
+								onChange={field.onChange}
+								ref={field.ref}
+							/>
+
+							<CalendarIcon
+								className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2'
+								size={24}
+							/>
+						</div>
 					);
 				}}
 			/>

@@ -51,7 +51,7 @@ export const CreateApplicantForm = () => {
 			<h1 className='text-h1'>Thêm hồ sơ Ứng viên mới</h1>
 			<FormProvider {...methods}>
 				<form
-					className='flex flex-col gap-2'
+					className='flex flex-col gap-2 p-2'
 					onSubmit={methods.handleSubmit(handleSubmit, handleError)}
 				>
 					<TextInput
