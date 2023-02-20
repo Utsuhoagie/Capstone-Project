@@ -18,12 +18,12 @@ interface SelectInputProps extends React.ComponentPropsWithRef<'select'> {
 }
 
 interface SelectInputSingleProps extends SelectInputProps {
-	optionPairs: { value: any; display: string }[];
+	optionPairs: { value: any; display: string | undefined }[];
 	selectedValue: any;
 }
 
 interface SelectInputMultipleProps extends SelectInputProps {
-	optionPairs: { value: any; display: string }[];
+	optionPairs: { value: any; display: string | undefined }[];
 	selectedValues: any[];
 }
 
@@ -35,7 +35,7 @@ interface SelectInputMultipleProps extends SelectInputProps {
 
 const SelectInputSingle = ({
 	name,
-	options,
+	optionPairs,
 	displayConfigs,
 	selectedValue,
 	multiple,
@@ -43,11 +43,11 @@ const SelectInputSingle = ({
 	required,
 	...props
 }: SelectInputSingleProps) => {
-	console.log({
-		displayConfigs,
-		field: name,
-		value: selectedValue,
-	});
+	// console.log({
+	// 	displayConfigs,
+	// 	field: name,
+	// 	value: selectedValue,
+	// });
 
 	return (
 		<Controller
@@ -86,20 +86,16 @@ const SelectInputSingle = ({
 
 						<div className='relative'>
 							<Listbox.Options className='absolute z-50 box-border w-w-input-medium divide-y divide-neutral-gray-4 overflow-hidden rounded-b border-x border-b border-primary-normal'>
-								{options.map((option) => (
+								{optionPairs.map((optionPair) => (
 									<Listbox.Option
-										key={option}
-										value={option}
+										key={optionPair.value}
+										value={optionPair.value}
 										className={
 											' h-h-input w-w-input-medium cursor-pointer bg-neutral-white px-2 py-1.5 text-neutral-gray-9 ' +
 											' hover:bg-secondary-normal ui-selected:bg-secondary-normal '
 										}
 									>
-										{getDisplayForFieldValue({
-											displayConfigs,
-											field: name,
-											value: option,
-										})}
+										{optionPair.display}
 									</Listbox.Option>
 								))}
 							</Listbox.Options>
@@ -113,7 +109,7 @@ const SelectInputSingle = ({
 
 const SelectInputMultiple = ({
 	name,
-	options,
+	optionPairs,
 	displayConfigs,
 	selectedValues,
 	multiple,
@@ -156,20 +152,20 @@ const SelectInputMultiple = ({
 
 						<div className='relative'>
 							<Listbox.Options className='absolute z-50 box-border w-w-input-medium divide-y divide-neutral-gray-4 overflow-hidden rounded-b border-x border-b border-primary-normal'>
-								{options.map((option) => (
+								{optionPairs.map((optionPair) => (
 									<Listbox.Option
-										key={option.value}
-										value={option.value}
+										key={optionPair.value}
+										value={optionPair.value}
 										className={
 											' z-50 flex h-h-input w-w-input-medium cursor-pointer flex-row items-center gap-2 bg-neutral-white px-2 py-1.5 text-neutral-gray-9 ' +
 											' hover:bg-secondary-normal ui-selected:bg-secondary-normal '
 										}
 									>
 										<CheckboxIcon
-											checked={selectedValues.includes(option.value)}
+											checked={selectedValues.includes(optionPair.value)}
 											size={24}
 										/>
-										<p>{option.display}</p>
+										<p>{optionPair.display}</p>
 									</Listbox.Option>
 								))}
 							</Listbox.Options>

@@ -6,7 +6,7 @@ export interface CreateApplicantFormIntermediateValues {
 	FullName: string;
 	Gender: 'male' | 'female' | 'other';
 	BirthDate?: Date;
-	Address?: string;
+	Address: string;
 	Phone: string;
 	Email?: string;
 	ExperienceYears: string;
@@ -79,7 +79,7 @@ export const createApplicantFormSchema = z.object({
 	// 	.max(dayjs().toDate(), { message: 'Thời điểm nộp hồ sơ không hợp lệ.' }),
 	AppliedDate: z.preprocess(
 		(val) => dayjs(val as string).toDate(),
-		z.date().max(dayjs().add(1, 'day').toDate(), {
+		z.date().max(dayjs().add(1, 'hour').toDate(), {
 			message: 'Thời điểm nộp hồ sơ không hợp lệ.',
 		})
 	),

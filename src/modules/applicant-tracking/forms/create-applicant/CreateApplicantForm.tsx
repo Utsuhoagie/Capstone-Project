@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
+import { Applicant } from '../../ApplicantTracking.interface';
 import { useApplicantTrackingStore } from '../../ApplicantTracking.store';
 import {
 	CreateApplicantFormIntermediateValues,
@@ -14,6 +16,26 @@ import {
 
 export const CreateApplicantForm = () => {
 	const navigate = useNavigate();
+
+	const mutation = useMutation(
+		'applicant-tracking/create',
+		async (formData: Applicant) => {
+			const res = await fetch('https://localhost:5000/api/ApplicantTracking', {
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				method: 'POST',
+				body: JSON.stringify(formData),
+			});
+
+			console.log({ res });
+
+			const data = res.json();
+
+			console.log({ data });
+		}
+	);
 
 	const methods = useForm<CreateApplicantFormIntermediateValues>({
 		mode: 'onSubmit',
@@ -38,12 +60,28 @@ export const CreateApplicantForm = () => {
 	);
 
 	const handleSubmit: SubmitHandler<CreateApplicantFormIntermediateValues> = (
-		data
+		rawData
 	) => {
-		console.log(data);
+		console.log(rawData);
+
+		const formData: Applicant = {
+			NationalId: rawData.NationalId,
+			FullName: rawData.FullName,
+			Gender: rawData.Gender,
+			BirthDate: rawData.BirthDate,
+			Address: rawData.Address,
+			Phone: rawData.Phone,
+			Email: rawData.Email,
+			ExperienceYears: parseInt(rawData.ExperienceYears),
+			AppliedPosition: rawData.AppliedPosition,
+			AppliedDate: rawData.AppliedDate,
+			AskingSalary: parseInt(rawData.AskingSalary),
+		};
+
+		mutation.mutate(formData);
 	};
 	const handleError = (error) => {
-		console.log(error);
+		console.log('Error!!!!!!', error);
 	};
 
 	return (

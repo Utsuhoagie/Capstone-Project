@@ -32,7 +32,7 @@ export const ListItem = ({
 	return (
 		<div className='flex w-full flex-row items-center justify-between'>
 			<Label label={label} />
-			<p className=''>{displayValue === '' ? <EmptyText /> : displayValue}</p>
+			<p>{displayValue === undefined ? <EmptyText /> : displayValue}</p>
 		</div>
 	);
 };

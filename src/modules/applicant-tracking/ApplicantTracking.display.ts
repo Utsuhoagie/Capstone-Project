@@ -92,7 +92,8 @@ export const APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS: FormattableFieldMappe
 	};
 
 export const APPLICANT_TRACKING_FORMATTERS: Formatters = {
-	Date: (value: Date) => dayjs(value).format('DD/MM/YYYY'),
+	Date: (value: Date | undefined) =>
+		value ? dayjs(value).format('DD/MM/YYYY') : undefined,
 	Money: (value: number) => value.toLocaleString('vi-VN'),
 
 	NationalId: (value: string) =>

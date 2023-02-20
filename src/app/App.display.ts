@@ -77,7 +77,7 @@ export function getDisplayForFieldValue({
 	displayConfigs,
 	field,
 	value,
-}: DisplayArgs): string {
+}: DisplayArgs): string | undefined {
 	const displayMode = displayConfigs.displayModeMappers[field];
 
 	switch (displayMode) {
@@ -105,12 +105,12 @@ function mapValueToDisplay({
 	displayConfigs: { mappers },
 	field,
 	value,
-}: DisplayArgs): string {
+}: DisplayArgs): string | undefined {
 	const fieldValues = mappers[field];
 	const mappableFieldValue = fieldValues.find(
 		(fieldValue) => fieldValue.value === value
 	);
-	return mappableFieldValue!.display;
+	return mappableFieldValue?.display;
 }
 
 // ====== Formatted ======
@@ -124,14 +124,14 @@ export interface FormattableFieldMappers {
 
 export interface Formatters {
 	// NOTE: I wanna use [field: FormattableField] here but idk how
-	[formattableField: string]: (value: any) => string;
+	[formattableField: string]: (value: any) => string | undefined;
 }
 
 function formatFieldToDisplay({
 	displayConfigs: { formattableFieldMappers, formatters },
 	field,
 	value,
-}: DisplayArgs): string {
+}: DisplayArgs): string | undefined {
 	const formattableField = formattableFieldMappers[field];
 	const formatter = formatters[formattableField];
 	return formatter(value);
