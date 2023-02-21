@@ -1,21 +1,14 @@
 import { List } from '../../../components/organisms/List/List';
-import { useTableStore } from '../../../components/organisms/Table/Table.store';
-import { Applicant } from '../ApplicantTracking.interface';
 import { useApplicantTrackingStore } from '../ApplicantTracking.store';
 import { APPLICANT_TRACKING_LIST_ITEM_CONFIGS } from './DetailSection.config';
 
 export const DetailSection = () => {
-	const visibleApplicants = useApplicantTrackingStore(
-		(state) => state.applicants
+	const selectedApplicant = useApplicantTrackingStore(
+		(state) => state.selectedApplicant
 	);
 	const displayConfigs = useApplicantTrackingStore(
 		(state) => state.displayConfigs
 	);
-	const selectedRowIndex = useTableStore((state) => state.selectedRowIndex);
-	const selectedApplicant: Applicant | undefined =
-		selectedRowIndex === undefined
-			? undefined
-			: visibleApplicants[selectedRowIndex];
 
 	return (
 		<div className='flex-1 rounded border border-semantic-section-border p-4 shadow-md'>

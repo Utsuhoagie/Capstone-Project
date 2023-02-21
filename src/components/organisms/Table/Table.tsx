@@ -105,7 +105,10 @@ export const Table = ({
 				<tbody>
 					{table.getRowModel().rows.map((row, rowIndex) => {
 						const isRowSelected = selectedRowIndex === rowIndex;
-						const isRowWithData = rowIndex < firstIndexWithoutData;
+						const isRowWithData =
+							firstIndexWithoutData !== -1
+								? rowIndex < firstIndexWithoutData
+								: true;
 
 						return (
 							<tr
@@ -119,11 +122,11 @@ export const Table = ({
 												: ' odd:bg-primary-bright-6 ')
 										: ' flex flex-row odd:bg-primary-bright-6 '
 								}
-								onClick={() =>
+								onClick={() => {
 									isRowWithData
 										? setSelectedRowIndex(isRowSelected ? undefined : rowIndex)
-										: undefined
-								}
+										: undefined;
+								}}
 							>
 								{row.getVisibleCells().map((cell) => {
 									const columnConfig = columnConfigs[cell.column.id];

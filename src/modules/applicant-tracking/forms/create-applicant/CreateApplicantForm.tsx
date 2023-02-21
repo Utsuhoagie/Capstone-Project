@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
@@ -20,6 +20,7 @@ export const CreateApplicantForm = () => {
 
 	const showToast = useToastStore((state) => state.showToast);
 
+	const queryClient = useQueryClient();
 	const mutation = useMutation(
 		'applicant-tracking/create',
 		async (formData: Applicant) => {
@@ -37,6 +38,11 @@ export const CreateApplicantForm = () => {
 			} else {
 				showToast({ state: 'error' });
 			}
+		},
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries('applicant-tracking');
+			},
 		}
 	);
 
@@ -81,6 +87,7 @@ export const CreateApplicantForm = () => {
 			AskingSalary: parseInt(rawData.AskingSalary),
 		};
 
+		// console.log({ formData });
 		mutation.mutate(formData);
 	};
 	const handleError = (error) => {
@@ -185,6 +192,13 @@ export const CreateApplicantForm = () => {
 
 					<Button type='submit' width='medium'>
 						Thêm
+					</Button>
+					<Button
+						type='button'
+						width='medium'
+						onClick={() => console.log(methods.getValues())}
+					>
+						Xem form
 					</Button>
 					<Button
 						type='button'

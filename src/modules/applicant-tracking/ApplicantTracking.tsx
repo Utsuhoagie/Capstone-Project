@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
+import { useTableStore } from '../../components/organisms/Table/Table.store';
 import {
 	Applicant,
 	Applicant_APIResponse,
@@ -11,9 +12,9 @@ import { DataTable } from './data-table/DataTable';
 import { DetailSection } from './detail-section/DetailSection';
 
 export const ApplicantTracking = () => {
-	const setApplicants = useApplicantTrackingStore(
-		(state) => state.setApplicants
-	);
+	const { applicants, setApplicants, setSelectedApplicant } =
+		useApplicantTrackingStore((state) => state);
+	const selectedRowIndex = useTableStore((state) => state.selectedRowIndex);
 
 	const { isLoading, error, data } = useQuery(
 		'applicant-tracking',
@@ -34,13 +35,19 @@ export const ApplicantTracking = () => {
 		}
 	);
 
+	useEffect(() => {
+		if (selectedRowIndex === undefined) {
+			setSelectedApplicant(undefined);
+			return;
+		}
+
+		const selectedApplicant = applicants[selectedRowIndex];
+		setSelectedApplicant(selectedApplicant);
+	}, [selectedRowIndex]);
+
 	if (isLoading) return <p>'Loading...'</p>;
 
 	if (error) return <p>Error! {JSON.stringify(error)}</p>;
-
-	// useEffect(() => {
-	// 	setApplicants(FAKE_DATA);
-	// }, []);
 
 	return (
 		<div className='flex flex-col gap-4'>

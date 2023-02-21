@@ -14,12 +14,12 @@ import {
 
 interface ApplicantTrackingStore {
 	// Server state
-	applicants: Applicant[];
+	applicants: Applicant[]; // NOTE: should be paginated (e.g 10 only)
 	setApplicants: (_applicants: Applicant[]) => void;
 
 	// Client state
-	// selectedApplicant: Applicant | undefined;
-	// setSelectedApplicant: (_applicant: Applicant) => void;
+	selectedApplicant: Applicant | undefined;
+	setSelectedApplicant: (_applicant: Applicant | undefined) => void;
 	displayConfigs: DisplayConfigs;
 	// setDisplayConfigs: (_displayConfigs: DisplayConfigs) => void;
 }
@@ -36,13 +36,14 @@ export const useApplicantTrackingStore = create<ApplicantTrackingStore>()(
 			}),
 
 		// Client state
-		// selectedApplicant: undefined,
-		// setSelectedApplicant: (_applicant: Applicant) =>
-		// 	set((prev) => {
-		// 		let next = clone(prev);
-		// 		next.selectedApplicant = _applicant;
-		// 		return next;
-		// 	}),
+		selectedApplicant: undefined,
+		setSelectedApplicant: (_applicant: Applicant | undefined) =>
+			set((prev) => {
+				let next = clone(prev);
+				next.selectedApplicant = _applicant;
+				return next;
+			}),
+
 		displayConfigs: {
 			fields: APPLICANT_TRACKING_FIELDS,
 			labellers: APPLICANT_TRACKING_LABELLERS,
