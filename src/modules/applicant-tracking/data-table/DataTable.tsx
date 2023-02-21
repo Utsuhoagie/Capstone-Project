@@ -20,8 +20,6 @@ export const DataTable = () => {
 		...new Array(10 - applicants.length).fill(undefined),
 	];
 
-	console.log({ applicants, filledApplicants });
-
 	const subsetColumnConfigs = omit(
 		['NationalId', 'Address'],
 		APPLICANT_TRACKING_COLUMN_CONFIGS

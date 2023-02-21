@@ -1,5 +1,4 @@
 import { Dialog as HuiDialog } from '@headlessui/react';
-import { useState } from 'react';
 import { useDialogStore } from '../../../app/App.store';
 import { CloseIcon } from '../../../assets/icons/CloseIcon';
 
@@ -14,8 +13,6 @@ export const Dialog = () => {
 	const { isOpen, isClosable, title, content, closeDialog } = useDialogStore(
 		(state) => state
 	);
-
-	console.log({ isOpen, isClosable, title, content });
 
 	return (
 		<HuiDialog

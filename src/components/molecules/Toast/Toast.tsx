@@ -1,15 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useToastStore } from '../../../app/App.store';
 
 export const Toast = () => {
-	// const { isOpen, state, timeoutId, showToast, hideToast, setTimeoutId } =
 	const { isOpen, state, hideToast } = useToastStore((state) => state);
 
 	const isSuccess = state === 'success';
 	const isError = state === 'error';
 
 	useEffect(() => {
-		console.log({ isOpen }, ' changed once');
 		if (isOpen) {
 			setTimeout(() => {
 				hideToast();
