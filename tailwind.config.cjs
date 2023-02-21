@@ -17,6 +17,8 @@ module.exports = {
 				'w-list-section': 550,
 				// 'w-attachment-section':
 				'w-navbar': 240,
+				'w-toast': 240,
+				'h-toast': 160,
 				'h-input': 40,
 				'h-dialog-title': 40,
 				'h-image-section': 250,
@@ -86,9 +88,21 @@ module.exports = {
 					white: '#ffffff',
 				},
 				state: {
-					success: colors.green[500],
-					warning: colors.yellow[400],
-					error: colors.red[600],
+					success: {
+						dark: colors.green[700],
+						normal: colors.green[500],
+						bright: colors.green[200],
+					},
+					warning: {
+						dark: colors.yellow[700],
+						normal: colors.yellow[400],
+						bright: colors.yellow[200],
+					},
+					error: {
+						dark: colors.red[800],
+						normal: colors.red[600],
+						bright: colors.red[200],
+					},
 				},
 			},
 		},

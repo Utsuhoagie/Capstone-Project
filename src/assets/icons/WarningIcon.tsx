@@ -6,7 +6,7 @@ export const WarningIcon = ({ size, ...props }: IconProps) => {
 			width={size}
 			height={size}
 			viewBox='0 0 24 24'
-			className='fill-state-warning'
+			className='fill-state-warning-normal'
 			xmlns='http://www.w3.org/2000/svg'
 		>
 			<g clipPath='url(#clip0_303_12687)'>

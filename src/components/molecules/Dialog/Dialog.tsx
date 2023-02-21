@@ -3,15 +3,19 @@ import { useState } from 'react';
 import { useDialogStore } from '../../../app/App.store';
 import { CloseIcon } from '../../../assets/icons/CloseIcon';
 
-export interface DialogProps {
-	isOpen: boolean;
-	isClosable: boolean;
-	title?: string;
-	content: React.ReactNode;
-}
+// export interface DialogProps {
+// 	isOpen: boolean;
+// 	isClosable: boolean;
+// 	title?: string;
+// 	content: React.ReactNode;
+// }
 
-export const Dialog = ({ isOpen, isClosable, title, content }: DialogProps) => {
-	const closeDialog = useDialogStore((state) => state.closeDialog);
+export const Dialog = () => {
+	const { isOpen, isClosable, title, content, closeDialog } = useDialogStore(
+		(state) => state
+	);
+
+	console.log({ isOpen, isClosable, title, content });
 
 	return (
 		<HuiDialog
@@ -25,7 +29,7 @@ export const Dialog = ({ isOpen, isClosable, title, content }: DialogProps) => {
 					className='HuiTitle relative flex flex-row items-center justify-center'
 				>
 					<h2 className='h-h-dialog-title py-2 font-bold text-primary-dark-2'>
-						{title ?? 'adasdas'}
+						{title ?? ''}
 					</h2>
 					{isClosable && (
 						<CloseIcon

@@ -37,7 +37,7 @@ export const TextInput = ({
 			<input
 				className={
 					' h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
-					` ${error ? 'border-state-error' : 'border-primary-normal'} ` +
+					` ${error ? 'border-state-error-normal' : 'border-primary-normal'} ` +
 					' hover:shadow focus:shadow ' +
 					` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
 				}
@@ -46,7 +46,7 @@ export const TextInput = ({
 			/>
 
 			{error && (
-				<div className='flex flex-row items-center gap-2 text-state-error'>
+				<div className='flex flex-row items-center gap-2 text-state-error-normal'>
 					<ErrorIcon size={24} />
 					<p>{error?.message?.toString()}</p>
 				</div>

@@ -1,10 +1,13 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { DialogProps } from '../components/molecules/Dialog/Dialog';
 import { clone } from 'ramda';
 
-interface DialogStore extends DialogProps {
-	setDialogIsOpen: (isOpen: boolean) => void;
+interface DialogStore {
+	isOpen: boolean;
+	isClosable: boolean;
+	title?: string;
+	content: React.ReactNode;
+
 	openDialog: ({
 		isClosable,
 		title,
@@ -24,12 +27,6 @@ export const useDialogStore = create<DialogStore>()(
 		title: undefined,
 		content: undefined,
 
-		setDialogIsOpen: (isOpen: boolean) =>
-			set((prev) => {
-				let next = clone(prev);
-				next.isOpen = isOpen;
-				return next;
-			}),
 		openDialog: ({
 			isClosable,
 			title,
@@ -51,6 +48,48 @@ export const useDialogStore = create<DialogStore>()(
 			set((prev) => {
 				let next = clone(prev);
 				next.isOpen = false;
+				return next;
+			}),
+	}))
+);
+
+interface ToastStore {
+	isOpen: boolean;
+	state?: 'success' | 'error';
+	timeoutId?: number;
+	// title?: string;
+	// content: React.ReactNode;
+
+	showToast: ({ state }: { state: 'success' | 'error' }) => void;
+	hideToast: () => void;
+	setTimeoutId: (timeoutId: number) => void;
+}
+
+export const useToastStore = create<ToastStore>()(
+	devtools((set) => ({
+		isOpen: false,
+		state: undefined,
+		timeoutId: undefined,
+		// title: undefined,
+		// content: undefined,
+
+		showToast: ({ state }: { state: 'success' | 'error' }) =>
+			set((prev) => {
+				let next = clone(prev);
+				next.isOpen = true;
+				next.state = state;
+				return next;
+			}),
+		hideToast: () =>
+			set((prev) => {
+				let next = clone(prev);
+				next.isOpen = false;
+				return next;
+			}),
+		setTimeoutId: (timeoutId: number) =>
+			set((prev) => {
+				let next = clone(prev);
+				next.timeoutId = timeoutId;
 				return next;
 			}),
 	}))

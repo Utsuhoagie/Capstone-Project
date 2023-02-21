@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDialogStore } from '../../app/App.store';
+import { useDialogStore, useToastStore } from '../../app/App.store';
 import { Button } from '../../components/atoms/Button/Button';
 import { TextInput } from '../../components/atoms/Input/TextInput';
 import { Tag } from '../../components/atoms/Tag/Tag';
@@ -7,6 +7,8 @@ import { ExampleForm } from './ExampleForm';
 
 export const Example = () => {
 	const openDialog = useDialogStore((state) => state.openDialog);
+	const showToast = useToastStore((state) => state.showToast);
+
 	const [index, setIndex] = useState<number>(0);
 	const widths = ['full', 'small', 'medium', 'big'] as const;
 
@@ -28,16 +30,18 @@ export const Example = () => {
 
 				<Button
 					width='medium'
-					onClick={() =>
+					onClick={() => {
+						console.log('clicked');
 						openDialog({
 							isClosable: true,
 							content: (
 								<div className='h-3/4 w-3/4'>
-									<ExampleForm />
+									{/* <ExampleForm /> */}
+									<p className='h-[600px] w-[800px]'>dadasdas</p>
 								</div>
 							),
-						})
-					}
+						});
+					}}
 				>
 					Open Dialog
 				</Button>
@@ -46,6 +50,10 @@ export const Example = () => {
 			<Tag canClose={true} onClick={() => window.alert('aaaaaaa')}>
 				Toàn thời gian
 			</Tag>
+
+			<Button width='small' onClick={() => showToast({ state: 'error' })}>
+				Show Toast
+			</Button>
 		</div>
 	);
 };
