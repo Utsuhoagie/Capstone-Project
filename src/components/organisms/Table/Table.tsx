@@ -135,7 +135,7 @@ export const Table = ({
 										<td
 											key={cell.id}
 											className={
-												' text-ellipsis whitespace-nowrap border-x border-t border-neutral-gray-5 px-1.5 py-1 text-left ' +
+												' overflow-hidden text-ellipsis whitespace-nowrap border-x border-t border-neutral-gray-5 px-1.5 py-1 text-left ' +
 												' first:border-l-0 ' +
 												' last:border-r-0 '
 											}

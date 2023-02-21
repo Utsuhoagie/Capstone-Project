@@ -20,13 +20,13 @@ export const Toast = () => {
 	return (
 		<div
 			className={
-				' fixed right-4 bottom-4 max-h-h-toast max-w-[240px] border ' +
+				' fixed right-4 bottom-4 max-h-h-toast max-w-[240px] border p-2 ' +
 				`${isOpen ? '' : ' hidden '}` +
 				`${
 					isSuccess
-						? ' border-state-success-dark bg-state-success-bright p-2 '
+						? ' border-state-success-dark bg-state-success-bright '
 						: isError
-						? ' border-state-error-dark bg-state-error-normal '
+						? ' border-state-error-dark bg-state-error-bright '
 						: ''
 				}`
 			}

@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
@@ -17,6 +18,8 @@ import {
 export const CreateApplicantForm = () => {
 	const navigate = useNavigate();
 
+	const showToast = useToastStore((state) => state.showToast);
+
 	const mutation = useMutation(
 		'applicant-tracking/create',
 		async (formData: Applicant) => {
@@ -29,11 +32,11 @@ export const CreateApplicantForm = () => {
 				body: JSON.stringify(formData),
 			});
 
-			console.log({ res });
-
-			const data = res.json();
-
-			console.log({ data });
+			if (res.ok) {
+				showToast({ state: 'success' });
+			} else {
+				showToast({ state: 'error' });
+			}
 		}
 	);
 
@@ -81,7 +84,7 @@ export const CreateApplicantForm = () => {
 		mutation.mutate(formData);
 	};
 	const handleError = (error) => {
-		console.log('Error!!!!!!', error);
+		console.log({ error });
 	};
 
 	return (
@@ -187,8 +190,7 @@ export const CreateApplicantForm = () => {
 						type='button'
 						secondary
 						width='medium'
-						// onClick={() => navigate('/app/applicant-tracking')}
-						onClick={() => console.log(methods.getValues())}
+						onClick={() => navigate('/app/applicant-tracking')}
 					>
 						Thoát
 					</Button>
