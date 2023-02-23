@@ -5,6 +5,7 @@ import { ErrorIcon } from '../../../../assets/icons/ErrorIcon';
 import { Label } from '../Label';
 import { DisplayConfigs, getLabelForField } from '../../../../app/App.display';
 import { CalendarIcon } from '../../../../assets/icons/CalendarIcon';
+import dayjs from 'dayjs';
 
 interface DateInputProps {
 	name: string;
@@ -73,9 +74,15 @@ export const DateInput = ({
 								}
 								placeholderText={placeholder}
 								dateFormat='dd/MM/yyyy'
-								selected={field.value}
-								onChange={field.onChange}
-								ref={field.ref}
+								selected={
+									field.value && dayjs(field.value).startOf('day').toDate()
+								}
+								onChange={(date, event) => {
+									console.log('onChange', date);
+									const startOfDayDate = dayjs(date).startOf('day').toDate();
+									field.onChange(startOfDayDate, event);
+								}}
+								ref={(element) => element && field.ref(element['input'])}
 							/>
 
 							<CalendarIcon

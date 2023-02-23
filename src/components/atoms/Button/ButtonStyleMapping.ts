@@ -5,7 +5,7 @@
 
 export const buttonStyleMapping = {
 	all:
-		' rounded cursor-pointer px-6 py-2 ' +
+		' rounded cursor-pointer px-6 py-2 font-semibold ' +
 		' hover:shadow hover:shadow-primary-normal ' +
 		' active:shadow active:shadow-primary-normal ' +
 		' disabled:opacity-50 disabled:cursor-not-allowed ',

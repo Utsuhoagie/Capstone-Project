@@ -16,12 +16,12 @@ export interface Applicant_APIResponse {
 	NationalId: string;
 	FullName: string;
 	Gender: 'male' | 'female' | 'other';
-	BirthDate: Date | null;
+	BirthDate: string | null;
 	Address: string;
 	Phone: string;
 	Email: string | null;
 	ExperienceYears: number;
 	AppliedPosition: string;
-	AppliedDate: Date;
+	AppliedDate: string;
 	AskingSalary: number;
 }

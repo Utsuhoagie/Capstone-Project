@@ -16,7 +16,7 @@ export const DeleteButton = () => {
 		'applicant-tracking/delete',
 		async () => {
 			const res = await fetch(
-				`https://localhost:5000/api/ApplicantTracking?NationalId=${selectedApplicant?.NationalId}`,
+				`https://localhost:5000/api/ApplicantTracking/Delete?NationalId=${selectedApplicant?.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',
@@ -44,7 +44,7 @@ export const DeleteButton = () => {
 	}
 
 	return (
-		<Button width='medium' onClick={handleDelete}>
+		<Button secondary width='big' onClick={handleDelete}>
 			Xóa hồ sơ
 		</Button>
 	);

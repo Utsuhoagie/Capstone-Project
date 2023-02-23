@@ -24,14 +24,17 @@ export const CreateApplicantForm = () => {
 	const mutation = useMutation(
 		'applicant-tracking/create',
 		async (formData: Applicant) => {
-			const res = await fetch('https://localhost:5000/api/ApplicantTracking', {
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				method: 'POST',
-				body: JSON.stringify(formData),
-			});
+			const res = await fetch(
+				'https://localhost:5000/api/ApplicantTracking/Create',
+				{
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+					},
+					method: 'POST',
+					body: JSON.stringify(formData),
+				}
+			);
 
 			if (res.ok) {
 				showToast({ state: 'success' });

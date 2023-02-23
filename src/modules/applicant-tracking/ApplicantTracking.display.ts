@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import {
 	DisplayModeMappers,
 	FormattableFieldMappers,
@@ -6,6 +8,13 @@ import {
 	Labellers,
 	Mappers,
 } from '../../app/App.display';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
+dayjs.tz.setDefault('Asia/Ho_Chi_Minh');
+
+// dayjs.tz.setDefault('Asia/Ho_Chi_Minh');
 
 // NOTE: This changes together with Applicant
 export const APPLICANT_TRACKING_FIELDS: string[] = [
@@ -92,8 +101,18 @@ export const APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS: FormattableFieldMappe
 	};
 
 export const APPLICANT_TRACKING_FORMATTERS: Formatters = {
-	Date: (value: Date | undefined) =>
-		value ? dayjs(value).format('DD/MM/YYYY') : undefined,
+	Date: (value: Date | undefined) => {
+		// const timezoneParse = 'Europe/London'; // +00:00
+		// const timezone = 'Asia/Dubai'; // +04:00
+		// const timezoneConvert = 'Asia/Ho_Chi_Minh'; // +07:00
+		// const timezone = 'Asia/Tokyo'; // +09:00
+		// const timezone = 'Australia/Sydney'; // +10:00
+
+		const timeInUTC = dayjs(value);
+		const timeInLocal = timeInUTC.tz();
+
+		return value ? timeInLocal.format('DD/MM/YYYY') : undefined;
+	},
 	Money: (value: number) => value.toLocaleString('vi-VN'),
 
 	NationalId: (value: string) =>
