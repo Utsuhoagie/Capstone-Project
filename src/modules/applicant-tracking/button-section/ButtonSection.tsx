@@ -1,5 +1,6 @@
 import { useTableStore } from '../../../components/organisms/Table/Table.store';
 import { DeleteButton } from './DeleteButton';
+import { UpdateButton } from './UpdateButton';
 
 export const ButtonSection = () => {
 	const selectedRowIndex = useTableStore((state) => state.selectedRowIndex);
@@ -7,10 +8,11 @@ export const ButtonSection = () => {
 	return (
 		<div
 			className={
-				' flex w-fit flex-col items-center rounded border border-secondary-dark-1 p-2 shadow-md ' +
+				' flex w-fit flex-col items-center gap-2 rounded border border-secondary-dark-1 p-4 shadow-md ' +
 				`${selectedRowIndex !== undefined ? '' : ' hidden '}`
 			}
 		>
+			<UpdateButton />
 			<DeleteButton />
 		</div>
 	);

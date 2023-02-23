@@ -3,6 +3,7 @@ import { AppLayout } from '../../components/layouts/AppLayout';
 import { AuthLayout } from '../../components/layouts/AuthLayout';
 import { ApplicantTracking } from '../../modules/applicant-tracking/ApplicantTracking';
 import { CreateApplicantForm } from '../../modules/applicant-tracking/forms/create-applicant/CreateApplicantForm';
+import { UpdateApplicantForm } from '../../modules/applicant-tracking/forms/update-applicant/UpdateApplicantForm';
 import { useAuthStore } from '../../modules/auth/Auth.store';
 import { Login } from '../../modules/auth/Login/Login';
 import { Dashboard } from '../../modules/dashboard/Dashboard';
@@ -32,6 +33,10 @@ export const Routes = () => {
 				<Route
 					path='applicant-tracking/create'
 					element={<CreateApplicantForm />}
+				/>
+				<Route
+					path='applicant-tracking/update'
+					element={<UpdateApplicantForm />}
 				/>
 
 				<Route path='ex' element={<Example />} />

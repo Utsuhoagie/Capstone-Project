@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
+import { useSearchParams } from 'react-router-dom';
 import { useTableStore } from '../../components/organisms/Table/Table.store';
 import {
 	Applicant,
@@ -12,6 +13,9 @@ import { DataTable } from './data-table/DataTable';
 import { DetailSection } from './detail-section/DetailSection';
 
 export const ApplicantTracking = () => {
+	const [searchParams, setSearchParams] = useSearchParams();
+	const currentPage = searchParams.get('page') ?? 1;
+
 	const { applicants, setApplicants, setSelectedApplicant } =
 		useApplicantTrackingStore((state) => state);
 	const selectedRowIndex = useTableStore((state) => state.selectedRowIndex);
@@ -19,7 +23,9 @@ export const ApplicantTracking = () => {
 	const { isLoading, error, data } = useQuery(
 		'applicant-tracking',
 		async () => {
-			const res = await fetch('https://localhost:5000/api/ApplicantTracking');
+			const res = await fetch(
+				`https://localhost:5000/api/ApplicantTracking?page=${currentPage}`
+			);
 
 			const data: Applicant_APIResponse[] = await res.json();
 
@@ -27,8 +33,11 @@ export const ApplicantTracking = () => {
 
 			const applicants: Applicant[] = data.map((datum) => ({
 				...datum,
-				BirthDate: datum.BirthDate ?? undefined,
+				BirthDate: datum.BirthDate
+					? dayjs(datum.BirthDate).toDate()
+					: undefined,
 				Email: datum.Email ?? undefined,
+				AppliedDate: dayjs(datum.AppliedDate).toDate(),
 			}));
 
 			setApplicants(applicants);
