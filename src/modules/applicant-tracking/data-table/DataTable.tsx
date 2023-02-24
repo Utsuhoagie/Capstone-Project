@@ -29,6 +29,10 @@ export const DataTable = () => {
 		navigate('create');
 	}
 
+	// useEffect(() => {
+	// 	navigate(`?page=${currentPageIndex}`);
+	// }, [currentPageIndex]);
+
 	return (
 		<div className='flex flex-col gap-4'>
 			<div className='flex flex-row gap-4'>

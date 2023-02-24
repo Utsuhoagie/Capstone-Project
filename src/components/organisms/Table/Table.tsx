@@ -5,12 +5,15 @@ import {
 	useReactTable,
 } from '@tanstack/react-table';
 import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
 	DisplayConfigs,
 	getDisplayForFieldValue,
 	getLabelForField,
 } from '../../../app/App.display';
 import { EmptyText } from '../../atoms/EmptyText/EmptyText';
+import { Pagination } from './Pagination/Pagination';
+import { PaginationButton } from './Pagination/PaginationButton';
 import { ColumnConfigs, TableConfig } from './Table.interface';
 import { useTableStore } from './Table.store';
 
@@ -28,11 +31,13 @@ export const Table = ({
 	columnConfigs,
 }: TableProps) => {
 	// Row state management
-	const selectedRowIndex = useTableStore((state) => state.selectedRowIndex);
-	const setSelectedRowIndex = useTableStore(
-		(state) => state.setSelectedRowIndex
-	);
+	const { selectedRowIndex, setSelectedRowIndex, pagination, setPagination } =
+		useTableStore((state) => state);
 	const firstIndexWithoutData = data.findIndex((row) => row === undefined);
+
+	// Search params
+	const [searchParams, setSearchParams] = useSearchParams();
+	const currentPageIndex = parseInt(searchParams.get('page') ?? '1');
 
 	// Display configs
 	const { labellers } = displayConfigs;
@@ -74,101 +79,109 @@ export const Table = ({
 
 	useEffect(() => {
 		setSelectedRowIndex(undefined);
-	}, []);
+	}, [searchParams]);
 
 	return (
-		<div
-			className='overflow-x-auto overflow-y-clip rounded border-2 border-semantic-section-border shadow-md'
-			style={{ width: tableConfig.width }}
-		>
-			<table className='table-fixed bg-neutral-white'>
-				<thead>
-					<tr className='flex flex-row bg-primary-dark-1'>
-						{table.getFlatHeaders().map((header) => {
-							const columnConfig = columnConfigs[header.id];
+		<div>
+			<div
+				className='overflow-x-auto overflow-y-clip rounded border-2 border-semantic-section-border shadow-md'
+				style={{ width: tableConfig.width }}
+			>
+				<table className='table-fixed bg-neutral-white'>
+					<thead>
+						<tr className='flex flex-row bg-primary-dark-1'>
+							{table.getFlatHeaders().map((header) => {
+								const columnConfig = columnConfigs[header.id];
+
+								return (
+									<th
+										key={header.id}
+										className={
+											' flex flex-col justify-center border-x border-neutral-gray-5 px-1.5 py-1 text-left font-medium text-neutral-gray-1 ' +
+											' first:border-l-0 ' +
+											' last:border-r-0 '
+										}
+										style={{ width: columnConfig?.width ?? undefined }}
+									>
+										{flexRender(
+											header.column.columnDef.header,
+											header.getContext()
+										)}
+									</th>
+								);
+							})}
+						</tr>
+					</thead>
+
+					<tbody>
+						{table.getRowModel().rows.map((row, rowIndex) => {
+							const isRowSelected = selectedRowIndex === rowIndex;
+							const isRowWithData =
+								firstIndexWithoutData !== -1
+									? rowIndex < firstIndexWithoutData
+									: true;
 
 							return (
-								<th
-									key={header.id}
+								<tr
+									key={row.id}
 									className={
-										' flex flex-col justify-center border-x border-neutral-gray-5 px-1.5 py-1 text-left font-medium text-neutral-gray-1 ' +
-										' first:border-l-0 ' +
-										' last:border-r-0 '
+										isRowWithData
+											? ' group flex cursor-pointer flex-row ' +
+											  ' hover:bg-accent-bright-1' /*  hover:text-neutral-gray-1 ' + */ +
+											  (isRowSelected
+													? ' bg-accent-bright-1 ' /* ' text-neutral-gray-1 ' */
+													: ' odd:bg-primary-bright-6 ')
+											: ' flex flex-row odd:bg-primary-bright-6 '
 									}
-									style={{ width: columnConfig?.width ?? undefined }}
+									onClick={() => {
+										isRowWithData
+											? setSelectedRowIndex(
+													isRowSelected ? undefined : rowIndex
+											  )
+											: undefined;
+									}}
 								>
-									{flexRender(
-										header.column.columnDef.header,
-										header.getContext()
-									)}
-								</th>
+									{row.getVisibleCells().map((cell) => {
+										const columnConfig = columnConfigs[cell.column.id];
+
+										const value = cell.getContext().getValue();
+										const isValueUndefined = value === undefined;
+
+										return (
+											<td
+												key={cell.id}
+												className={
+													' overflow-hidden text-ellipsis whitespace-nowrap border-x border-t border-neutral-gray-5 px-1.5 py-1 text-left ' +
+													' first:border-l-0 ' +
+													' last:border-r-0 '
+												}
+												style={{ width: columnConfig?.width ?? undefined }}
+											>
+												{isValueUndefined ? (
+													isRowWithData ? (
+														<EmptyText canHover isHovered={isRowSelected} />
+													) : (
+														<span className='select-none whitespace-pre'>
+															{' '}
+														</span>
+													)
+												) : (
+													flexRender(
+														cell.column.columnDef.cell,
+														cell.getContext()
+													)
+												)}
+											</td>
+										);
+									})}
+								</tr>
 							);
 						})}
-					</tr>
-				</thead>
+					</tbody>
+				</table>
+			</div>
 
-				<tbody>
-					{table.getRowModel().rows.map((row, rowIndex) => {
-						const isRowSelected = selectedRowIndex === rowIndex;
-						const isRowWithData =
-							firstIndexWithoutData !== -1
-								? rowIndex < firstIndexWithoutData
-								: true;
-
-						return (
-							<tr
-								key={row.id}
-								className={
-									isRowWithData
-										? ' group flex cursor-pointer flex-row ' +
-										  ' hover:bg-accent-bright-1' /*  hover:text-neutral-gray-1 ' + */ +
-										  (isRowSelected
-												? ' bg-accent-bright-1 ' /* ' text-neutral-gray-1 ' */
-												: ' odd:bg-primary-bright-6 ')
-										: ' flex flex-row odd:bg-primary-bright-6 '
-								}
-								onClick={() => {
-									isRowWithData
-										? setSelectedRowIndex(isRowSelected ? undefined : rowIndex)
-										: undefined;
-								}}
-							>
-								{row.getVisibleCells().map((cell) => {
-									const columnConfig = columnConfigs[cell.column.id];
-
-									const value = cell.getContext().getValue();
-									const isValueUndefined = value === undefined;
-
-									return (
-										<td
-											key={cell.id}
-											className={
-												' overflow-hidden text-ellipsis whitespace-nowrap border-x border-t border-neutral-gray-5 px-1.5 py-1 text-left ' +
-												' first:border-l-0 ' +
-												' last:border-r-0 '
-											}
-											style={{ width: columnConfig?.width ?? undefined }}
-										>
-											{isValueUndefined ? (
-												isRowWithData ? (
-													<EmptyText canHover isHovered={isRowSelected} />
-												) : (
-													<span className='select-none whitespace-pre'> </span>
-												)
-											) : (
-												flexRender(
-													cell.column.columnDef.cell,
-													cell.getContext()
-												)
-											)}
-										</td>
-									);
-								})}
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
+			<Pagination />
 		</div>
 	);
 };
