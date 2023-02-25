@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDialogStore, useToastStore } from '../../app/App.store';
+import { ArrowBigIcon } from '../../assets/icons/ArrowBigIcon';
 import { Button } from '../../components/atoms/Button/Button';
 import { TextInput } from '../../components/atoms/Input/TextInput';
 import { Tag } from '../../components/atoms/Tag/Tag';
@@ -54,6 +55,10 @@ export const Example = () => {
 			<Button width='small' onClick={() => showToast({ state: 'error' })}>
 				Show Toast
 			</Button>
+
+			<div>
+				<ArrowBigIcon size={32} direction='down' />
+			</div>
 		</div>
 	);
 };

@@ -1,12 +1,20 @@
-import { IconProps } from './_Icon.interface';
+import {
+	DirectionalIconProps,
+	getTailwindRotateClassFromDirection,
+} from './_Icon.interface';
 
-export const DropdownIcon = ({ size, ...props }: IconProps) => {
+export const DropdownIcon = ({
+	size,
+	direction,
+	...props
+}: DirectionalIconProps) => {
 	return (
 		<svg
 			width={size}
 			height={size}
 			viewBox='0 0 24 24'
 			xmlns='http://www.w3.org/2000/svg'
+			className={getTailwindRotateClassFromDirection(direction)}
 			{...props}
 		>
 			<g clipPath='url(#clip0_344_12697)'>

@@ -1,18 +1,18 @@
-import { IconProps } from './_Icon.interface';
-
-interface ArrowSmallIconProps extends IconProps {
-	direction: 'left' | 'right';
-}
+import {
+	DirectionalIconProps,
+	getTailwindRotateClassFromDirection,
+	IconProps,
+} from './_Icon.interface';
 
 // Default direction is DOWN
-export const ArrowSmallIcon = ({ size, direction }: ArrowSmallIconProps) => {
+export const ArrowSmallIcon = ({ size, direction }: DirectionalIconProps) => {
 	return (
 		<svg
 			width={size}
 			height={size}
 			viewBox='0 0 24 24'
 			fill='none'
-			className={direction === 'left' ? 'rotate-90' : '-rotate-90'}
+			className={getTailwindRotateClassFromDirection(direction)}
 			xmlns='http://www.w3.org/2000/svg'
 		>
 			<g clipPath='url(#clip0_406_12677)'>

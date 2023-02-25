@@ -74,20 +74,6 @@ export const APPLICANT_TRACKING_MAPPERS: Mappers = {
 			display: 'Khác',
 		},
 	],
-	// AppliedPosition: [
-	// 	{
-	// 		value: 'developer',
-	// 		display: 'Developer',
-	// 	},
-	// 	{
-	// 		value: 'marketing',
-	// 		display: 'Marketing',
-	// 	},
-	// 	{
-	// 		value: 'hr',
-	// 		display: 'Human Resources',
-	// 	},
-	// ],
 };
 
 export const APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS: FormattableFieldMappers =
