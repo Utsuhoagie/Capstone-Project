@@ -13,7 +13,7 @@ import { ExampleTable } from '../../modules/example/ExampleTable';
 import { ProtectedRoute } from './ProtectedRoute';
 
 export const Routes = () => {
-	const { isLoggedIn } = useAuthStore((state) => state);
+	const { isLoggedIn } = useAuthStore();
 
 	return (
 		<ReactRouterRoutes>

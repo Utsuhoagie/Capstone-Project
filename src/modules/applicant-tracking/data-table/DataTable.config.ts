@@ -8,15 +8,15 @@ export const APPLICANT_TRACKING_TABLE_CONFIGS: TableConfig = {
 };
 
 export const APPLICANT_TRACKING_COLUMN_CONFIGS: ColumnConfigs = {
-	NationalId: { width: 140 },
-	FullName: { width: 220 },
-	Gender: { width: 80 },
-	BirthDate: { width: 115 },
-	Address: { width: 300 },
-	Phone: { width: 120 },
-	Email: { width: 220 },
-	ExperienceYears: { width: 100 },
-	AppliedPosition: { width: 180 },
-	AppliedDate: { width: 145 },
-	AskingSalary: { width: 130 },
+	NationalId: { width: 140, isSortable: false },
+	FullName: { width: 220, isSortable: true },
+	Gender: { width: 110, isSortable: false },
+	BirthDate: { width: 115, isSortable: true },
+	Address: { width: 300, isSortable: false },
+	Phone: { width: 140, isSortable: false },
+	Email: { width: 220, isSortable: false },
+	ExperienceYears: { width: 160, isSortable: true },
+	AppliedPosition: { width: 180, isSortable: true },
+	AppliedDate: { width: 145, isSortable: true },
+	AskingSalary: { width: 130, isSortable: true },
 };

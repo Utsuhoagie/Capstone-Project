@@ -11,13 +11,12 @@ import { useNavigate } from 'react-router';
 export const DataTable = () => {
 	const navigate = useNavigate();
 
-	const displayConfigs = useApplicantTrackingStore(
-		(state) => state.displayConfigs
-	);
-	const applicants = useApplicantTrackingStore((state) => state.applicants);
+	const { allApplicants, applicantsOnPage, displayConfigs } =
+		useApplicantTrackingStore();
+
 	const filledApplicants = [
-		...applicants,
-		...new Array(10 - applicants.length).fill(undefined),
+		...applicantsOnPage,
+		...new Array(10 - applicantsOnPage.length).fill(undefined),
 	];
 
 	const subsetColumnConfigs = omit(
@@ -28,10 +27,6 @@ export const DataTable = () => {
 	function handleClickCreate() {
 		navigate('create');
 	}
-
-	// useEffect(() => {
-	// 	navigate(`?page=${currentPageIndex}`);
-	// }, [currentPageIndex]);
 
 	return (
 		<div className='flex flex-col gap-4'>

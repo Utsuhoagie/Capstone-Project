@@ -2,18 +2,21 @@ import {
 	createColumnHelper,
 	flexRender,
 	getCoreRowModel,
+	getSortedRowModel,
+	SortingState,
 	useReactTable,
 } from '@tanstack/react-table';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
 	DisplayConfigs,
 	getDisplayForFieldValue,
 	getLabelForField,
 } from '../../../app/App.display';
+import { ArrowBigIcon } from '../../../assets/icons/ArrowBigIcon';
+import { DropdownIcon } from '../../../assets/icons/DropdownIcon';
 import { EmptyText } from '../../atoms/EmptyText/EmptyText';
 import { Pagination } from './Pagination/Pagination';
-import { PaginationButton } from './Pagination/PaginationButton';
 import { ColumnConfigs, TableConfig } from './Table.interface';
 import { useTableStore } from './Table.store';
 
@@ -32,12 +35,14 @@ export const Table = ({
 }: TableProps) => {
 	// Row state management
 	const { selectedRowIndex, setSelectedRowIndex, pagination, setPagination } =
-		useTableStore((state) => state);
+		useTableStore();
 	const firstIndexWithoutData = data.findIndex((row) => row === undefined);
 
 	// Search params
-	const [searchParams, setSearchParams] = useSearchParams();
-	const currentPageIndex = parseInt(searchParams.get('page') ?? '1');
+	const [searchParams, _] = useSearchParams();
+
+	// Sorting
+	const [sortingState, setSortingState] = useState<SortingState>([]);
 
 	// Display configs
 	const { labellers } = displayConfigs;
@@ -65,6 +70,7 @@ export const Table = ({
 
 					return getDisplayForFieldValue({ displayConfigs, field, value });
 				},
+				sortUndefined: 1,
 			}
 		)
 	);
@@ -73,9 +79,16 @@ export const Table = ({
 	const table = useReactTable({
 		data: data,
 		columns: columns,
+		state: {
+			sorting: sortingState,
+		},
+		onSortingChange: setSortingState,
 		getCoreRowModel: getCoreRowModel(),
+		getSortedRowModel: getSortedRowModel(),
 		// debugAll: true,
 	});
+
+	console.log(data);
 
 	useEffect(() => {
 		setSelectedRowIndex(undefined);
@@ -93,19 +106,40 @@ export const Table = ({
 							{table.getFlatHeaders().map((header) => {
 								const columnConfig = columnConfigs[header.id];
 
+								const isSortable = columnConfig.isSortable;
+								const isSortedDirection = isSortable
+									? header.column.getIsSorted()
+									: false;
+
 								return (
 									<th
 										key={header.id}
 										className={
-											' flex flex-col justify-center border-x border-neutral-gray-5 px-1.5 py-1 text-left font-medium text-neutral-gray-1 ' +
+											' relative flex flex-col justify-center border-x border-neutral-gray-5 px-1.5 py-1 text-left font-medium text-neutral-gray-1 ' +
 											' first:border-l-0 ' +
-											' last:border-r-0 '
+											' last:border-r-0 ' +
+											` ${isSortable ? ' cursor-pointer ' : ''} `
 										}
 										style={{ width: columnConfig?.width ?? undefined }}
+										onClick={
+											isSortable
+												? header.column.getToggleSortingHandler()
+												: undefined
+										}
 									>
 										{flexRender(
 											header.column.columnDef.header,
 											header.getContext()
+										)}
+										{isSortable && isSortedDirection && (
+											<div className='absolute right-1'>
+												<ArrowBigIcon
+													size={16}
+													direction={
+														isSortedDirection === 'asc' ? 'up' : 'down'
+													}
+												/>
+											</div>
 										)}
 									</th>
 								);

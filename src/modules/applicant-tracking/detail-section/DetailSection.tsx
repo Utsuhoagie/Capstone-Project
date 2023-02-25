@@ -3,12 +3,7 @@ import { useApplicantTrackingStore } from '../ApplicantTracking.store';
 import { APPLICANT_TRACKING_LIST_ITEM_CONFIGS } from './DetailSection.config';
 
 export const DetailSection = () => {
-	const selectedApplicant = useApplicantTrackingStore(
-		(state) => state.selectedApplicant
-	);
-	const displayConfigs = useApplicantTrackingStore(
-		(state) => state.displayConfigs
-	);
+	const { selectedApplicant, displayConfigs } = useApplicantTrackingStore();
 
 	return (
 		<div className='flex-1 rounded border border-semantic-section-border p-4 shadow-md'>

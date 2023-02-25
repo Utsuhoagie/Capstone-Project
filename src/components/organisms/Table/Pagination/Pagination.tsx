@@ -9,7 +9,7 @@ import { PaginationButton } from './PaginationButton';
 import { PaginationInputButton } from './PaginationInputButton';
 
 export const Pagination = () => {
-	const { pagination, setPagination } = useTableStore((state) => state);
+	const { pagination, setPagination } = useTableStore();
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	// 1-based index

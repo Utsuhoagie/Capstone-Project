@@ -10,9 +10,7 @@ import { CloseIcon } from '../../../assets/icons/CloseIcon';
 // }
 
 export const Dialog = () => {
-	const { isOpen, isClosable, title, content, closeDialog } = useDialogStore(
-		(state) => state
-	);
+	const { isOpen, isClosable, title, content, closeDialog } = useDialogStore();
 
 	return (
 		<HuiDialog

@@ -16,4 +16,5 @@ export interface ColumnConfigs {
 
 export interface ColumnConfig {
 	width?: number;
+	isSortable?: boolean;
 }

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useToastStore } from '../../../app/App.store';
 
 export const Toast = () => {
-	const { isOpen, state, hideToast } = useToastStore((state) => state);
+	const { isOpen, state, hideToast } = useToastStore();
 
 	const isSuccess = state === 'success';
 	const isError = state === 'error';
