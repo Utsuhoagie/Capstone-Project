@@ -3,11 +3,11 @@ import {
 	TableConfig,
 } from '../../../components/organisms/Table/Table.interface';
 
-export const APPLICANT_TRACKING_TABLE_CONFIGS: TableConfig = {
+export const APPLICANT_TABLE_CONFIGS: TableConfig = {
 	width: '100%',
 };
 
-export const APPLICANT_TRACKING_COLUMN_CONFIGS: ColumnConfigs = {
+export const APPLICANT_COLUMN_CONFIGS: ColumnConfigs = {
 	NationalId: { width: 140, isSortable: false },
 	FullName: { width: 220, isSortable: true },
 	Gender: { width: 110, isSortable: false },

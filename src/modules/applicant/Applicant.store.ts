@@ -1,18 +1,18 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { clone } from 'ramda';
-import { Applicant } from './ApplicantTracking.interface';
+import { Applicant } from './Applicant.interface';
 import { DisplayConfigs } from '../../app/App.display';
 import {
-	APPLICANT_TRACKING_FIELDS,
-	APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
-	APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS,
-	APPLICANT_TRACKING_FORMATTERS,
-	APPLICANT_TRACKING_LABELLERS,
-	APPLICANT_TRACKING_MAPPERS,
-} from './ApplicantTracking.display';
+	APPLICANT_FIELDS,
+	APPLICANT_DISPLAY_MODE_MAPPERS,
+	APPLICANT_FORMATTABLE_FIELD_MAPPERS,
+	APPLICANT_FORMATTERS,
+	APPLICANT_LABELLERS,
+	APPLICANT_MAPPERS,
+} from './Applicant.display';
 
-interface ApplicantTrackingStore {
+interface ApplicantStore {
 	// Server state
 	visibleApplicants: Applicant[];
 	setVisibleApplicants: (_applicants: Applicant[]) => void;
@@ -26,7 +26,7 @@ interface ApplicantTrackingStore {
 	// setDisplayConfigs: (_displayConfigs: DisplayConfigs) => void;
 }
 
-export const useApplicantTrackingStore = create<ApplicantTrackingStore>()(
+export const useApplicantStore = create<ApplicantStore>()(
 	devtools((set) => ({
 		// Server state
 		visibleApplicants: [],
@@ -54,12 +54,12 @@ export const useApplicantTrackingStore = create<ApplicantTrackingStore>()(
 			}),
 
 		displayConfigs: {
-			fields: APPLICANT_TRACKING_FIELDS,
-			labellers: APPLICANT_TRACKING_LABELLERS,
-			displayModeMappers: APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS,
-			mappers: APPLICANT_TRACKING_MAPPERS,
-			formattableFieldMappers: APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS,
-			formatters: APPLICANT_TRACKING_FORMATTERS,
+			fields: APPLICANT_FIELDS,
+			labellers: APPLICANT_LABELLERS,
+			displayModeMappers: APPLICANT_DISPLAY_MODE_MAPPERS,
+			mappers: APPLICANT_MAPPERS,
+			formattableFieldMappers: APPLICANT_FORMATTABLE_FIELD_MAPPERS,
+			formatters: APPLICANT_FORMATTERS,
 		},
 		// setDisplayConfigs: (_displayConfigs: DisplayConfigs) =>
 		// 	set((prev) => {

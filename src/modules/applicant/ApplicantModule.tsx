@@ -9,23 +9,20 @@ import {
 	Pagination,
 } from '../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../components/organisms/Table/Table.store';
-import {
-	Applicant,
-	Applicant_APIResponse,
-} from './ApplicantTracking.interface';
-import { useApplicantTrackingStore } from './ApplicantTracking.store';
+import { Applicant, Applicant_APIResponse } from './Applicant.interface';
+import { useApplicantStore } from './Applicant.store';
 import { ButtonSection } from './button-section/ButtonSection';
 import { DataTable } from './data-table/DataTable';
 import { DetailSection } from './detail-section/DetailSection';
 
-export const ApplicantTracking = () => {
+export const ApplicantModule = () => {
 	const navigate = useNavigate();
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	const { selectedRowIndex, pagination, setPagination } = useTableStore();
 	const { visibleApplicants, setVisibleApplicants, setSelectedApplicant } =
-		useApplicantTrackingStore();
+		useApplicantStore();
 
 	const currentQueryParams = QueryString.parse(searchParams.toString());
 	const allQueryParams = {
@@ -35,12 +32,12 @@ export const ApplicantTracking = () => {
 	};
 
 	const { isLoading, error, data } = useQuery(
-		// ['applicant-tracking', currentPageIndex],
-		['applicant-tracking', allQueryParams],
+		// ['applicant', currentPageIndex],
+		['applicant', allQueryParams],
 		async () => {
 			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
 			const res = await fetch(
-				`https://localhost:5000/api/ApplicantTracking?${allQueryParamsAsQueryString}`
+				`https://localhost:5000/api/Applicant?${allQueryParamsAsQueryString}`
 			);
 
 			const pagedResponse: PagedResult<Applicant_APIResponse> =

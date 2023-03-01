@@ -14,8 +14,11 @@ export const AppNavbar = () => {
 	return (
 		<nav className='fixed h-screen w-w-navbar bg-primary-dark-2'>
 			<ul className='flex flex-col items-start'>
-				<NavItem onClick={handleLogout}>Logout</NavItem>
-				<NavItem>Link 2</NavItem>
+				<NavItem onClick={handleLogout}>Đăng xuất</NavItem>
+
+				<NavItem onClick={() => navigate('applicant')}>Ứng Viên</NavItem>
+
+				<NavItem onClick={() => navigate('applicant')}>Nhân viên</NavItem>
 			</ul>
 		</nav>
 	);

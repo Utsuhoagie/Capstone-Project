@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../../components/atoms/Button/Button';
-import { useApplicantTrackingStore } from '../ApplicantTracking.store';
+import { useApplicantStore } from '../Applicant.store';
 
 export const UpdateButton = () => {
 	const navigate = useNavigate();
-	const selectedApplicant = useApplicantTrackingStore(
+	const selectedApplicant = useApplicantStore(
 		(state) => state.selectedApplicant
 	);
 
@@ -13,9 +13,7 @@ export const UpdateButton = () => {
 			secondary
 			width='big'
 			onClick={() =>
-				navigate(
-					`/app/applicant-tracking/update?id=${selectedApplicant?.NationalId}`
-				)
+				navigate(`/app/applicant/update?id=${selectedApplicant?.NationalId}`)
 			}
 		>
 			Chỉnh sửa hồ sơ

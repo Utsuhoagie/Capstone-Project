@@ -1,9 +1,9 @@
 import { Table } from '../../../components/organisms/Table/Table';
 import {
-	APPLICANT_TRACKING_TABLE_CONFIGS,
-	APPLICANT_TRACKING_COLUMN_CONFIGS,
+	APPLICANT_TABLE_CONFIGS,
+	APPLICANT_COLUMN_CONFIGS,
 } from './DataTable.config';
-import { useApplicantTrackingStore } from '../ApplicantTracking.store';
+import { useApplicantStore } from '../Applicant.store';
 import { omit } from 'ramda';
 import { Button } from '../../../components/atoms/Button/Button';
 import { useNavigate } from 'react-router';
@@ -15,7 +15,7 @@ export const DataTable = () => {
 
 	const { openDialog } = useDialogStore();
 
-	const { visibleApplicants, displayConfigs } = useApplicantTrackingStore();
+	const { visibleApplicants, displayConfigs } = useApplicantStore();
 
 	const filledApplicants = [
 		...visibleApplicants,
@@ -24,7 +24,7 @@ export const DataTable = () => {
 
 	const subsetColumnConfigs = omit(
 		['NationalId', 'Address'],
-		APPLICANT_TRACKING_COLUMN_CONFIGS
+		APPLICANT_COLUMN_CONFIGS
 	);
 
 	function handleClickCreate() {
@@ -52,7 +52,7 @@ export const DataTable = () => {
 			<Table
 				data={filledApplicants}
 				displayConfigs={displayConfigs}
-				tableConfig={APPLICANT_TRACKING_TABLE_CONFIGS}
+				tableConfig={APPLICANT_TABLE_CONFIGS}
 				columnConfigs={subsetColumnConfigs}
 			/>
 		</div>

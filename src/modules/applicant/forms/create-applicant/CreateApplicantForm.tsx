@@ -8,8 +8,8 @@ import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
-import { Applicant } from '../../ApplicantTracking.interface';
-import { useApplicantTrackingStore } from '../../ApplicantTracking.store';
+import { Applicant } from '../../Applicant.interface';
+import { useApplicantStore } from '../../Applicant.store';
 import {
 	CreateApplicantFormIntermediateValues,
 	createApplicantFormSchema,
@@ -22,19 +22,16 @@ export const CreateApplicantForm = () => {
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'applicant-tracking/create',
+		'applicant/create',
 		async (formData: Applicant) => {
-			const res = await fetch(
-				'https://localhost:5000/api/ApplicantTracking/Create',
-				{
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-					method: 'POST',
-					body: JSON.stringify(formData),
-				}
-			);
+			const res = await fetch('https://localhost:5000/api/Applicant/Create', {
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				method: 'POST',
+				body: JSON.stringify(formData),
+			});
 
 			if (res.ok) {
 				showToast({ state: 'success' });
@@ -44,7 +41,7 @@ export const CreateApplicantForm = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant-tracking');
+				queryClient.invalidateQueries('applicant');
 			},
 		}
 	);
@@ -67,9 +64,7 @@ export const CreateApplicantForm = () => {
 		resolver: zodResolver(createApplicantFormSchema),
 	});
 
-	const displayConfigs = useApplicantTrackingStore(
-		(state) => state.displayConfigs
-	);
+	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
 
 	const handleSubmit: SubmitHandler<CreateApplicantFormIntermediateValues> = (
 		rawData
@@ -207,7 +202,7 @@ export const CreateApplicantForm = () => {
 						type='button'
 						secondary
 						width='medium'
-						onClick={() => navigate('/app/applicant-tracking')}
+						onClick={() => navigate('/app/applicant')}
 					>
 						Thoát
 					</Button>

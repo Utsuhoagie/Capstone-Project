@@ -8,8 +8,8 @@ import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
-import { Applicant } from '../../ApplicantTracking.interface';
-import { useApplicantTrackingStore } from '../../ApplicantTracking.store';
+import { Applicant } from '../../Applicant.interface';
+import { useApplicantStore } from '../../Applicant.store';
 import {
 	UpdateApplicantFormIntermediateValues,
 	updateApplicantFormSchema,
@@ -18,16 +18,16 @@ import {
 export const UpdateApplicantForm = () => {
 	const navigate = useNavigate();
 
-	const selectedApplicant = useApplicantTrackingStore(
+	const selectedApplicant = useApplicantStore(
 		(state) => state.selectedApplicant
 	) as Applicant;
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'applicant-tracking/update',
+		'applicant/update',
 		async (formData: Applicant) => {
 			const res = await fetch(
-				`https://localhost:5000/api/ApplicantTracking/Update?NationalId=${selectedApplicant.NationalId}`,
+				`https://localhost:5000/api/Applicant/Update?NationalId=${selectedApplicant.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',
@@ -46,7 +46,7 @@ export const UpdateApplicantForm = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant-tracking');
+				queryClient.invalidateQueries('applicant');
 			},
 		}
 	);
@@ -71,9 +71,7 @@ export const UpdateApplicantForm = () => {
 		resolver: zodResolver(updateApplicantFormSchema),
 	});
 
-	const displayConfigs = useApplicantTrackingStore(
-		(state) => state.displayConfigs
-	);
+	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
 
 	const handleSubmit: SubmitHandler<UpdateApplicantFormIntermediateValues> = (
 		rawData
@@ -211,7 +209,7 @@ export const UpdateApplicantForm = () => {
 						type='button'
 						secondary
 						width='medium'
-						onClick={() => navigate('/app/applicant-tracking?page=2')}
+						onClick={() => navigate('/app/applicant?page=2')}
 					>
 						Thoát
 					</Button>

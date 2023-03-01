@@ -1,22 +1,22 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { useToastStore } from '../../../app/App.store';
 import { Button } from '../../../components/atoms/Button/Button';
-import { Applicant } from '../ApplicantTracking.interface';
-import { useApplicantTrackingStore } from '../ApplicantTracking.store';
+import { Applicant } from '../Applicant.interface';
+import { useApplicantStore } from '../Applicant.store';
 
 export const DeleteButton = () => {
 	const showToast = useToastStore((state) => state.showToast);
 
-	const selectedApplicant = useApplicantTrackingStore(
+	const selectedApplicant = useApplicantStore(
 		(state) => state.selectedApplicant
 	);
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'applicant-tracking/delete',
+		'applicant/delete',
 		async () => {
 			const res = await fetch(
-				`https://localhost:5000/api/ApplicantTracking/Delete?NationalId=${selectedApplicant?.NationalId}`,
+				`https://localhost:5000/api/Applicant/Delete?NationalId=${selectedApplicant?.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',
@@ -34,7 +34,7 @@ export const DeleteButton = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant-tracking');
+				queryClient.invalidateQueries('applicant');
 			},
 		}
 	);

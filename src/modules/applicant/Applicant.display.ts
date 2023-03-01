@@ -17,7 +17,7 @@ dayjs.tz.setDefault('Asia/Ho_Chi_Minh');
 // dayjs.tz.setDefault('Asia/Ho_Chi_Minh');
 
 // NOTE: This changes together with Applicant
-export const APPLICANT_TRACKING_FIELDS: string[] = [
+export const APPLICANT_FIELDS: string[] = [
 	'NationalId',
 	'FullName',
 	'Gender',
@@ -31,7 +31,7 @@ export const APPLICANT_TRACKING_FIELDS: string[] = [
 	'AskingSalary',
 ];
 
-export const APPLICANT_TRACKING_LABELLERS: Labellers = {
+export const APPLICANT_LABELLERS: Labellers = {
 	NationalId: 'CMND / CCCD',
 	FullName: 'Họ tên',
 	Gender: 'Giới tính',
@@ -45,7 +45,7 @@ export const APPLICANT_TRACKING_LABELLERS: Labellers = {
 	AskingSalary: 'Mức lương đề nghị',
 };
 
-export const APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
+export const APPLICANT_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
 	NationalId: 'formatted',
 	FullName: 'normal',
 	Gender: 'mapped',
@@ -59,7 +59,7 @@ export const APPLICANT_TRACKING_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
 	AskingSalary: 'formatted',
 };
 
-export const APPLICANT_TRACKING_MAPPERS: Mappers = {
+export const APPLICANT_MAPPERS: Mappers = {
 	Gender: [
 		{
 			value: 'male',
@@ -76,17 +76,16 @@ export const APPLICANT_TRACKING_MAPPERS: Mappers = {
 	],
 };
 
-export const APPLICANT_TRACKING_FORMATTABLE_FIELD_MAPPERS: FormattableFieldMappers =
-	{
-		NationalId: 'NationalId',
-		Phone: 'Phone',
-		BirthDate: 'Date',
-		ExperienceYears: 'ExperienceYears',
-		AppliedDate: 'Date',
-		AskingSalary: 'Money',
-	};
+export const APPLICANT_FORMATTABLE_FIELD_MAPPERS: FormattableFieldMappers = {
+	NationalId: 'NationalId',
+	Phone: 'Phone',
+	BirthDate: 'Date',
+	ExperienceYears: 'ExperienceYears',
+	AppliedDate: 'Date',
+	AskingSalary: 'Money',
+};
 
-export const APPLICANT_TRACKING_FORMATTERS: Formatters = {
+export const APPLICANT_FORMATTERS: Formatters = {
 	Date: (value: Date | undefined) => {
 		// const timezoneParse = 'Europe/London'; // +00:00
 		// const timezone = 'Asia/Dubai'; // +04:00

@@ -9,7 +9,7 @@ import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInpu
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useTableStore } from '../../../../components/organisms/Table/Table.store';
-import { useApplicantTrackingStore } from '../../ApplicantTracking.store';
+import { useApplicantStore } from '../../Applicant.store';
 import {
 	FilterApplicantFormIntermediateValues,
 	filterApplicantDialogFormSchema,
@@ -20,7 +20,7 @@ export const FilterDialog = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { closeDialog } = useDialogStore();
 	const { pagination } = useTableStore();
-	const { displayConfigs } = useApplicantTrackingStore();
+	const { displayConfigs } = useApplicantStore();
 	const methods = useForm<FilterApplicantFormIntermediateValues>({
 		resolver: zodResolver(filterApplicantDialogFormSchema),
 		defaultValues: {

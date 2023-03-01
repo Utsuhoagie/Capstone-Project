@@ -1,9 +1,9 @@
 import { List } from '../../../components/organisms/List/List';
-import { useApplicantTrackingStore } from '../ApplicantTracking.store';
-import { APPLICANT_TRACKING_LIST_ITEM_CONFIGS } from './DetailSection.config';
+import { useApplicantStore } from '../Applicant.store';
+import { APPLICANT_LIST_ITEM_CONFIGS } from './DetailSection.config';
 
 export const DetailSection = () => {
-	const { selectedApplicant, displayConfigs } = useApplicantTrackingStore();
+	const { selectedApplicant, displayConfigs } = useApplicantStore();
 
 	return (
 		<div className='flex-1 rounded border border-semantic-section-border p-4 shadow-md'>
@@ -19,7 +19,7 @@ export const DetailSection = () => {
 						<List
 							data={selectedApplicant}
 							displayConfigs={displayConfigs}
-							listItemConfigs={APPLICANT_TRACKING_LIST_ITEM_CONFIGS}
+							listItemConfigs={APPLICANT_LIST_ITEM_CONFIGS}
 						/>
 					</div>
 

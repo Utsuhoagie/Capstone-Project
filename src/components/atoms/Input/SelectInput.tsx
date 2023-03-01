@@ -9,7 +9,7 @@ import {
 	getDisplayForFieldValue,
 	getLabelForField,
 } from '../../../app/App.display';
-import { useApplicantTrackingStore } from '../../../modules/applicant-tracking/ApplicantTracking.store';
+import { useApplicantStore } from '../../../modules/applicant/Applicant.store';
 
 interface SelectInputProps extends React.ComponentPropsWithRef<'select'> {
 	name: string;
@@ -201,9 +201,7 @@ export const SelectInput = ({
 	const selectedValue = watch(props.name) as string;
 	const selectedValues = watch(props.name) as string[];
 
-	const displayConfigs = useApplicantTrackingStore(
-		(state) => state.displayConfigs
-	);
+	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
 
 	const optionPairs = props.options.map((option) => ({
 		value: option,
