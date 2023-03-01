@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
+import QueryString from 'query-string';
 import { clone, omit } from 'ramda';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { PAGE_SIZE } from '../../components/organisms/Table/Pagination/Pagination.constants';
 import {
 	PagedResult,
 	Pagination,
@@ -21,115 +21,68 @@ import { DetailSection } from './detail-section/DetailSection';
 export const ApplicantTracking = () => {
 	const navigate = useNavigate();
 
-	const [searchParams, _] = useSearchParams();
-	const currentPageString = searchParams.get('page') ?? '1';
-	const currentPageIndex = parseInt(currentPageString);
-	console.log({ currentPageIndex });
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	const { selectedRowIndex, pagination, setPagination } = useTableStore();
-	const {
-		allApplicants,
-		setAllApplicants,
-		applicantsOnPage,
-		setApplicantsOnPage,
-		setSelectedApplicant,
-	} = useApplicantTrackingStore();
+	const { visibleApplicants, setVisibleApplicants, setSelectedApplicant } =
+		useApplicantTrackingStore();
+
+	const currentQueryParams = QueryString.parse(searchParams.toString());
+	const allQueryParams = {
+		page: pagination.CurrentPage,
+		pageSize: pagination.PageSize,
+		...currentQueryParams,
+	};
 
 	const { isLoading, error, data } = useQuery(
-		'applicant-tracking',
+		// ['applicant-tracking', currentPageIndex],
+		['applicant-tracking', allQueryParams],
 		async () => {
-			const res = await fetch('https://localhost:5000/api/ApplicantTracking');
+			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
+			const res = await fetch(
+				`https://localhost:5000/api/ApplicantTracking?${allQueryParamsAsQueryString}`
+			);
 
 			const pagedResponse: PagedResult<Applicant_APIResponse> =
 				await res.json();
+			console.log('Paged API response: ', pagedResponse);
 
-			console.log('API response for ALL: ', pagedResponse);
+			const responsePagination: Pagination = omit(['Items'], pagedResponse);
+			setPagination(responsePagination);
 
-			const pagination: Pagination = omit(['Items'], pagedResponse);
-
-			setPagination(pagination);
-
-			const allApplicants: Applicant[] = pagedResponse.Items.map((Item) => ({
-				...Item,
-				BirthDate: Item.BirthDate ? dayjs(Item.BirthDate).toDate() : undefined,
-				Email: Item.Email ?? undefined,
-				AppliedDate: dayjs(Item.AppliedDate).toDate(),
-			}));
-
-			setAllApplicants(allApplicants);
-
-			const currentPageIndex0Based = currentPageIndex - 1;
-			const pageSize = pagination.PageSize;
-			const applicantsOnPage: Applicant[] = clone(allApplicants).slice(
-				currentPageIndex0Based * pageSize,
-				currentPageIndex0Based * pageSize + pageSize
+			const responseVisibleApplicants: Applicant[] = pagedResponse.Items.map(
+				(Item) => ({
+					...Item,
+					BirthDate: Item.BirthDate
+						? dayjs(Item.BirthDate).toDate()
+						: undefined,
+					Email: Item.Email ?? undefined,
+					AppliedDate: dayjs(Item.AppliedDate).toDate(),
+				})
 			);
-
-			setApplicantsOnPage(applicantsOnPage);
+			setVisibleApplicants(responseVisibleApplicants);
 		},
-		{ keepPreviousData: true }
+		{ keepPreviousData: true, staleTime: 0, refetchOnWindowFocus: false }
 	);
 
-	/* 	useQuery(
-		['applicant-tracking', currentPage],
-		async () => {
-			const fetchURL =
-				'https://localhost:5000/api/ApplicantTracking' +
-				(currentPage !== 1 ? `?page=${currentPage}&pageSize=${PAGE_SIZE}` : '');
-			const res = await fetch(fetchURL);
-
-			const pagedResponse: PagedResult<Applicant_APIResponse> =
-				await res.json();
-
-			console.log('API response ', pagedResponse);
-
-			const pagination: Pagination = omit(['Items'], pagedResponse);
-
-			setPagination(pagination);
-
-			const allApplicants: Applicant[] = pagedResponse.Items.map((Item) => ({
-				...Item,
-				BirthDate: Item.BirthDate ? dayjs(Item.BirthDate).toDate() : undefined,
-				Email: Item.Email ?? undefined,
-				AppliedDate: dayjs(Item.AppliedDate).toDate(),
-			}));
-
-			const currentPageIndex0Based = pagination.CurrentPage - 1;
-			const pageSize = pagination.PageSize;
-			const applicantsOnPage: Applicant[] = clone(allApplicants).slice(
-				currentPageIndex0Based * pageSize,
-				currentPageIndex0Based * pageSize + pageSize
-			);
-
-			setAllApplicants(allApplicants);
-			setApplicantsOnPage(applicantsOnPage);
-		},
-		{ keepPreviousData: true }
-	); */
-
+	// Whenever clicking a table row
 	useEffect(() => {
 		if (selectedRowIndex === undefined) {
 			setSelectedApplicant(undefined);
 			return;
 		}
-		const selectedApplicant = applicantsOnPage[selectedRowIndex];
+		const selectedApplicant = visibleApplicants[selectedRowIndex];
 		setSelectedApplicant(selectedApplicant);
 	}, [selectedRowIndex]);
 
+	// Whenever query params change
 	useEffect(() => {
-		const page = searchParams.get('page');
-
-		const currentPageIndex = parseInt(page ?? '1');
-		const currentPageIndex0Based = currentPageIndex - 1;
-		const pageSize = pagination.PageSize;
-		const applicantsOnPage: Applicant[] = clone(allApplicants).slice(
-			currentPageIndex0Based * pageSize,
-			currentPageIndex0Based * pageSize + pageSize
+		console.log(
+			'Effect SearchParams, searchParams = ',
+			searchParams.toString()
 		);
-
-		// console.log({ applicantsOnPage });
-
-		setApplicantsOnPage(applicantsOnPage);
+		const pageParam = searchParams.get('page') ?? '1';
+		const currentPageIndex = parseInt(pageParam);
 
 		const newPagination: Pagination = {
 			...pagination,
@@ -140,9 +93,10 @@ export const ApplicantTracking = () => {
 
 		setPagination(newPagination);
 
-		if (page !== null) {
-			navigate(`?page=${page}`);
-		}
+		// setSearchParams((prev) => ({
+		// 	...prev,
+		// 	page: pageParam,
+		// }));
 	}, [searchParams]);
 
 	if (isLoading) return <p>'Loading...'</p>;

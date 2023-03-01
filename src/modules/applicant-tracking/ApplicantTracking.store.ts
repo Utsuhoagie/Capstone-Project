@@ -14,12 +14,12 @@ import {
 
 interface ApplicantTrackingStore {
 	// Server state
-	allApplicants: Applicant[];
-	setAllApplicants: (_applicants: Applicant[]) => void;
+	visibleApplicants: Applicant[];
+	setVisibleApplicants: (_applicants: Applicant[]) => void;
 
 	// Client state
-	applicantsOnPage: Applicant[];
-	setApplicantsOnPage: (_applicantsOnPage: Applicant[]) => void;
+	/* applicantsOnPage: Applicant[];
+	setApplicantsOnPage: (_applicantsOnPage: Applicant[]) => void; */
 	selectedApplicant: Applicant | undefined;
 	setSelectedApplicant: (_applicant: Applicant | undefined) => void;
 	displayConfigs: DisplayConfigs;
@@ -29,22 +29,22 @@ interface ApplicantTrackingStore {
 export const useApplicantTrackingStore = create<ApplicantTrackingStore>()(
 	devtools((set) => ({
 		// Server state
-		allApplicants: [],
-		setAllApplicants: (_allApplicants: Applicant[]) =>
+		visibleApplicants: [],
+		setVisibleApplicants: (_visibleApplicants: Applicant[]) =>
 			set((prev) => {
 				let next = clone(prev);
-				next.allApplicants = _allApplicants;
+				next.visibleApplicants = _visibleApplicants;
 				return next;
 			}),
 
 		// Client state
-		applicantsOnPage: [],
+		/* applicantsOnPage: [],
 		setApplicantsOnPage: (_applicantsOnPage: Applicant[]) =>
 			set((prev) => {
 				let next = clone(prev);
 				next.applicantsOnPage = _applicantsOnPage;
 				return next;
-			}),
+			}), */
 		selectedApplicant: undefined,
 		setSelectedApplicant: (_applicant: Applicant | undefined) =>
 			set((prev) => {

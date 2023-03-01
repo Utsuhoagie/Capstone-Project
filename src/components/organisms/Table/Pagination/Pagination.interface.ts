@@ -1,8 +1,12 @@
 export type Pagination = {
-	TotalCount: number;
-	PageSize: number;
+	Count: number;
+
 	CurrentPage: number;
+	PageSize: number;
+
+	TotalCount: number;
 	TotalPages: number;
+
 	HasPrevious: boolean;
 	HasNext: boolean;
 };

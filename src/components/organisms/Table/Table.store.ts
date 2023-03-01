@@ -16,9 +16,10 @@ export const useTableStore = create<TableStore>()(
 	devtools((set) => ({
 		selectedRowIndex: undefined,
 		pagination: {
-			TotalCount: 0,
-			PageSize: PAGE_SIZE,
+			Count: 0,
 			CurrentPage: 1,
+			PageSize: PAGE_SIZE,
+			TotalCount: 0,
 			TotalPages: 1,
 			HasPrevious: false,
 			HasNext: false,

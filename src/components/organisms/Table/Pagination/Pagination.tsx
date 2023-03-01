@@ -12,8 +12,6 @@ export const Pagination = () => {
 	const { pagination, setPagination } = useTableStore();
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	// 1-based index
-	const currentPageIndex = parseInt(searchParams.get('page') ?? '1');
 	const hasPaginationInput = pagination.TotalPages > MAX_PAGES_WITHOUT_INPUT;
 
 	const pagesFillerWithoutInput = !hasPaginationInput
@@ -31,7 +29,12 @@ export const Pagination = () => {
 			<PaginationButton
 				content='prev'
 				disabled={!pagination.HasPrevious}
-				onClick={() => setSearchParams({ page: `${currentPageIndex - 1}` })}
+				onClick={() =>
+					setSearchParams((prev) => ({
+						...prev,
+						page: `${pagination.CurrentPage - 1}`,
+					}))
+				}
 			/>
 
 			{!hasPaginationInput &&
@@ -41,7 +44,7 @@ export const Pagination = () => {
 					return (
 						<PaginationButton
 							key={pageIndex}
-							active={currentPageIndex === pageIndex}
+							active={pagination.CurrentPage === pageIndex}
 							content={pageIndex}
 							onClick={() => setSearchParams({ page: `${pageIndex}` })}
 						/>
@@ -55,7 +58,7 @@ export const Pagination = () => {
 						return (
 							<PaginationButton
 								key={pageIndex}
-								active={currentPageIndex === pageIndex}
+								active={pagination.CurrentPage === pageIndex}
 								content={pageIndex}
 								onClick={() => setSearchParams({ page: `${pageIndex}` })}
 							/>
@@ -70,7 +73,7 @@ export const Pagination = () => {
 						return (
 							<PaginationButton
 								key={pageIndex}
-								active={currentPageIndex === pageIndex}
+								active={pagination.CurrentPage === pageIndex}
 								content={pageIndex}
 								onClick={() => setSearchParams({ page: `${pageIndex}` })}
 							/>
@@ -82,7 +85,12 @@ export const Pagination = () => {
 			<PaginationButton
 				content='next'
 				disabled={!pagination.HasNext}
-				onClick={() => setSearchParams({ page: `${currentPageIndex + 1}` })}
+				onClick={() =>
+					setSearchParams((prev) => ({
+						...prev,
+						page: `${pagination.CurrentPage + 1}`,
+					}))
+				}
 			/>
 		</div>
 	);

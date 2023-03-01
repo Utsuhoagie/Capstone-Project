@@ -7,16 +7,19 @@ import { useApplicantTrackingStore } from '../ApplicantTracking.store';
 import { omit } from 'ramda';
 import { Button } from '../../../components/atoms/Button/Button';
 import { useNavigate } from 'react-router';
+import { useDialogStore } from '../../../app/App.store';
+import { FilterDialog } from './filter-dialog/FilterDialog';
 
 export const DataTable = () => {
 	const navigate = useNavigate();
 
-	const { allApplicants, applicantsOnPage, displayConfigs } =
-		useApplicantTrackingStore();
+	const { openDialog } = useDialogStore();
+
+	const { visibleApplicants, displayConfigs } = useApplicantTrackingStore();
 
 	const filledApplicants = [
-		...applicantsOnPage,
-		...new Array(10 - applicantsOnPage.length).fill(undefined),
+		...visibleApplicants,
+		...new Array(10 - visibleApplicants.length).fill(undefined),
 	];
 
 	const subsetColumnConfigs = omit(
@@ -28,13 +31,21 @@ export const DataTable = () => {
 		navigate('create');
 	}
 
+	function handleOpenFilterDialog() {
+		openDialog({
+			isClosable: true,
+			title: 'Bộ lọc',
+			content: <FilterDialog />,
+		});
+	}
+
 	return (
 		<div className='flex flex-col gap-4'>
 			<div className='flex flex-row gap-4'>
 				<Button width='small' onClick={handleClickCreate}>
 					Thêm
 				</Button>
-				<Button secondary width='small'>
+				<Button secondary width='small' onClick={handleOpenFilterDialog}>
 					Bộ Lọc
 				</Button>
 			</div>
