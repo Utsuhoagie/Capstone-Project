@@ -81,7 +81,11 @@ const SelectInputSingle = ({
 									  })
 									: placeholder}
 							</p>
-							<DropdownIcon size={24} className='ui-open:rotate-180' />
+							<DropdownIcon
+								size={24}
+								direction='down'
+								className='ui-open:rotate-180'
+							/>
 						</Listbox.Button>
 
 						<div className='relative'>
@@ -147,7 +151,11 @@ const SelectInputMultiple = ({
 									  'Nhiều...'
 									: placeholder}
 							</p>
-							<DropdownIcon size={24} className='ui-open:rotate-180' />
+							<DropdownIcon
+								size={24}
+								direction='down'
+								className='ui-open:rotate-180'
+							/>
 						</Listbox.Button>
 
 						<div className='relative'>

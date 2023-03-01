@@ -88,8 +88,6 @@ export const Table = ({
 		// debugAll: true,
 	});
 
-	console.log(data);
-
 	useEffect(() => {
 		setSelectedRowIndex(undefined);
 	}, [searchParams]);

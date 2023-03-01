@@ -691,31 +691,41 @@
 }
 
 .react-datepicker__close-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+
   cursor: pointer;
-  background-color: transparent;
+  /* background-color: transparent; */
   border: 0;
   outline: 0;
-  padding: 0 6px 0 0;
+  padding: 0 0px 0 0;
   position: absolute;
-  top: 0;
-  right: 0;
-  height: 100%;
-  display: table-cell;
-  vertical-align: middle;
+  top: 50%;
+  right: 48px;
+  transform: translateY(-50%);  
+  content: "×";
 }
 .react-datepicker__close-icon::after {
   cursor: pointer;
-  background-color: #216ba5;
+  background-color: #dc2626;
   color: #fff;
   border-radius: 50%;
   height: 16px;
   width: 16px;
-  padding: 2px;
-  font-size: 12px;
+  padding: 0px;
+
+  font-size: 14px;
   line-height: 1;
-  text-align: center;
-  display: table-cell;
   vertical-align: middle;
+  /* text-align: center;
+  display: table-cell;
+  vertical-align: middle; */
   content: "×";
 }
 

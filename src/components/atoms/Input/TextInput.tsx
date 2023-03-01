@@ -5,12 +5,14 @@ import { Label } from './Label';
 
 interface TextInputProps extends React.ComponentPropsWithRef<'input'> {
 	name: string;
+	label?: string;
 	width: 'full' | 'medium';
 	displayConfigs: DisplayConfigs;
 }
 
 export const TextInput = ({
 	name,
+	label,
 	width,
 	displayConfigs,
 	type,
@@ -27,10 +29,13 @@ export const TextInput = ({
 		<div className='flex flex-row items-center gap-2'>
 			{/* {hasLabel && <Label label={label} required={required} />} */}
 			<Label
-				label={getLabelForField({
-					labellers: displayConfigs.labellers,
-					field: name,
-				})}
+				label={
+					label ??
+					getLabelForField({
+						labellers: displayConfigs.labellers,
+						field: name,
+					})
+				}
 				required={required}
 			/>
 

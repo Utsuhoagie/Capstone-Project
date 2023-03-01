@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 
 interface DateInputProps {
 	name: string;
+	label?: string;
 	required?: boolean;
 	placeholder?: string;
 	width: 'medium' | 'full';
@@ -17,18 +18,19 @@ interface DateInputProps {
 
 export const DateInput = ({
 	name,
+	label,
 	required,
 	placeholder,
 	width,
 	displayConfigs,
 }: DateInputProps) => {
-	const { formState } = useFormContext();
+	const { formState, setValue, getValues } = useFormContext();
 	const error = formState.errors[name];
 
 	// const hasLabel: boolean = label !== undefined;
 
 	return (
-		<div className='flex flex-row items-center gap-0'>
+		<div className='flex flex-row items-center gap-2'>
 			{/* {hasLabel && (
 				<Label
 					label={getLabelForField({
@@ -40,10 +42,13 @@ export const DateInput = ({
 			)} */}
 
 			<Label
-				label={getLabelForField({
-					labellers: displayConfigs.labellers,
-					field: name,
-				})}
+				label={
+					label ??
+					getLabelForField({
+						labellers: displayConfigs.labellers,
+						field: name,
+					})
+				}
 				required={required}
 			/>
 
@@ -62,8 +67,9 @@ export const DateInput = ({
 					return (
 						<div className='relative'>
 							<ReactDatePicker
+								isClearable
 								className={
-									' mx-2 h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none' +
+									' h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none' +
 									` ${
 										error
 											? 'border-state-error-normal'
@@ -74,13 +80,34 @@ export const DateInput = ({
 								}
 								placeholderText={placeholder}
 								dateFormat='dd/MM/yyyy'
-								selected={
-									field.value && dayjs(field.value).startOf('day').toDate()
-								}
+								selected={(() => {
+									const formValue =
+										field.value === '' ? undefined : field.value;
+									const formValueDayjs = dayjs(formValue).startOf('day');
+
+									return formValue === undefined
+										? undefined
+										: formValueDayjs.toDate();
+
+									// const usableDate = dayjs(field.value).startOf('day').toDate();
+									// const defaultUnusableDate = undefined;
+									// return field.value === DEFAULT_UNUSABLE_DATE
+									// 	? usableDate
+									// 	: defaultUnusableDate;
+								})()}
 								onChange={(date, event) => {
 									console.log('onChange', date);
-									const startOfDayDate = dayjs(date).startOf('day').toDate();
-									field.onChange(startOfDayDate, event);
+									if (date === null) {
+										field.onChange(undefined, event);
+										setValue(name, '');
+										console.log('getValues', getValues());
+										return;
+									}
+
+									const startOfDayString = dayjs(date)
+										.startOf('day')
+										.toISOString();
+									field.onChange(startOfDayString, event);
 								}}
 								ref={(element) => element && field.ref(element['input'])}
 							/>

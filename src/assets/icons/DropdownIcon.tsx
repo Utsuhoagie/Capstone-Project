@@ -6,6 +6,7 @@ import {
 export const DropdownIcon = ({
 	size,
 	direction,
+	className,
 	...props
 }: DirectionalIconProps) => {
 	return (
@@ -14,7 +15,9 @@ export const DropdownIcon = ({
 			height={size}
 			viewBox='0 0 24 24'
 			xmlns='http://www.w3.org/2000/svg'
-			className={getTailwindRotateClassFromDirection(direction)}
+			className={`${getTailwindRotateClassFromDirection(
+				direction
+			)} ${className}`}
 			{...props}
 		>
 			<g clipPath='url(#clip0_344_12697)'>

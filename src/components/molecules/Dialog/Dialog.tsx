@@ -18,14 +18,14 @@ export const Dialog = () => {
 			open={isOpen}
 			onClose={() => closeDialog()}
 		>
-			<HuiDialog.Panel className='HuiPanel flex flex-col divide-y divide-neutral-gray-6 bg-neutral-white'>
+			<HuiDialog.Panel className='HuiPanel flex flex-col divide-y divide-neutral-gray-6 rounded bg-neutral-white'>
 				<HuiDialog.Title
 					as='div'
 					className='HuiTitle relative flex flex-row items-center justify-center'
 				>
-					<h2 className='h-h-dialog-title py-2 font-bold text-primary-dark-2'>
+					<h3 className='h-h-dialog-title py-2 text-h3 font-bold text-primary-dark-2'>
 						{title ?? ''}
-					</h2>
+					</h3>
 					{isClosable && (
 						<CloseIcon
 							className='absolute top-2 right-2 cursor-pointer'
