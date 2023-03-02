@@ -8,23 +8,23 @@ import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
-import { Applicant } from '../../Applicant.interface';
-import { useApplicantStore } from '../../Applicant.store';
+import { Employee } from '../../Employee.interface';
+import { useEmployeeStore } from '../../Employee.store';
 import {
-	CreateApplicantFormIntermediateValues,
-	createApplicantFormSchema,
-} from './CreateApplicantForm.form';
+	CreateEmployeeFormIntermediateValues,
+	createEmployeeFormSchema,
+} from './CreateEmployeeForm.form';
 
-export const CreateApplicantForm = () => {
+export const CreateEmployeeForm = () => {
 	const navigate = useNavigate();
 
 	const showToast = useToastStore((state) => state.showToast);
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'applicant/create',
-		async (formData: Applicant) => {
-			const res = await fetch('https://localhost:5000/api/Applicant/Create', {
+		'employee/create',
+		async (formData: Employee) => {
+			const res = await fetch('https://localhost:5000/api/Employee/Create', {
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json',
@@ -41,12 +41,12 @@ export const CreateApplicantForm = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant');
+				queryClient.invalidateQueries('employee');
 			},
 		}
 	);
 
-	const methods = useForm<CreateApplicantFormIntermediateValues>({
+	const methods = useForm<CreateEmployeeFormIntermediateValues>({
 		mode: 'onSubmit',
 		defaultValues: {
 			NationalId: '',
@@ -61,17 +61,17 @@ export const CreateApplicantForm = () => {
 			AppliedDate: dayjs().toDate(),
 			AskingSalary: '',
 		},
-		resolver: zodResolver(createApplicantFormSchema),
+		resolver: zodResolver(createEmployeeFormSchema),
 	});
 
-	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
+	const displayConfigs = useEmployeeStore((state) => state.displayConfigs);
 
-	const handleSubmit: SubmitHandler<CreateApplicantFormIntermediateValues> = (
+	const handleSubmit: SubmitHandler<CreateEmployeeFormIntermediateValues> = (
 		rawData
 	) => {
 		console.log(rawData);
 
-		const formData: Applicant = {
+		const formData: Employee = {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
@@ -80,9 +80,11 @@ export const CreateApplicantForm = () => {
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
-			AppliedPosition: rawData.AppliedPosition,
-			AppliedDate: rawData.AppliedDate,
-			AskingSalary: parseInt(rawData.AskingSalary),
+			Position: '',
+			Salary: 0,
+			EmployedDate: new Date(),
+			StartHour: 0,
+			EndHour: 23,
 		};
 
 		// console.log({ formData });
@@ -125,7 +127,6 @@ export const CreateApplicantForm = () => {
 					/>
 
 					<DateInput
-						isClearable
 						name='BirthDate'
 						placeholder='Chọn ngày sinh.'
 						width='medium'
@@ -166,7 +167,7 @@ export const CreateApplicantForm = () => {
 
 					<TextInput
 						required
-						name='AppliedPosition'
+						name='Position'
 						placeholder='Nhập vị trí ứng tuyển.'
 						width='medium'
 						displayConfigs={displayConfigs}
@@ -203,7 +204,7 @@ export const CreateApplicantForm = () => {
 						type='button'
 						secondary
 						width='medium'
-						onClick={() => navigate('/app/applicant')}
+						onClick={() => navigate('/app/employee')}
 					>
 						Thoát
 					</Button>

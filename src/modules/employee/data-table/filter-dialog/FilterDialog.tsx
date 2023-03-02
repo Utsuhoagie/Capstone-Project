@@ -9,20 +9,20 @@ import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInpu
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useTableStore } from '../../../../components/organisms/Table/Table.store';
-import { useApplicantStore } from '../../Applicant.store';
+import { useEmployeeStore } from '../../Employee.store';
 import {
-	FilterApplicantFormIntermediateValues,
-	filterApplicantDialogFormSchema,
-	FilterApplicantFormSubmitValues,
+	FilterEmployeeFormIntermediateValues,
+	filterEmployeeDialogFormSchema,
+	FilterEmployeeFormSubmitValues,
 } from './FilterDialog.form';
 
 export const FilterDialog = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { closeDialog } = useDialogStore();
 	const { pagination } = useTableStore();
-	const { displayConfigs } = useApplicantStore();
-	const methods = useForm<FilterApplicantFormIntermediateValues>({
-		resolver: zodResolver(filterApplicantDialogFormSchema),
+	const { displayConfigs } = useEmployeeStore();
+	const methods = useForm<FilterEmployeeFormIntermediateValues>({
+		resolver: zodResolver(filterEmployeeDialogFormSchema),
 		defaultValues: {
 			SubName: searchParams.get('SubName') ?? '',
 			Gender: (searchParams.get('Gender') as any) ?? '',
@@ -36,13 +36,13 @@ export const FilterDialog = () => {
 	});
 
 	const handleApplyFilter: SubmitHandler<
-		FilterApplicantFormIntermediateValues
+		FilterEmployeeFormIntermediateValues
 	> = async (rawData: any) => {
-		/* NOTE: rawData is NOT FilterApplicantFormIntermediateValues
+		/* NOTE: rawData is NOT FilterEmployeeFormIntermediateValues
     Zod 'preprocess' changes some of it */
 		console.table(rawData);
 
-		const submitData: FilterApplicantFormSubmitValues = {
+		const submitData: FilterEmployeeFormSubmitValues = {
 			SubName: rawData.SubName,
 			Gender: rawData.Gender,
 			Address: rawData.Address,
@@ -112,14 +112,12 @@ export const FilterDialog = () => {
 				/>
 
 				<DateInput
-					isClearable
 					name='AppliedDateFrom'
 					label='Từ'
 					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 				<DateInput
-					isClearable
 					name='AppliedDateTo'
 					label='Đến'
 					width='medium'

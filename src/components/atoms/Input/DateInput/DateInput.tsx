@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 
 interface DateInputProps {
 	name: string;
+	isClearable?: boolean;
 	label?: string;
 	required?: boolean;
 	placeholder?: string;
@@ -18,6 +19,7 @@ interface DateInputProps {
 
 export const DateInput = ({
 	name,
+	isClearable,
 	label,
 	required,
 	placeholder,
@@ -31,16 +33,6 @@ export const DateInput = ({
 
 	return (
 		<div className='flex flex-row items-center gap-2'>
-			{/* {hasLabel && (
-				<Label
-					label={getLabelForField({
-						labellers: displayConfigs.labellers,
-						field: name,
-					})}
-					required={required}
-				/>
-			)} */}
-
 			<Label
 				label={
 					label ??
@@ -52,22 +44,13 @@ export const DateInput = ({
 				required={required}
 			/>
 
-			{/* <input
-				className={
-					' h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
-					` ${error ? 'border-state-error-normal' : 'border-primary-normal'} ` +
-					' hover:shadow focus:shadow ' +
-					` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
-				}
-				{...register(name, { valueAsDate: true })}
-			/> */}
 			<Controller
 				name={name}
 				render={({ field, fieldState, formState }) => {
 					return (
 						<div className='relative'>
 							<ReactDatePicker
-								isClearable
+								isClearable={isClearable}
 								className={
 									' h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none' +
 									` ${

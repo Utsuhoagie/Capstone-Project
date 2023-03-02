@@ -132,6 +132,7 @@ export const UpdateApplicantForm = () => {
 					/>
 
 					<DateInput
+						isClearable
 						name='BirthDate'
 						placeholder='Chọn ngày sinh.'
 						width='medium'
@@ -209,7 +210,7 @@ export const UpdateApplicantForm = () => {
 						type='button'
 						secondary
 						width='medium'
-						onClick={() => navigate('/app/applicant?page=2')}
+						onClick={() => navigate('/app/applicant')}
 					>
 						Thoát
 					</Button>
