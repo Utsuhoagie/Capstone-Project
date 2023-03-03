@@ -16,9 +16,9 @@ export const AppNavbar = () => {
 			<ul className='flex flex-col items-start'>
 				<NavItem onClick={handleLogout}>Đăng xuất</NavItem>
 
-				<NavItem onClick={() => navigate('applicant')}>Ứng Viên</NavItem>
+				<NavItem onClick={() => navigate('applicants')}>Ứng Viên</NavItem>
 
-				<NavItem onClick={() => navigate('applicant')}>Nhân viên</NavItem>
+				<NavItem onClick={() => navigate('employees')}>Nhân viên</NavItem>
 			</ul>
 		</nav>
 	);

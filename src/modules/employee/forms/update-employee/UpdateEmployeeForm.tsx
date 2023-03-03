@@ -5,7 +5,8 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
-import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInput';
+import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
+import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { Employee } from '../../Employee.interface';
@@ -24,10 +25,10 @@ export const UpdateEmployeeForm = () => {
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'applicant/update',
+		'employees/update',
 		async (formData: Employee) => {
 			const res = await fetch(
-				`https://localhost:5000/api/Employee/Update?NationalId=${selectedEmployee.NationalId}`,
+				`https://localhost:5000/api/Employees/Update?NationalId=${selectedEmployee.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',
@@ -46,7 +47,7 @@ export const UpdateEmployeeForm = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant');
+				queryClient.invalidateQueries('employees');
 			},
 		}
 	);
@@ -59,14 +60,24 @@ export const UpdateEmployeeForm = () => {
 			NationalId: selectedEmployee.NationalId,
 			FullName: selectedEmployee.FullName,
 			Gender: selectedEmployee.Gender,
-			BirthDate: dayjs(selectedEmployee.BirthDate).toDate(),
+			BirthDate: selectedEmployee.BirthDate
+				? dayjs(selectedEmployee.BirthDate).toISOString()
+				: undefined,
 			Address: selectedEmployee.Address,
 			Phone: selectedEmployee.Phone,
 			Email: selectedEmployee.Email,
 			ExperienceYears: `${selectedEmployee.ExperienceYears}`,
-			AppliedPosition: selectedEmployee.AppliedPosition,
-			AppliedDate: dayjs(selectedEmployee.AppliedDate).toDate(),
-			AskingSalary: `${selectedEmployee.AskingSalary}`,
+			Position: selectedEmployee.Position,
+			EmployedDate: dayjs(selectedEmployee.EmployedDate).toISOString(),
+			Salary: `${selectedEmployee.Salary}`,
+			StartHour: `${dayjs()
+				.hour(selectedEmployee.StartHour)
+				.startOf('hour')
+				.toISOString()}`,
+			EndHour: `${dayjs()
+				.hour(selectedEmployee.EndHour)
+				.startOf('hour')
+				.toISOString()}`,
 		},
 		resolver: zodResolver(updateEmployeeFormSchema),
 	});
@@ -82,14 +93,18 @@ export const UpdateEmployeeForm = () => {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
-			BirthDate: rawData.BirthDate,
+			BirthDate: rawData.BirthDate
+				? dayjs(rawData.BirthDate).toDate()
+				: undefined,
 			Address: rawData.Address,
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
-			AppliedPosition: rawData.AppliedPosition,
-			AppliedDate: rawData.AppliedDate,
-			AskingSalary: parseInt(rawData.AskingSalary),
+			Position: rawData.Position,
+			EmployedDate: dayjs(rawData.EmployedDate).toDate(),
+			Salary: parseInt(rawData.Salary),
+			StartHour: dayjs(rawData.StartHour).hour(),
+			EndHour: dayjs(rawData.StartHour).hour(),
 		};
 
 		// console.log({ formData });
@@ -101,7 +116,7 @@ export const UpdateEmployeeForm = () => {
 
 	return (
 		<div className='flex flex-col gap-4'>
-			<h1 className='text-h1'>Thêm hồ sơ Ứng viên mới</h1>
+			<h1 className='text-h1'>Chỉnh sửa hồ sơ Nhân viên</h1>
 			<FormProvider {...methods}>
 				<form
 					className='flex flex-col gap-2 p-2'
@@ -127,6 +142,7 @@ export const UpdateEmployeeForm = () => {
 						required
 						name='Gender'
 						placeholder='Chọn 1.'
+						width='medium'
 						options={['male', 'female', 'other']}
 						displayConfigs={displayConfigs}
 					/>
@@ -163,8 +179,8 @@ export const UpdateEmployeeForm = () => {
 
 					<TextInput
 						required
-						type='number'
 						name='ExperienceYears'
+						type='number'
 						placeholder='Nhập số năm kinh nghiệm.'
 						width='medium'
 						displayConfigs={displayConfigs}
@@ -172,26 +188,40 @@ export const UpdateEmployeeForm = () => {
 
 					<TextInput
 						required
-						name='AppliedPosition'
-						placeholder='Nhập vị trí ứng tuyển.'
+						name='Position'
+						placeholder='Nhập vị trí.'
 						width='medium'
 						displayConfigs={displayConfigs}
 					/>
 
 					<DateInput
 						required
-						name='AppliedDate'
-						placeholder='Chọn ngày nộp hồ sơ ứng tuyển.'
+						name='EmployedDate'
+						placeholder='Chọn ngày bắt đầu làm việc.'
 						width='medium'
 						displayConfigs={displayConfigs}
 					/>
 
 					<TextInput
 						required
+						name='Salary'
 						type='number'
-						name='AskingSalary'
 						width='medium'
-						placeholder='Nhập mức lương đề nghị.'
+						placeholder='Nhập mức lương.'
+						displayConfigs={displayConfigs}
+					/>
+
+					<TimeInput
+						required
+						name='StartHour'
+						width='medium'
+						displayConfigs={displayConfigs}
+					/>
+
+					<TimeInput
+						required
+						name='EndHour'
+						width='medium'
 						displayConfigs={displayConfigs}
 					/>
 
@@ -209,7 +239,7 @@ export const UpdateEmployeeForm = () => {
 						type='button'
 						secondary
 						width='medium'
-						onClick={() => navigate('/app/applicant?page=2')}
+						onClick={() => navigate('/app/employees')}
 					>
 						Thoát
 					</Button>

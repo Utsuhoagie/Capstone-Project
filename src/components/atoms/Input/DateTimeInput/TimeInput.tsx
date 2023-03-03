@@ -7,7 +7,7 @@ import { DisplayConfigs, getLabelForField } from '../../../../app/App.display';
 import { CalendarIcon } from '../../../../assets/icons/CalendarIcon';
 import dayjs from 'dayjs';
 
-interface DateInputProps {
+interface TimeInputProps {
 	name: string;
 	isClearable?: boolean;
 	label?: string;
@@ -17,7 +17,7 @@ interface DateInputProps {
 	displayConfigs: DisplayConfigs;
 }
 
-export const DateInput = ({
+export const TimeInput = ({
 	name,
 	isClearable,
 	label,
@@ -25,7 +25,7 @@ export const DateInput = ({
 	placeholder,
 	width,
 	displayConfigs,
-}: DateInputProps) => {
+}: TimeInputProps) => {
 	const { formState, setValue, getValues } = useFormContext();
 	const error = formState.errors[name];
 
@@ -50,7 +50,6 @@ export const DateInput = ({
 					return (
 						<div className='relative'>
 							<ReactDatePicker
-								isClearable={isClearable}
 								className={
 									' h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none' +
 									` ${
@@ -61,22 +60,23 @@ export const DateInput = ({
 									' hover:shadow focus:shadow ' +
 									` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
 								}
+								showTimeSelect
+								showTimeSelectOnly
+								timeIntervals={60}
+								minDate={dayjs().startOf('day').toDate()}
+								maxDate={dayjs().endOf('day').toDate()}
+								isClearable={isClearable}
 								placeholderText={placeholder}
-								dateFormat='dd/MM/yyyy'
+								timeFormat='H:mm'
+								dateFormat='H:mm'
 								selected={(() => {
 									const formValue =
 										field.value === '' ? undefined : field.value;
-									const formValueDayjs = dayjs(formValue).startOf('day');
+									const formValueDayjs = dayjs(formValue);
 
 									return formValue === undefined
 										? undefined
 										: formValueDayjs.toDate();
-
-									// const usableDate = dayjs(field.value).startOf('day').toDate();
-									// const defaultUnusableDate = undefined;
-									// return field.value === DEFAULT_UNUSABLE_DATE
-									// 	? usableDate
-									// 	: defaultUnusableDate;
 								})()}
 								onChange={(date, event) => {
 									console.log('onChange', date);
@@ -87,10 +87,8 @@ export const DateInput = ({
 										return;
 									}
 
-									const startOfDayString = dayjs(date)
-										.startOf('day')
-										.toISOString();
-									field.onChange(startOfDayString, event);
+									const isoString = dayjs(date).toISOString();
+									field.onChange(isoString, event);
 								}}
 								ref={(element) => element && field.ref(element['input'])}
 							/>

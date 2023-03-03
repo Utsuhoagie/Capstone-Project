@@ -8,8 +8,8 @@ export interface Employee {
 	Email?: string;
 	ExperienceYears: number;
 	Position: string;
-	Salary: number;
 	EmployedDate: Date;
+	Salary: number;
 	StartHour: number;
 	EndHour: number;
 }
@@ -24,8 +24,8 @@ export interface Employee_APIResponse {
 	Email: string | null;
 	ExperienceYears: number;
 	Position: string;
-	Salary: number;
 	EmployedDate: string;
+	Salary: number;
 	StartHour: number;
 	EndHour: number;
 }

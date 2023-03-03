@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { useToastStore } from '../../../app/App.store';
 import { Button } from '../../../components/atoms/Button/Button';
-import { Employee } from '../Employee.interface';
 import { useEmployeeStore } from '../Employee.store';
 
 export const DeleteButton = () => {
@@ -11,10 +10,10 @@ export const DeleteButton = () => {
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'applicant/delete',
+		'employees/delete',
 		async () => {
 			const res = await fetch(
-				`https://localhost:5000/api/Employee/Delete?NationalId=${selectedEmployee?.NationalId}`,
+				`https://localhost:5000/api/Employees/Delete?NationalId=${selectedEmployee?.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',
@@ -32,7 +31,7 @@ export const DeleteButton = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant');
+				queryClient.invalidateQueries('employees');
 			},
 		}
 	);

@@ -33,11 +33,11 @@ export const ApplicantModule = () => {
 
 	const { isLoading, error, data } = useQuery(
 		// ['applicant', currentPageIndex],
-		['applicant', allQueryParams],
+		['applicants', allQueryParams],
 		async () => {
 			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
 			const res = await fetch(
-				`https://localhost:5000/api/Applicant?${allQueryParamsAsQueryString}`
+				`https://localhost:5000/api/Applicants?${allQueryParamsAsQueryString}`
 			);
 
 			const pagedResponse: PagedResult<Applicant_APIResponse> =

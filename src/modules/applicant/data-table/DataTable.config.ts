@@ -18,5 +18,5 @@ export const APPLICANT_COLUMN_CONFIGS: ColumnConfigs = {
 	ExperienceYears: { width: 160, isSortable: true },
 	AppliedPosition: { width: 180, isSortable: true },
 	AppliedDate: { width: 145, isSortable: true },
-	AskingSalary: { width: 130, isSortable: true },
+	AskingSalary: { width: 160, isSortable: true },
 };

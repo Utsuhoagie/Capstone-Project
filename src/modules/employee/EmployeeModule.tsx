@@ -32,12 +32,11 @@ export const EmployeeModule = () => {
 	};
 
 	const { isLoading, error, data } = useQuery(
-		// ['employee', currentPageIndex],
-		['employee', allQueryParams],
+		['employees', allQueryParams],
 		async () => {
 			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
 			const res = await fetch(
-				`https://localhost:5000/api/Employee?${allQueryParamsAsQueryString}`
+				`https://localhost:5000/api/Employees?${allQueryParamsAsQueryString}`
 			);
 
 			const pagedResponse: PagedResult<Employee_APIResponse> = await res.json();

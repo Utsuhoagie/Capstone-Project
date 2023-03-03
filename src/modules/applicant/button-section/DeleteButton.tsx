@@ -13,10 +13,10 @@ export const DeleteButton = () => {
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'applicant/delete',
+		'applicants/delete',
 		async () => {
 			const res = await fetch(
-				`https://localhost:5000/api/Applicant/Delete?NationalId=${selectedApplicant?.NationalId}`,
+				`https://localhost:5000/api/Applicants/Delete?NationalId=${selectedApplicant?.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',

@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
-import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInput';
+import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { Applicant } from '../../Applicant.interface';
@@ -22,9 +22,9 @@ export const CreateApplicantForm = () => {
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'applicant/create',
+		'applicants/create',
 		async (formData: Applicant) => {
-			const res = await fetch('https://localhost:5000/api/Applicant/Create', {
+			const res = await fetch('https://localhost:5000/api/Applicants/Create', {
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json',
@@ -48,17 +48,18 @@ export const CreateApplicantForm = () => {
 
 	const methods = useForm<CreateApplicantFormIntermediateValues>({
 		mode: 'onSubmit',
+		reValidateMode: 'onSubmit',
 		defaultValues: {
 			NationalId: '',
 			FullName: '',
 			Gender: 'male',
-			BirthDate: undefined,
+			BirthDate: '',
 			Address: '',
 			Phone: '',
 			Email: '',
 			ExperienceYears: '',
 			AppliedPosition: '',
-			AppliedDate: dayjs().toDate(),
+			AppliedDate: dayjs().toISOString(),
 			AskingSalary: '',
 		},
 		resolver: zodResolver(createApplicantFormSchema),
@@ -75,13 +76,15 @@ export const CreateApplicantForm = () => {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
-			BirthDate: rawData.BirthDate,
+			BirthDate: rawData.BirthDate
+				? dayjs(rawData.BirthDate).toDate()
+				: undefined,
 			Address: rawData.Address,
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
 			AppliedPosition: rawData.AppliedPosition,
-			AppliedDate: rawData.AppliedDate,
+			AppliedDate: dayjs(rawData.AppliedDate).toDate(),
 			AskingSalary: parseInt(rawData.AskingSalary),
 		};
 
@@ -89,7 +92,7 @@ export const CreateApplicantForm = () => {
 		mutation.mutate(formData);
 	};
 	const handleError = (error) => {
-		console.log({ error });
+		console.table(error);
 	};
 
 	return (
@@ -119,6 +122,7 @@ export const CreateApplicantForm = () => {
 					<SelectInput
 						required
 						name='Gender'
+						width='medium'
 						placeholder='Chọn 1.'
 						options={['male', 'female', 'other']}
 						displayConfigs={displayConfigs}
@@ -157,8 +161,8 @@ export const CreateApplicantForm = () => {
 
 					<TextInput
 						required
-						type='number'
 						name='ExperienceYears'
+						type='number'
 						placeholder='Nhập số năm kinh nghiệm.'
 						width='medium'
 						displayConfigs={displayConfigs}
@@ -182,8 +186,8 @@ export const CreateApplicantForm = () => {
 
 					<TextInput
 						required
-						type='number'
 						name='AskingSalary'
+						type='number'
 						width='medium'
 						placeholder='Nhập mức lương đề nghị.'
 						displayConfigs={displayConfigs}
@@ -203,7 +207,7 @@ export const CreateApplicantForm = () => {
 						type='button'
 						secondary
 						width='medium'
-						onClick={() => navigate('/app/applicant')}
+						onClick={() => navigate('/app/applicants')}
 					>
 						Thoát
 					</Button>

@@ -6,7 +6,7 @@ import {
 	preprocessStringToOptionalString,
 } from '../../../../app/App.form';
 
-export interface CreateEmployeeFormIntermediateValues {
+export interface UpdateEmployeeFormIntermediateValues {
 	NationalId: string;
 	FullName: string;
 	Gender: 'male' | 'female' | 'other';
@@ -22,7 +22,7 @@ export interface CreateEmployeeFormIntermediateValues {
 	EndHour: string;
 }
 
-export const createEmployeeFormSchema = z
+export const updateEmployeeFormSchema = z
 	.object({
 		NationalId: z.string().regex(/^(\d){9}((\d){3})?$/, {
 			message: 'Số CMND/CCCD phải có đúng 9 hoặc 12 số.',
@@ -57,9 +57,11 @@ export const createEmployeeFormSchema = z
 			.min(5, { message: 'Địa chỉ quá ngắn.' })
 			.max(200, { message: 'Địa chỉ quá dài.' }),
 
-		Phone: z.string().regex(/^\d{10,11}$/, {
-			message: 'Số điện thoại phải có 10 hoặc 11 số.',
-		}),
+		Phone: z
+			.string()
+			.regex(/^\d{10,11}$/, {
+				message: 'Số điện thoại phải có 10 hoặc 11 số.',
+			}),
 
 		Email: z.preprocess(
 			preprocessStringToOptionalString,

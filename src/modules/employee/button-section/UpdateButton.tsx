@@ -11,7 +11,7 @@ export const UpdateButton = () => {
 			secondary
 			width='big'
 			onClick={() =>
-				navigate(`/app/applicant/update?id=${selectedEmployee?.NationalId}`)
+				navigate(`/app/employees/update?id=${selectedEmployee?.NationalId}`)
 			}
 		>
 			Chỉnh sửa hồ sơ

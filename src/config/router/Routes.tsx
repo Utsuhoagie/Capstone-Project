@@ -7,6 +7,9 @@ import { UpdateApplicantForm } from '../../modules/applicant/forms/update-applic
 import { useAuthStore } from '../../modules/auth/Auth.store';
 import { Login } from '../../modules/auth/Login/Login';
 import { Dashboard } from '../../modules/dashboard/Dashboard';
+import { EmployeeModule } from '../../modules/employee/EmployeeModule';
+import { CreateEmployeeForm } from '../../modules/employee/forms/create-employee/CreateEmployeeForm';
+import { UpdateEmployeeForm } from '../../modules/employee/forms/update-employee/UpdateEmployeeForm';
 import { Example } from '../../modules/example/Example';
 import { ExampleForm } from '../../modules/example/ExampleForm';
 import { ExampleTable } from '../../modules/example/ExampleTable';
@@ -29,9 +32,13 @@ export const Routes = () => {
 			<Route path='app' element={<ProtectedRoute element={<AppLayout />} />}>
 				<Route index element={<Dashboard />} />
 
-				<Route path='applicant' element={<ApplicantModule />} />
-				<Route path='applicant/create' element={<CreateApplicantForm />} />
-				<Route path='applicant/update' element={<UpdateApplicantForm />} />
+				<Route path='applicants' element={<ApplicantModule />} />
+				<Route path='applicants/create' element={<CreateApplicantForm />} />
+				<Route path='applicants/update' element={<UpdateApplicantForm />} />
+
+				<Route path='employees' element={<EmployeeModule />} />
+				<Route path='employees/create' element={<CreateEmployeeForm />} />
+				<Route path='employees/update' element={<UpdateEmployeeForm />} />
 
 				<Route path='ex' element={<Example />} />
 				<Route path='ex-form' element={<ExampleForm />} />

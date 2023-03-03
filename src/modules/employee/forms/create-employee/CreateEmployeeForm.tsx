@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
+import { range } from 'ramda';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
-import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInput';
+import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
+import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { Employee } from '../../Employee.interface';
@@ -22,9 +24,9 @@ export const CreateEmployeeForm = () => {
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'employee/create',
+		'employees/create',
 		async (formData: Employee) => {
-			const res = await fetch('https://localhost:5000/api/Employee/Create', {
+			const res = await fetch('https://localhost:5000/api/Employees/Create', {
 				headers: {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json',
@@ -41,7 +43,7 @@ export const CreateEmployeeForm = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('employee');
+				queryClient.invalidateQueries('employees');
 			},
 		}
 	);
@@ -52,14 +54,14 @@ export const CreateEmployeeForm = () => {
 			NationalId: '',
 			FullName: '',
 			Gender: 'male',
-			BirthDate: undefined,
+			BirthDate: '',
 			Address: '',
 			Phone: '',
 			Email: '',
 			ExperienceYears: '',
-			AppliedPosition: '',
-			AppliedDate: dayjs().toDate(),
-			AskingSalary: '',
+			Position: '',
+			EmployedDate: dayjs().toISOString(),
+			Salary: '',
 		},
 		resolver: zodResolver(createEmployeeFormSchema),
 	});
@@ -75,16 +77,18 @@ export const CreateEmployeeForm = () => {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
-			BirthDate: rawData.BirthDate,
+			BirthDate: rawData.BirthDate
+				? dayjs(rawData.BirthDate).toDate()
+				: undefined,
 			Address: rawData.Address,
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
-			Position: '',
-			Salary: 0,
-			EmployedDate: new Date(),
-			StartHour: 0,
-			EndHour: 23,
+			Position: rawData.Position,
+			EmployedDate: dayjs(rawData.BirthDate).toDate(),
+			Salary: parseInt(rawData.Salary),
+			StartHour: dayjs(rawData.StartHour).hour(),
+			EndHour: dayjs(rawData.EndHour).hour(),
 		};
 
 		// console.log({ formData });
@@ -96,7 +100,7 @@ export const CreateEmployeeForm = () => {
 
 	return (
 		<div className='flex flex-col gap-4'>
-			<h1 className='text-h1'>Thêm hồ sơ Ứng viên mới</h1>
+			<h1 className='text-h1'>Thêm hồ sơ Nhân viên mới</h1>
 			<FormProvider {...methods}>
 				<form
 					className='flex flex-col gap-2 p-2'
@@ -122,6 +126,7 @@ export const CreateEmployeeForm = () => {
 						required
 						name='Gender'
 						placeholder='Chọn 1.'
+						width='medium'
 						options={['male', 'female', 'other']}
 						displayConfigs={displayConfigs}
 					/>
@@ -175,8 +180,8 @@ export const CreateEmployeeForm = () => {
 
 					<DateInput
 						required
-						name='AppliedDate'
-						placeholder='Chọn ngày nộp hồ sơ ứng tuyển.'
+						name='EmployedDate'
+						placeholder='Chọn ngày bắt đầu làm việc.'
 						width='medium'
 						displayConfigs={displayConfigs}
 					/>
@@ -184,9 +189,34 @@ export const CreateEmployeeForm = () => {
 					<TextInput
 						required
 						type='number'
-						name='AskingSalary'
+						name='Salary'
 						width='medium'
-						placeholder='Nhập mức lương đề nghị.'
+						placeholder='Nhập mức lương.'
+						displayConfigs={displayConfigs}
+					/>
+
+					{/* <SelectInput
+						required
+						name='StartHour'
+						placeholder=''
+						width='medium'
+						displayConfigs={displayConfigs}
+						options={range(0, 23)}
+					/> */}
+
+					<TimeInput
+						required
+						name='StartHour'
+						placeholder='Chọn thời gian bắt đầu ca.'
+						width='medium'
+						displayConfigs={displayConfigs}
+					/>
+
+					<TimeInput
+						required
+						name='EndHour'
+						placeholder='Chọn thời gian kết thúc ca.'
+						width='medium'
 						displayConfigs={displayConfigs}
 					/>
 
@@ -204,7 +234,7 @@ export const CreateEmployeeForm = () => {
 						type='button'
 						secondary
 						width='medium'
-						onClick={() => navigate('/app/employee')}
+						onClick={() => navigate('/app/employees')}
 					>
 						Thoát
 					</Button>

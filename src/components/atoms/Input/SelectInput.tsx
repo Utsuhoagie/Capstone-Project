@@ -13,6 +13,7 @@ import { useApplicantStore } from '../../../modules/applicant/Applicant.store';
 
 interface SelectInputProps extends React.ComponentPropsWithRef<'select'> {
 	name: string;
+	width: 'full' | 'medium';
 	options: any[];
 	displayConfigs: DisplayConfigs;
 }
@@ -36,6 +37,7 @@ interface SelectInputMultipleProps extends SelectInputProps {
 const SelectInputSingle = ({
 	name,
 	optionPairs,
+	width,
 	displayConfigs,
 	selectedValue,
 	multiple,
@@ -71,7 +73,13 @@ const SelectInputSingle = ({
 					</Listbox.Label>
 
 					<div className='flex flex-col'>
-						<Listbox.Button className='flex h-h-input w-w-input-medium flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ui-open:rounded-t ui-not-open:rounded'>
+						<Listbox.Button
+							className={
+								' flex h-h-input flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ' +
+								' ui-open:rounded-t ui-not-open:rounded ' +
+								` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
+							}
+						>
 							<p className='overflow-ellipsis'>
 								{selectedValue !== ''
 									? getDisplayForFieldValue({
@@ -114,6 +122,7 @@ const SelectInputSingle = ({
 const SelectInputMultiple = ({
 	name,
 	optionPairs,
+	width,
 	displayConfigs,
 	selectedValues,
 	multiple,

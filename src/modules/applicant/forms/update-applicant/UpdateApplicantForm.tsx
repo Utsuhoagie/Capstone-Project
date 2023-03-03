@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
-import { DateInput } from '../../../../components/atoms/Input/DateInput/DateInput';
+import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { Applicant } from '../../Applicant.interface';
@@ -24,10 +24,10 @@ export const UpdateApplicantForm = () => {
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'applicant/update',
+		'applicants/update',
 		async (formData: Applicant) => {
 			const res = await fetch(
-				`https://localhost:5000/api/Applicant/Update?NationalId=${selectedApplicant.NationalId}`,
+				`https://localhost:5000/api/Applicants/Update?NationalId=${selectedApplicant.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',
@@ -59,13 +59,15 @@ export const UpdateApplicantForm = () => {
 			NationalId: selectedApplicant.NationalId,
 			FullName: selectedApplicant.FullName,
 			Gender: selectedApplicant.Gender,
-			BirthDate: dayjs(selectedApplicant.BirthDate).toDate(),
+			BirthDate: Boolean(selectedApplicant.BirthDate)
+				? dayjs(selectedApplicant.BirthDate).toISOString()
+				: undefined,
 			Address: selectedApplicant.Address,
 			Phone: selectedApplicant.Phone,
 			Email: selectedApplicant.Email,
 			ExperienceYears: `${selectedApplicant.ExperienceYears}`,
 			AppliedPosition: selectedApplicant.AppliedPosition,
-			AppliedDate: dayjs(selectedApplicant.AppliedDate).toDate(),
+			AppliedDate: dayjs(selectedApplicant.AppliedDate).toISOString(),
 			AskingSalary: `${selectedApplicant.AskingSalary}`,
 		},
 		resolver: zodResolver(updateApplicantFormSchema),
@@ -82,13 +84,15 @@ export const UpdateApplicantForm = () => {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
-			BirthDate: rawData.BirthDate,
+			BirthDate: Boolean(rawData.BirthDate)
+				? dayjs(rawData.BirthDate).toDate()
+				: undefined,
 			Address: rawData.Address,
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
 			AppliedPosition: rawData.AppliedPosition,
-			AppliedDate: rawData.AppliedDate,
+			AppliedDate: dayjs(rawData.AppliedDate).toDate(),
 			AskingSalary: parseInt(rawData.AskingSalary),
 		};
 
@@ -101,7 +105,7 @@ export const UpdateApplicantForm = () => {
 
 	return (
 		<div className='flex flex-col gap-4'>
-			<h1 className='text-h1'>Thêm hồ sơ Ứng viên mới</h1>
+			<h1 className='text-h1'>Chỉnh sửa hồ sơ Ứng viên</h1>
 			<FormProvider {...methods}>
 				<form
 					className='flex flex-col gap-2 p-2'
@@ -126,6 +130,7 @@ export const UpdateApplicantForm = () => {
 					<SelectInput
 						required
 						name='Gender'
+						width='medium'
 						placeholder='Chọn 1.'
 						options={['male', 'female', 'other']}
 						displayConfigs={displayConfigs}
@@ -210,7 +215,7 @@ export const UpdateApplicantForm = () => {
 						type='button'
 						secondary
 						width='medium'
-						onClick={() => navigate('/app/applicant')}
+						onClick={() => navigate('/app/applicants')}
 					>
 						Thoát
 					</Button>
