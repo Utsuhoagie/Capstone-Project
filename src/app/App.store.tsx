@@ -53,6 +53,71 @@ export const useDialogStore = create<DialogStore>()(
 	}))
 );
 
+interface ConfirmDialogStore {
+	isOpen: boolean;
+	isClosable: boolean;
+	title?: string;
+	message: string;
+	onConfirm: () => void;
+	onSuccess: () => void;
+
+	openConfirmDialog: ({
+		isClosable,
+		title,
+		message,
+		onConfirm,
+		onSuccess,
+	}: {
+		isClosable: boolean;
+		title?: string;
+		message: string;
+		onConfirm: () => void;
+		onSuccess: () => void;
+	}) => void;
+	closeConfirmDialog: () => void;
+}
+
+export const useConfirmDialogStore = create<ConfirmDialogStore>()(
+	devtools((set) => ({
+		isOpen: false,
+		isClosable: false,
+		title: undefined,
+		message: '',
+		onConfirm: () => {},
+		onSuccess: () => {},
+
+		openConfirmDialog: ({
+			isClosable,
+			title,
+			message,
+			onConfirm,
+			onSuccess,
+		}: {
+			isClosable: boolean;
+			title?: string;
+			message: string;
+			onConfirm: () => void;
+			onSuccess: () => void;
+		}) =>
+			set((prev) => {
+				let next = clone(prev);
+				next.isOpen = true;
+				next.isClosable = isClosable;
+				next.title = title;
+				next.message = message;
+				next.onConfirm = onConfirm;
+				next.onSuccess = onSuccess;
+				return next;
+			}),
+		closeConfirmDialog: () =>
+			set((prev) => {
+				let next = clone(prev);
+				next.isOpen = false;
+				return next;
+			}),
+	}))
+);
+
 interface ToastStore {
 	isOpen: boolean;
 	state?: 'success' | 'error';

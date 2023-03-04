@@ -3,7 +3,10 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { useToastStore } from '../../../../app/App.store';
+import {
+	useConfirmDialogStore,
+	useToastStore,
+} from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
@@ -22,6 +25,9 @@ export const EmployApplicantForm = () => {
 	const navigate = useNavigate();
 
 	const showToast = useToastStore((state) => state.showToast);
+	const openConfirmDialog = useConfirmDialogStore(
+		(state) => state.openConfirmDialog
+	);
 	const selectedApplicant = useApplicantStore(
 		(state) => state.selectedApplicant
 	) as Applicant;
@@ -107,7 +113,18 @@ export const EmployApplicantForm = () => {
 		};
 
 		// console.log({ formData });
-		mutation.mutate(formData);
+		openConfirmDialog({
+			isClosable: true,
+			// title,
+			message: 'Xác nhận tuyển ứng viên này?',
+			onConfirm: () => {
+				mutation.mutate(formData);
+				navigate('/app/applicants');
+			},
+			onSuccess: () => {
+				window.alert('aaaaaa');
+			},
+		});
 	};
 
 	const handleError = (error) => {

@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom';
+import { ConfirmDialog } from '../molecules/ConfirmDialog/ConfirmDialog';
 import { Dialog } from '../molecules/Dialog/Dialog';
 import { AppNavbar } from '../molecules/Navbar/AppNavbar';
 import { Toast } from '../molecules/Toast/Toast';
@@ -12,6 +13,7 @@ export const AppLayout = () => {
 			</div>
 
 			<Dialog />
+			<ConfirmDialog />
 			<Toast />
 		</div>
 	);
