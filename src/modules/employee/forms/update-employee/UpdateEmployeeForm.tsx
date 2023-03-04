@@ -70,14 +70,14 @@ export const UpdateEmployeeForm = () => {
 			Position: selectedEmployee.Position,
 			EmployedDate: dayjs(selectedEmployee.EmployedDate).toISOString(),
 			Salary: `${selectedEmployee.Salary}`,
-			StartHour: `${dayjs()
+			StartHour: dayjs()
 				.hour(selectedEmployee.StartHour)
 				.startOf('hour')
-				.toISOString()}`,
-			EndHour: `${dayjs()
+				.toISOString(),
+			EndHour: dayjs()
 				.hour(selectedEmployee.EndHour)
 				.startOf('hour')
-				.toISOString()}`,
+				.toISOString(),
 		},
 		resolver: zodResolver(updateEmployeeFormSchema),
 	});

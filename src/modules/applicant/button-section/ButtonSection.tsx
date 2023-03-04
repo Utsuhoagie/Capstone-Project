@@ -1,5 +1,6 @@
 import { useTableStore } from '../../../components/organisms/Table/Table.store';
 import { DeleteButton } from './DeleteButton';
+import { EmployButton } from './EmployButton';
 import { UpdateButton } from './UpdateButton';
 
 export const ButtonSection = () => {
@@ -12,6 +13,7 @@ export const ButtonSection = () => {
 				`${selectedRowIndex !== undefined ? '' : ' hidden '}`
 			}
 		>
+			<EmployButton />
 			<UpdateButton />
 			<DeleteButton />
 		</div>

@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
-import { range } from 'ramda';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -10,30 +9,38 @@ import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/Date
 import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
-import { Employee } from '../../Employee.interface';
-import { useEmployeeStore } from '../../Employee.store';
+import { Employee } from '../../../employee/Employee.interface';
+import { useEmployeeStore } from '../../../employee/Employee.store';
+import { Applicant } from '../../Applicant.interface';
+import { useApplicantStore } from '../../Applicant.store';
 import {
-	CreateEmployeeFormIntermediateValues,
-	createEmployeeFormSchema,
-} from './CreateEmployeeForm.form';
+	EmployApplicantFormIntermediateValues,
+	employApplicantFormSchema,
+} from './EmployApplicantForm.form';
 
-export const CreateEmployeeForm = () => {
+export const EmployApplicantForm = () => {
 	const navigate = useNavigate();
 
 	const showToast = useToastStore((state) => state.showToast);
+	const selectedApplicant = useApplicantStore(
+		(state) => state.selectedApplicant
+	) as Applicant;
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'employees/create',
+		'applicants/employ',
 		async (formData: Employee) => {
-			const res = await fetch('https://localhost:5000/api/Employees/Create', {
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				method: 'POST',
-				body: JSON.stringify(formData),
-			});
+			const res = await fetch(
+				`https://localhost:5000/api/Applicants/Employ?NationalId=${selectedApplicant.NationalId}`,
+				{
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+					},
+					method: 'POST',
+					body: JSON.stringify(formData),
+				}
+			);
 
 			if (res.ok) {
 				showToast({ state: 'success' });
@@ -43,37 +50,43 @@ export const CreateEmployeeForm = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('employees');
+				queryClient.invalidateQueries('applicant');
 			},
 		}
 	);
 
-	const methods = useForm<CreateEmployeeFormIntermediateValues>({
+	const methods = useForm<EmployApplicantFormIntermediateValues>({
 		mode: 'onSubmit',
+		reValidateMode: 'onSubmit',
 		defaultValues: {
-			NationalId: '',
-			FullName: '',
-			Gender: 'male',
-			BirthDate: '',
-			Address: '',
-			Phone: '',
-			Email: '',
-			ExperienceYears: '',
-			Position: '',
+			NationalId: selectedApplicant.NationalId,
+			FullName: selectedApplicant.FullName,
+			Gender: selectedApplicant.Gender,
+			BirthDate: selectedApplicant.BirthDate
+				? dayjs(selectedApplicant.BirthDate).toISOString()
+				: '',
+			Address: selectedApplicant.Address,
+			Phone: selectedApplicant.Phone,
+			Email: selectedApplicant.Email,
+			ExperienceYears: `${selectedApplicant.ExperienceYears}`,
+			Position: selectedApplicant.AppliedPosition,
 			EmployedDate: dayjs().toISOString(),
-			Salary: '',
+			Salary: `${selectedApplicant.AskingSalary}`,
 			StartHour: dayjs().hour(9).startOf('hour').toISOString(),
 			EndHour: dayjs().hour(18).startOf('hour').toISOString(),
 		},
-		resolver: zodResolver(createEmployeeFormSchema),
+		resolver: zodResolver(employApplicantFormSchema),
 	});
 
-	const displayConfigs = useEmployeeStore((state) => state.displayConfigs);
+	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
+	const employeeDisplayConfigs = useEmployeeStore(
+		(state) => state.displayConfigs
+	);
 
-	const handleSubmit: SubmitHandler<CreateEmployeeFormIntermediateValues> = (
+	const handleSubmit: SubmitHandler<EmployApplicantFormIntermediateValues> = (
 		rawData
 	) => {
-		console.log(rawData);
+		console.table(rawData);
 
 		const formData: Employee = {
 			NationalId: rawData.NationalId,
@@ -87,7 +100,7 @@ export const CreateEmployeeForm = () => {
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
 			Position: rawData.Position,
-			EmployedDate: dayjs(rawData.BirthDate).toDate(),
+			EmployedDate: dayjs(rawData.EmployedDate).toDate(),
 			Salary: parseInt(rawData.Salary),
 			StartHour: dayjs(rawData.StartHour).hour(),
 			EndHour: dayjs(rawData.EndHour).hour(),
@@ -96,19 +109,21 @@ export const CreateEmployeeForm = () => {
 		// console.log({ formData });
 		mutation.mutate(formData);
 	};
+
 	const handleError = (error) => {
-		console.log({ error });
+		console.table(error);
 	};
 
 	return (
 		<div className='flex flex-col gap-4'>
-			<h1 className='text-h1'>Thêm hồ sơ Nhân viên mới</h1>
+			<h1 className='text-h1'>Tuyển Ứng viên</h1>
 			<FormProvider {...methods}>
 				<form
 					className='flex flex-col gap-2 p-2'
 					onSubmit={methods.handleSubmit(handleSubmit, handleError)}
 				>
 					<TextInput
+						disabled
 						required
 						name='NationalId'
 						placeholder='Nhập 9 hoặc 12 số.'
@@ -117,6 +132,7 @@ export const CreateEmployeeForm = () => {
 					/>
 
 					<TextInput
+						disabled
 						required
 						name='FullName'
 						placeholder='Nhập họ tên đầy đủ.'
@@ -125,15 +141,17 @@ export const CreateEmployeeForm = () => {
 					/>
 
 					<SelectInput
+						disabled
 						required
 						name='Gender'
-						placeholder='Chọn 1.'
 						width='medium'
+						placeholder='Chọn 1.'
 						options={['male', 'female', 'other']}
 						displayConfigs={displayConfigs}
 					/>
 
 					<DateInput
+						disabled
 						name='BirthDate'
 						placeholder='Chọn ngày sinh.'
 						width='medium'
@@ -141,6 +159,7 @@ export const CreateEmployeeForm = () => {
 					/>
 
 					<TextInput
+						disabled
 						required
 						name='Address'
 						placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
@@ -149,6 +168,7 @@ export const CreateEmployeeForm = () => {
 					/>
 
 					<TextInput
+						disabled
 						required
 						name='Phone'
 						placeholder='Nhập số điện thoại.'
@@ -157,6 +177,7 @@ export const CreateEmployeeForm = () => {
 					/>
 
 					<TextInput
+						disabled
 						name='Email'
 						placeholder='Nhập địa chỉ email.'
 						width='medium'
@@ -164,9 +185,10 @@ export const CreateEmployeeForm = () => {
 					/>
 
 					<TextInput
+						disabled
 						required
-						type='number'
 						name='ExperienceYears'
+						type='number'
 						placeholder='Nhập số năm kinh nghiệm.'
 						width='medium'
 						displayConfigs={displayConfigs}
@@ -175,9 +197,9 @@ export const CreateEmployeeForm = () => {
 					<TextInput
 						required
 						name='Position'
-						placeholder='Nhập vị trí ứng tuyển.'
+						placeholder='Nhập vị trí.'
 						width='medium'
-						displayConfigs={displayConfigs}
+						displayConfigs={employeeDisplayConfigs}
 					/>
 
 					<DateInput
@@ -185,41 +207,32 @@ export const CreateEmployeeForm = () => {
 						name='EmployedDate'
 						placeholder='Chọn ngày bắt đầu làm việc.'
 						width='medium'
-						displayConfigs={displayConfigs}
+						displayConfigs={employeeDisplayConfigs}
 					/>
 
 					<TextInput
 						required
-						type='number'
 						name='Salary'
+						type='number'
 						width='medium'
 						placeholder='Nhập mức lương.'
-						displayConfigs={displayConfigs}
+						displayConfigs={employeeDisplayConfigs}
 					/>
-
-					{/* <SelectInput
-						required
-						name='StartHour'
-						placeholder=''
-						width='medium'
-						displayConfigs={displayConfigs}
-						options={range(0, 23)}
-					/> */}
 
 					<TimeInput
 						required
 						name='StartHour'
-						placeholder='Chọn thời gian bắt đầu ca.'
 						width='medium'
-						displayConfigs={displayConfigs}
+						placeholder='Chọn thời gian bắt đầu ca.'
+						displayConfigs={employeeDisplayConfigs}
 					/>
 
 					<TimeInput
 						required
 						name='EndHour'
-						placeholder='Chọn thời gian kết thúc ca.'
 						width='medium'
-						displayConfigs={displayConfigs}
+						placeholder='Chọn thời gian kết thúc ca.'
+						displayConfigs={employeeDisplayConfigs}
 					/>
 
 					<Button type='submit' width='medium'>
@@ -228,7 +241,7 @@ export const CreateEmployeeForm = () => {
 					<Button
 						type='button'
 						width='medium'
-						onClick={() => console.log(methods.getValues())}
+						onClick={() => console.table(methods.getValues())}
 					>
 						Xem form
 					</Button>
@@ -236,7 +249,7 @@ export const CreateEmployeeForm = () => {
 						type='button'
 						secondary
 						width='medium'
-						onClick={() => navigate('/app/employees')}
+						onClick={() => navigate('/app/applicants')}
 					>
 						Thoát
 					</Button>

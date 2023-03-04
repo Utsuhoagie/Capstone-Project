@@ -3,6 +3,7 @@ import { AppLayout } from '../../components/layouts/AppLayout';
 import { AuthLayout } from '../../components/layouts/AuthLayout';
 import { ApplicantModule } from '../../modules/applicant/ApplicantModule';
 import { CreateApplicantForm } from '../../modules/applicant/forms/create-applicant/CreateApplicantForm';
+import { EmployApplicantForm } from '../../modules/applicant/forms/employ-applicant/EmployApplicantForm';
 import { UpdateApplicantForm } from '../../modules/applicant/forms/update-applicant/UpdateApplicantForm';
 import { useAuthStore } from '../../modules/auth/Auth.store';
 import { Login } from '../../modules/auth/Login/Login';
@@ -35,6 +36,7 @@ export const Routes = () => {
 				<Route path='applicants' element={<ApplicantModule />} />
 				<Route path='applicants/create' element={<CreateApplicantForm />} />
 				<Route path='applicants/update' element={<UpdateApplicantForm />} />
+				<Route path='applicants/employ' element={<EmployApplicantForm />} />
 
 				<Route path='employees' element={<EmployeeModule />} />
 				<Route path='employees/create' element={<CreateEmployeeForm />} />
