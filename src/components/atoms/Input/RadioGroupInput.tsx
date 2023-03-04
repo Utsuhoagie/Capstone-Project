@@ -45,7 +45,10 @@ export const RadioGroupInput = ({
 					>
 						{options.map((option) => (
 							<RadioGroup.Option
-								className='flex h-h-input cursor-pointer flex-row items-center gap-1 pr-2'
+								className={
+									' flex h-h-input cursor-pointer flex-row items-center gap-1 pr-2 ' +
+									' disabled:bg-neutral-gray-3 disabled:opacity-75 '
+								}
 								key={option}
 								value={option}
 							>

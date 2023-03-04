@@ -8,6 +8,7 @@ import { CalendarIcon } from '../../../../assets/icons/CalendarIcon';
 import dayjs from 'dayjs';
 
 interface DateInputProps {
+	disabled?: boolean;
 	name: string;
 	isClearable?: boolean;
 	label?: string;
@@ -18,6 +19,7 @@ interface DateInputProps {
 }
 
 export const DateInput = ({
+	disabled,
 	name,
 	isClearable,
 	label,
@@ -50,15 +52,17 @@ export const DateInput = ({
 					return (
 						<div className='relative'>
 							<ReactDatePicker
+								disabled={disabled}
 								className={
 									' h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none' +
+									' hover:shadow focus:shadow ' +
+									' disabled:cursor-not-allowed disabled:bg-neutral-gray-3 disabled:opacity-75 ' +
+									` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} ` +
 									` ${
 										error
 											? 'border-state-error-normal'
 											: 'border-primary-normal'
-									} ` +
-									' hover:shadow focus:shadow ' +
-									` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
+									} `
 								}
 								showMonthDropdown
 								showYearDropdown

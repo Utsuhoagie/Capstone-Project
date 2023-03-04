@@ -43,6 +43,7 @@ const SelectInputSingle = ({
 	multiple,
 	placeholder,
 	required,
+	disabled,
 	...props
 }: SelectInputSingleProps) => {
 	// console.log({
@@ -57,6 +58,7 @@ const SelectInputSingle = ({
 			// defaultValue={options[0].value}
 			render={({ field, fieldState, formState }) => (
 				<Listbox
+					disabled={disabled}
 					as='div'
 					className='flex w-full flex-row items-center gap-2'
 					value={field.value}
@@ -76,9 +78,11 @@ const SelectInputSingle = ({
 						<Listbox.Button
 							className={
 								' flex h-h-input flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ' +
+								` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} ` +
 								' ui-open:rounded-t ui-not-open:rounded ' +
-								` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
+								' disabled:cursor-not-allowed disabled:bg-neutral-gray-3 disabled:opacity-75 '
 							}
+							disabled={disabled}
 						>
 							<p className='overflow-ellipsis'>
 								{selectedValue !== ''
@@ -128,6 +132,7 @@ const SelectInputMultiple = ({
 	multiple,
 	placeholder,
 	required,
+	disabled,
 	...props
 }: SelectInputMultipleProps) => {
 	return (
@@ -136,6 +141,7 @@ const SelectInputMultiple = ({
 			defaultValue={[]}
 			render={({ field, fieldState, formState }) => (
 				<Listbox
+					disabled={disabled}
 					as='div'
 					className='flex w-full flex-row items-center gap-2'
 					multiple
@@ -153,7 +159,13 @@ const SelectInputMultiple = ({
 					</Listbox.Label>
 
 					<div className='flex flex-col'>
-						<Listbox.Button className='flex h-h-input w-w-input-medium flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ui-open:rounded-t ui-not-open:rounded'>
+						<Listbox.Button
+							className={
+								' flex h-h-input w-w-input-medium flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ' +
+								' ui-open:rounded-t ui-not-open:rounded ' +
+								' disabled:cursor-not-allowed disabled:bg-neutral-gray-3 disabled:opacity-75 '
+							}
+						>
 							<p className='overflow-ellipsis'>
 								{selectedValues.length > 0
 									? // ? selectedValues.join(', ')

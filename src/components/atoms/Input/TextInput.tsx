@@ -42,9 +42,10 @@ export const TextInput = ({
 			<input
 				className={
 					' h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
+					` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} ` +
 					` ${error ? 'border-state-error-normal' : 'border-primary-normal'} ` +
 					' hover:shadow focus:shadow ' +
-					` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} `
+					' disabled:cursor-not-allowed disabled:bg-neutral-gray-3 disabled:opacity-75 '
 				}
 				{...props}
 				{...register(name, { valueAsNumber: false /* isNumber */ })}
