@@ -77,7 +77,7 @@ export const FilterDialog = () => {
 	return (
 		<FormProvider {...methods}>
 			<form
-				className='flex h-[450px] w-[600px] flex-col items-start gap-2 p-4'
+				className='flex h-[500px] w-[750px] flex-col items-start gap-2 p-4'
 				onSubmit={methods.handleSubmit(handleApplyFilter, handleError)}
 			>
 				<TextInput

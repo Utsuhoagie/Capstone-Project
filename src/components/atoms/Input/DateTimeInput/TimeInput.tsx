@@ -6,6 +6,7 @@ import { Label } from '../Label';
 import { DisplayConfigs, getLabelForField } from '../../../../app/App.display';
 import { CalendarIcon } from '../../../../assets/icons/CalendarIcon';
 import dayjs from 'dayjs';
+import { ClockIcon } from '../../../../assets/icons/ClockIcon';
 
 interface TimeInputProps {
 	disabled?: boolean;
@@ -97,7 +98,7 @@ export const TimeInput = ({
 								ref={(element) => element && field.ref(element['input'])}
 							/>
 
-							<CalendarIcon
+							<ClockIcon
 								className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2'
 								size={24}
 							/>
