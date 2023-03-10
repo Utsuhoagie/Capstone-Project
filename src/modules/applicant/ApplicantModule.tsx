@@ -9,6 +9,7 @@ import {
 	Pagination,
 } from '../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../components/organisms/Table/Table.store';
+import { useAuthStore } from '../auth/Auth.store';
 import { Applicant, Applicant_APIResponse } from './Applicant.interface';
 import { useApplicantStore } from './Applicant.store';
 import { ButtonSection } from './button-section/ButtonSection';
@@ -20,6 +21,7 @@ export const ApplicantModule = () => {
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
+	const accessToken = useAuthStore((state) => state.accessToken);
 	const { selectedRowIndex, pagination, setPagination } = useTableStore();
 	const { visibleApplicants, setVisibleApplicants, setSelectedApplicant } =
 		useApplicantStore();
@@ -37,7 +39,12 @@ export const ApplicantModule = () => {
 		async () => {
 			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
 			const res = await fetch(
-				`https://localhost:5000/api/Applicants?${allQueryParamsAsQueryString}`
+				`https://localhost:5000/api/Applicants?${allQueryParamsAsQueryString}`,
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				}
 			);
 
 			const pagedResponse: PagedResult<Applicant_APIResponse> =

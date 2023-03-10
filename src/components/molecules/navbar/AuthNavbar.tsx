@@ -12,7 +12,7 @@ export const AuthNavbar = () => {
 	}
 
 	return (
-		<nav className='h-screen w-48 bg-primary-dark2 py-4 text-primary-bright2'>
+		<nav className='fixed h-screen w-w-navbar bg-primary-dark-2'>
 			<ul className='flex flex-col items-start'>
 				<NavItem onClick={handleLogin}>Login</NavItem>
 				<NavItem>Link 2</NavItem>
