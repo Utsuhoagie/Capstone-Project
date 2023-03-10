@@ -18,6 +18,8 @@ module.exports = {
 				// 'w-attachment-section':
 				'w-navbar': 240,
 				'w-toast': 240,
+				'w-auth': 450,
+				'h-auth': 450,
 				'h-toast': 160,
 				'h-input': 40,
 				'h-dialog-title': 40,

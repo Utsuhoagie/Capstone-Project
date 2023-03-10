@@ -11,9 +11,11 @@ export const Button = ({
 	children,
 	width,
 	secondary,
+	className,
 	...props
 }: ButtonProps) => {
 	const classes =
+		className +
 		buttonStyleMapping.all +
 		(secondary ? buttonStyleMapping.secondary : buttonStyleMapping.primary) +
 		buttonStyleMapping[width].width;

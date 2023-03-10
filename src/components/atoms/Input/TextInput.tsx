@@ -6,16 +6,17 @@ import { Label } from './Label';
 interface TextInputProps extends React.ComponentPropsWithRef<'input'> {
 	name: string;
 	label?: string;
+	isVertical?: boolean;
 	width: 'full' | 'medium';
-	displayConfigs: DisplayConfigs;
+	displayConfigs?: DisplayConfigs;
 }
 
 export const TextInput = ({
 	name,
 	label,
+	isVertical,
 	width,
 	displayConfigs,
-	type,
 	required,
 	...props
 }: TextInputProps) => {
@@ -26,13 +27,20 @@ export const TextInput = ({
 	// const isNumber: boolean = type === 'number';
 
 	return (
-		<div className='flex flex-row items-center gap-2'>
+		<div
+			className={`flex ${
+				isVertical
+					? ' flex-col items-start gap-1 '
+					: ' flex-row items-center gap-2'
+			}`}
+		>
 			{/* {hasLabel && <Label label={label} required={required} />} */}
+
 			<Label
 				label={
 					label ??
 					getLabelForField({
-						labellers: displayConfigs.labellers,
+						labellers: displayConfigs!.labellers,
 						field: name,
 					})
 				}
