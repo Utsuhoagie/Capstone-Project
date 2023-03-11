@@ -60,15 +60,18 @@ export const Login = () => {
 					<TextInput
 						isVertical
 						name='Password'
-						label='Password'
+						label='Mật khẩu'
 						type='password'
 						width='full'
 					/>
-					<Button className='mt-8 self-center' width='medium'>
+
+					<p className='mt-4 min-h-[20px] self-center text-body text-state-error-normal'>
+						{error}
+					</p>
+
+					<Button className='mt-4 self-center' type='submit' width='medium'>
 						Đăng nhập
 					</Button>
-
-					<p className='mt-8 self-center text-state-error-normal'>{error}</p>
 				</div>
 			</form>
 		</FormProvider>

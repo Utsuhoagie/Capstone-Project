@@ -57,11 +57,9 @@ export const employApplicantFormSchema = z
 			.min(5, { message: 'Địa chỉ quá ngắn.' })
 			.max(200, { message: 'Địa chỉ quá dài.' }),
 
-		Phone: z
-			.string()
-			.regex(/^\d{10,11}$/, {
-				message: 'Số điện thoại phải có 10 hoặc 11 số.',
-			}),
+		Phone: z.string().regex(/^\d{10,11}$/, {
+			message: 'Số điện thoại phải có 10 hoặc 11 số.',
+		}),
 
 		Email: z.preprocess(
 			preprocessStringToOptionalString,
@@ -110,6 +108,6 @@ export const employApplicantFormSchema = z
 
 		EndHour: z.preprocess(preprocessStringToOptionalDate, z.date()),
 	})
-	.refine((obj) => obj.StartHour < obj.EndHour, {
+	.refine((schema) => schema.StartHour < schema.EndHour, {
 		message: 'Giờ bắt đầu ca phải trước giờ kết thúc ca',
 	});
