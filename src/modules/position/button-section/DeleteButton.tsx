@@ -2,22 +2,19 @@ import { useMutation, useQueryClient } from 'react-query';
 import { BASE_URL } from '../../../app/App';
 import { useToastStore } from '../../../app/App.store';
 import { Button } from '../../../components/atoms/Button/Button';
-import { Applicant } from '../Applicant.interface';
-import { useApplicantStore } from '../Applicant.store';
+import { usePositionStore } from '../Position.store';
 
 export const DeleteButton = () => {
 	const showToast = useToastStore((state) => state.showToast);
 
-	const selectedApplicant = useApplicantStore(
-		(state) => state.selectedApplicant
-	);
+	const selectedPosition = usePositionStore((state) => state.selectedPosition);
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
-		'applicants/delete',
+		'positions/delete',
 		async () => {
 			const res = await fetch(
-				`${BASE_URL}/Applicants/Delete?NationalId=${selectedApplicant?.NationalId}`,
+				`${BASE_URL}/Positions/Delete?Name=${selectedPosition?.Name}`,
 				{
 					headers: {
 						'Accept': 'application/json',
@@ -35,7 +32,7 @@ export const DeleteButton = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant');
+				queryClient.invalidateQueries('position');
 			},
 		}
 	);
@@ -46,7 +43,7 @@ export const DeleteButton = () => {
 
 	return (
 		<Button secondary width='big' onClick={handleDelete}>
-			Xóa hồ sơ
+			Xóa vị trí
 		</Button>
 	);
 };

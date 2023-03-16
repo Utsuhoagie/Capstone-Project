@@ -26,7 +26,7 @@ export const APPLICANT_FIELDS: string[] = [
 	'Phone',
 	'Email',
 	'ExperienceYears',
-	'AppliedPosition',
+	'AppliedPositionName',
 	'AppliedDate',
 	'AskingSalary',
 ];
@@ -40,7 +40,7 @@ export const APPLICANT_LABELLERS: Labellers = {
 	Phone: 'Số điện thoại',
 	Email: 'Email',
 	ExperienceYears: 'Năm kinh nghiệm',
-	AppliedPosition: 'Vị trí ứng tuyển',
+	AppliedPositionName: 'Vị trí ứng tuyển',
 	AppliedDate: 'Ngày ứng tuyển',
 	AskingSalary: 'Mức lương đề nghị',
 };
@@ -54,7 +54,7 @@ export const APPLICANT_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
 	Phone: 'formatted',
 	Email: 'normal',
 	ExperienceYears: 'formatted',
-	AppliedPosition: 'normal',
+	AppliedPositionName: 'normal',
 	AppliedDate: 'formatted',
 	AskingSalary: 'formatted',
 };

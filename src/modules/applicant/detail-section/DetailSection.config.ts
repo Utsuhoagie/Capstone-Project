@@ -8,7 +8,7 @@ export const APPLICANT_LIST_ITEM_CONFIGS: ListItemConfigs = {
 	Address: {},
 	Phone: {},
 	Email: {},
-	AppliedPosition: {},
+	AppliedPositionName: {},
 	AppliedDate: {},
 	AskingSalary: {},
 };

@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
+import { BASE_URL } from '../../../app/App';
 import { useToastStore } from '../../../app/App.store';
 import { Button } from '../../../components/atoms/Button/Button';
 import { useEmployeeStore } from '../Employee.store';
@@ -13,7 +14,7 @@ export const DeleteButton = () => {
 		'employees/delete',
 		async () => {
 			const res = await fetch(
-				`https://localhost:5000/api/Employees/Delete?NationalId=${selectedEmployee?.NationalId}`,
+				`${BASE_URL}/Employees/Delete?NationalId=${selectedEmployee?.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',

@@ -7,12 +7,12 @@ export interface Applicant {
 	Phone: string;
 	Email?: string;
 	ExperienceYears: number;
-	AppliedPosition: string;
+	AppliedPositionName: string;
 	AppliedDate: Date;
 	AskingSalary: number;
 }
 
-export interface Applicant_APIResponse {
+export interface Applicant_API_Response {
 	NationalId: string;
 	FullName: string;
 	Gender: 'male' | 'female' | 'other';
@@ -21,7 +21,7 @@ export interface Applicant_APIResponse {
 	Phone: string;
 	Email: string | null;
 	ExperienceYears: number;
-	AppliedPosition: string;
+	AppliedPositionName: string;
 	AppliedDate: string;
 	AskingSalary: number;
 }

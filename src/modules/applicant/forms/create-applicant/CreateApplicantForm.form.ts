@@ -15,7 +15,7 @@ export interface CreateApplicantFormIntermediateValues {
 	Phone: string;
 	Email?: string;
 	ExperienceYears: string;
-	AppliedPosition: string;
+	AppliedPositionName: string;
 	AppliedDate: string;
 	AskingSalary: string;
 }
@@ -71,7 +71,7 @@ export const createApplicantFormSchema = z.object({
 		{ message: 'Số năm kinh nghiệm không hợp lệ.' }
 	),
 
-	AppliedPosition: z
+	AppliedPositionName: z
 		.string()
 		.min(2, { message: 'Vị trí không hợp lệ.' })
 		.max(30, { message: 'Vị trí không hợp lệ.' }),

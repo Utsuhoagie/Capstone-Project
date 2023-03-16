@@ -11,7 +11,7 @@ export interface FilterApplicantFormIntermediateValues {
 	// Phone: string;
 	// Email: string;
 	ExperienceYears: string;
-	AppliedPosition: string;
+	AppliedPositionName: string;
 	AppliedDateFrom: string;
 	AppliedDateTo: string;
 
@@ -23,7 +23,7 @@ export interface FilterApplicantFormSubmitValues {
 	Gender?: 'male' | 'female' | 'other';
 	Address?: string;
 	ExperienceYears?: number;
-	AppliedPosition?: string;
+	AppliedPositionName?: string;
 	AppliedDateFrom?: string;
 	AppliedDateTo?: string;
 	AskingSalary?: number;
@@ -88,7 +88,7 @@ export const filterApplicantDialogFormSchema = z.object({
 			.optional()
 	),
 
-	AppliedPosition: z.preprocess(
+	AppliedPositionName: z.preprocess(
 		(val) => (val === '' ? undefined : val),
 		z.string().max(30, { message: 'Vị trí không hợp lệ.' }).optional()
 	),

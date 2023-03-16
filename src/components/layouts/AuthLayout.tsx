@@ -1,10 +1,9 @@
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../../modules/auth/Auth.store';
-import { AuthNavbar } from '../molecules/Navbar/AuthNavbar';
 
 export const AuthLayout = () => {
-	const navigate = useNavigate();
-	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+	const accessToken = useAuthStore((state) => state.accessToken);
+	const isLoggedIn = Boolean(accessToken);
 
 	if (isLoggedIn) {
 		return <Navigate to='/app' />;

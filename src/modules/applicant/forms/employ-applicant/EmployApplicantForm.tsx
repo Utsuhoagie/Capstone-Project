@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../../../app/App';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -37,7 +38,7 @@ export const EmployApplicantForm = () => {
 		'applicants/employ',
 		async (formData: Employee) => {
 			const res = await fetch(
-				`https://localhost:5000/api/Applicants/Employ?NationalId=${selectedApplicant.NationalId}`,
+				`${BASE_URL}/Applicants/Employ?NationalId=${selectedApplicant.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',
@@ -75,7 +76,7 @@ export const EmployApplicantForm = () => {
 			Phone: selectedApplicant.Phone,
 			Email: selectedApplicant.Email,
 			ExperienceYears: `${selectedApplicant.ExperienceYears}`,
-			Position: selectedApplicant.AppliedPosition,
+			Position: selectedApplicant.AppliedPositionName,
 			EmployedDate: dayjs().toISOString(),
 			Salary: `${selectedApplicant.AskingSalary}`,
 			StartHour: dayjs().hour(9).startOf('hour').toISOString(),

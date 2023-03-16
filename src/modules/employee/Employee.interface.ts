@@ -14,7 +14,7 @@ export interface Employee {
 	EndHour: number;
 }
 
-export interface Employee_APIResponse {
+export interface Employee_API_Response {
 	NationalId: string;
 	FullName: string;
 	Gender: 'male' | 'female' | 'other';

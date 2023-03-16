@@ -16,7 +16,7 @@ export const APPLICANT_COLUMN_CONFIGS: ColumnConfigs = {
 	Phone: { width: 140, isSortable: false },
 	Email: { width: 220, isSortable: false },
 	ExperienceYears: { width: 160, isSortable: true },
-	AppliedPosition: { width: 180, isSortable: true },
+	AppliedPositionName: { width: 180, isSortable: true },
 	AppliedDate: { width: 145, isSortable: true },
 	AskingSalary: { width: 160, isSortable: true },
 };

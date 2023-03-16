@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
+import { BASE_URL } from '../../../app/App';
 import { Button } from '../../../components/atoms/Button/Button';
 import { TextInput } from '../../../components/atoms/Input/TextInput';
+import { Auth_API_Response } from '../Auth.interface';
 import { useAuthStore } from '../Auth.store';
 import { LoginFormIntermediateValues, LoginModel } from './Login.form';
 
 export const Login = () => {
-	const { login, setAccessToken } = useAuthStore();
+	const { setTokens } = useAuthStore();
 	const methods = useForm<LoginFormIntermediateValues>({
 		defaultValues: {
 			Email: '',
@@ -17,7 +19,7 @@ export const Login = () => {
 	const [error, setError] = useState<string>('');
 
 	const mutation = useMutation('login', async (formData: LoginModel) => {
-		const res = await fetch('https://localhost:5000/api/Auth/Login', {
+		const res = await fetch(`${BASE_URL}/Auth/Login`, {
 			headers: {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
@@ -26,7 +28,7 @@ export const Login = () => {
 			body: JSON.stringify(formData),
 		});
 
-		const data = await res.json();
+		const data: Auth_API_Response = await res.json();
 
 		if (!res.ok) {
 			// console.table(data);
@@ -36,7 +38,7 @@ export const Login = () => {
 		}
 
 		console.table(data);
-		setAccessToken(data.Token);
+		setTokens(data.AccessToken, data.RefreshToken);
 	});
 
 	function handleLogin(data) {

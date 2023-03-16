@@ -3,11 +3,11 @@ import { useAuthStore } from '../../../modules/auth/Auth.store';
 import { NavItem } from './NavItem';
 
 export const AppNavbar = () => {
-	const logout = useAuthStore((state) => state.logout);
+	const unsetLogin = useAuthStore((state) => state.unsetLogin);
 	const navigate = useNavigate();
 
 	function handleLogout() {
-		logout();
+		unsetLogin();
 		navigate('/auth', { replace: true });
 	}
 
@@ -19,6 +19,8 @@ export const AppNavbar = () => {
 				<NavItem onClick={() => navigate('applicants')}>Ứng Viên</NavItem>
 
 				<NavItem onClick={() => navigate('employees')}>Nhân viên</NavItem>
+
+				<NavItem onClick={() => navigate('positions')}>Vị trí</NavItem>
 			</ul>
 		</nav>
 	);

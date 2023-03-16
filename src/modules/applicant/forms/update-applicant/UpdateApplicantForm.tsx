@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { BASE_URL } from '../../../../app/App';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
@@ -27,7 +28,7 @@ export const UpdateApplicantForm = () => {
 		'applicants/update',
 		async (formData: Applicant) => {
 			const res = await fetch(
-				`https://localhost:5000/api/Applicants/Update?NationalId=${selectedApplicant.NationalId}`,
+				`${BASE_URL}/Applicants/Update?NationalId=${selectedApplicant.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',
@@ -66,7 +67,7 @@ export const UpdateApplicantForm = () => {
 			Phone: selectedApplicant.Phone,
 			Email: selectedApplicant.Email,
 			ExperienceYears: `${selectedApplicant.ExperienceYears}`,
-			AppliedPosition: selectedApplicant.AppliedPosition,
+			AppliedPositionName: selectedApplicant.AppliedPositionName,
 			AppliedDate: dayjs(selectedApplicant.AppliedDate).toISOString(),
 			AskingSalary: `${selectedApplicant.AskingSalary}`,
 		},
@@ -91,7 +92,7 @@ export const UpdateApplicantForm = () => {
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
-			AppliedPosition: rawData.AppliedPosition,
+			AppliedPositionName: rawData.AppliedPositionName,
 			AppliedDate: dayjs(rawData.AppliedDate).toDate(),
 			AskingSalary: parseInt(rawData.AskingSalary),
 		};
@@ -178,7 +179,7 @@ export const UpdateApplicantForm = () => {
 
 					<TextInput
 						required
-						name='AppliedPosition'
+						name='AppliedPositionName'
 						placeholder='Nhập vị trí ứng tuyển.'
 						width='medium'
 						displayConfigs={displayConfigs}

@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { BASE_URL } from '../../../../app/App';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
@@ -28,7 +29,7 @@ export const UpdateEmployeeForm = () => {
 		'employees/update',
 		async (formData: Employee) => {
 			const res = await fetch(
-				`https://localhost:5000/api/Employees/Update?NationalId=${selectedEmployee.NationalId}`,
+				`${BASE_URL}/Employees/Update?NationalId=${selectedEmployee.NationalId}`,
 				{
 					headers: {
 						'Accept': 'application/json',

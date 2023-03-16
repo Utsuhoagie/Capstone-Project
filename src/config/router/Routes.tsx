@@ -14,10 +14,13 @@ import { UpdateEmployeeForm } from '../../modules/employee/forms/update-employee
 import { Example } from '../../modules/example/Example';
 import { ExampleForm } from '../../modules/example/ExampleForm';
 import { ExampleTable } from '../../modules/example/ExampleTable';
+import { CreatePositionForm } from '../../modules/position/forms/create-position/CreatePositionForm';
+import { UpdatePositionForm } from '../../modules/position/forms/update-position/UpdatePositionForm';
+import { PositionModule } from '../../modules/position/PositionModule';
 import { ProtectedRoute } from './ProtectedRoute';
 
 export const Routes = () => {
-	const { isLoggedIn } = useAuthStore();
+	const { isLoggedIn } = useAuthStore((state) => state);
 
 	return (
 		<ReactRouterRoutes>
@@ -42,6 +45,10 @@ export const Routes = () => {
 				<Route path='employees' element={<EmployeeModule />} />
 				<Route path='employees/create' element={<CreateEmployeeForm />} />
 				<Route path='employees/update' element={<UpdateEmployeeForm />} />
+
+				<Route path='positions' element={<PositionModule />} />
+				<Route path='positions/create' element={<CreatePositionForm />} />
+				<Route path='positions/update' element={<UpdatePositionForm />} />
 
 				<Route path='ex' element={<Example />} />
 				<Route path='ex-form' element={<ExampleForm />} />

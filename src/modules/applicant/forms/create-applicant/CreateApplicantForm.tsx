@@ -3,11 +3,13 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../../../app/App';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
+import { useAuthStore } from '../../../auth/Auth.store';
 import { Applicant } from '../../Applicant.interface';
 import { useApplicantStore } from '../../Applicant.store';
 import {
@@ -18,14 +20,16 @@ import {
 export const CreateApplicantForm = () => {
 	const navigate = useNavigate();
 
+	const accessToken = useAuthStore((state) => state.accessToken);
 	const showToast = useToastStore((state) => state.showToast);
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
 		'applicants/create',
 		async (formData: Applicant) => {
-			const res = await fetch('https://localhost:5000/api/Applicants/Create', {
+			const res = await fetch(`${BASE_URL}/Applicants/Create`, {
 				headers: {
+					'Authorization': `Bearer ${accessToken}`,
 					'Accept': 'application/json',
 					'Content-Type': 'application/json',
 				},
@@ -58,7 +62,7 @@ export const CreateApplicantForm = () => {
 			Phone: '',
 			Email: '',
 			ExperienceYears: '',
-			AppliedPosition: '',
+			AppliedPositionName: '',
 			AppliedDate: dayjs().toISOString(),
 			AskingSalary: '',
 		},
@@ -83,7 +87,7 @@ export const CreateApplicantForm = () => {
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
-			AppliedPosition: rawData.AppliedPosition,
+			AppliedPositionName: rawData.AppliedPositionName,
 			AppliedDate: dayjs(rawData.AppliedDate).toDate(),
 			AskingSalary: parseInt(rawData.AskingSalary),
 		};
@@ -170,7 +174,7 @@ export const CreateApplicantForm = () => {
 
 					<TextInput
 						required
-						name='AppliedPosition'
+						name='AppliedPositionName'
 						placeholder='Nhập vị trí ứng tuyển.'
 						width='medium'
 						displayConfigs={displayConfigs}

@@ -9,11 +9,12 @@ import {
 	Pagination,
 } from '../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../components/organisms/Table/Table.store';
-import { Employee, Employee_APIResponse } from './Employee.interface';
+import { Employee, Employee_API_Response } from './Employee.interface';
 import { useEmployeeStore } from './Employee.store';
 import { ButtonSection } from './button-section/ButtonSection';
 import { DataTable } from './data-table/DataTable';
 import { DetailSection } from './detail-section/DetailSection';
+import { BASE_URL } from '../../app/App';
 
 export const EmployeeModule = () => {
 	const navigate = useNavigate();
@@ -36,10 +37,11 @@ export const EmployeeModule = () => {
 		async () => {
 			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
 			const res = await fetch(
-				`https://localhost:5000/api/Employees?${allQueryParamsAsQueryString}`
+				`${BASE_URL}/Employees?${allQueryParamsAsQueryString}`
 			);
 
-			const pagedResponse: PagedResult<Employee_APIResponse> = await res.json();
+			const pagedResponse: PagedResult<Employee_API_Response> =
+				await res.json();
 			console.log('Paged API response: ', pagedResponse);
 
 			const responsePagination: Pagination = omit(['Items'], pagedResponse);

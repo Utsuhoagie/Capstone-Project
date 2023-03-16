@@ -4,13 +4,14 @@ import { clone, omit } from 'ramda';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { BASE_URL } from '../../app/App';
 import {
 	PagedResult,
 	Pagination,
 } from '../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../components/organisms/Table/Table.store';
 import { useAuthStore } from '../auth/Auth.store';
-import { Applicant, Applicant_APIResponse } from './Applicant.interface';
+import { Applicant, Applicant_API_Response } from './Applicant.interface';
 import { useApplicantStore } from './Applicant.store';
 import { ButtonSection } from './button-section/ButtonSection';
 import { DataTable } from './data-table/DataTable';
@@ -39,7 +40,7 @@ export const ApplicantModule = () => {
 		async () => {
 			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
 			const res = await fetch(
-				`https://localhost:5000/api/Applicants?${allQueryParamsAsQueryString}`,
+				`${BASE_URL}/Applicants?${allQueryParamsAsQueryString}`,
 				{
 					headers: {
 						Authorization: `Bearer ${accessToken}`,
@@ -47,7 +48,7 @@ export const ApplicantModule = () => {
 				}
 			);
 
-			const pagedResponse: PagedResult<Applicant_APIResponse> =
+			const pagedResponse: PagedResult<Applicant_API_Response> =
 				await res.json();
 			console.log('Paged API response: ', pagedResponse);
 
