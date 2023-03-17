@@ -10,6 +10,8 @@ import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/Date
 import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
+import { useRefresh } from '../../../auth/Auth.hooks';
+import { useAuthStore } from '../../../auth/Auth.store';
 import { Employee } from '../../Employee.interface';
 import { useEmployeeStore } from '../../Employee.store';
 import {
@@ -19,6 +21,8 @@ import {
 
 export const UpdateEmployeeForm = () => {
 	const navigate = useNavigate();
+	const { accessToken } = useAuthStore();
+	useRefresh();
 
 	const selectedEmployee = useEmployeeStore(
 		(state) => state.selectedEmployee
@@ -32,6 +36,7 @@ export const UpdateEmployeeForm = () => {
 				`${BASE_URL}/Employees/Update?NationalId=${selectedEmployee.NationalId}`,
 				{
 					headers: {
+						'Authorization': `Bearer ${accessToken}`,
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
 					},

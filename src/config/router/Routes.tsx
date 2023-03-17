@@ -20,7 +20,8 @@ import { PositionModule } from '../../modules/position/PositionModule';
 import { ProtectedRoute } from './ProtectedRoute';
 
 export const Routes = () => {
-	const { isLoggedIn } = useAuthStore((state) => state);
+	const accessToken = useAuthStore((state) => state.accessToken);
+	const isLoggedIn = Boolean(accessToken);
 
 	return (
 		<ReactRouterRoutes>

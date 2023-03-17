@@ -25,7 +25,7 @@ export const POSITION_FIELDS: string[] = [
 
 export const POSITION_LABELLERS: Labellers = {
 	Name: 'Vị trí',
-	ApplicantCount: 'Số ứng viên muốn ứng tuyển',
+	ApplicantCount: 'Số ứng viên',
 	EmployeeCount: 'Số nhân viên',
 };
 

@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-import QueryString from 'query-string';
 import { omit } from 'ramda';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
@@ -18,17 +16,11 @@ import { BASE_URL } from '../../app/App';
 
 export const PositionModule = () => {
 	const accessToken = useAuthStore((state) => state.accessToken);
-	const { selectedRowIndex, pagination, setPagination } = useTableStore();
+	const { selectedRowIndex, setPagination } = useTableStore();
 	const { visiblePositions, setVisiblePositions, setSelectedPosition } =
 		usePositionStore();
 
-	const allQueryParams = {
-		page: pagination.CurrentPage,
-		pageSize: pagination.PageSize,
-	};
-
 	const { isLoading, error, data } = useQuery(
-		// ['position', currentPageIndex],
 		'positions',
 		async () => {
 			const res = await fetch(`${BASE_URL}/Positions`, {

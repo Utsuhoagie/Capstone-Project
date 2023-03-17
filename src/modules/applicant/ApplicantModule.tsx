@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import QueryString from 'query-string';
 import { clone, omit } from 'ramda';
 import { useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BASE_URL } from '../../app/App';
 import {
@@ -10,6 +10,11 @@ import {
 	Pagination,
 } from '../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../components/organisms/Table/Table.store';
+import {
+	useNOT_WORKING_YET_IsRefreshNeededAsync,
+	useRefresh,
+} from '../auth/Auth.hooks';
+import { Auth_API_Response } from '../auth/Auth.interface';
 import { useAuthStore } from '../auth/Auth.store';
 import { Applicant, Applicant_API_Response } from './Applicant.interface';
 import { useApplicantStore } from './Applicant.store';
@@ -19,10 +24,12 @@ import { DetailSection } from './detail-section/DetailSection';
 
 export const ApplicantModule = () => {
 	const navigate = useNavigate();
+	const { accessToken, refreshToken, setTokens, unsetLogin } = useAuthStore();
+	// TODO: should ideally NOT refresh every time
+	useRefresh();
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	const accessToken = useAuthStore((state) => state.accessToken);
 	const { selectedRowIndex, pagination, setPagination } = useTableStore();
 	const { visibleApplicants, setVisibleApplicants, setSelectedApplicant } =
 		useApplicantStore();
@@ -97,11 +104,6 @@ export const ApplicantModule = () => {
 		};
 
 		setPagination(newPagination);
-
-		// setSearchParams((prev) => ({
-		// 	...prev,
-		// 	page: pageParam,
-		// }));
 	}, [searchParams]);
 
 	if (isLoading) return <p>'Loading...'</p>;

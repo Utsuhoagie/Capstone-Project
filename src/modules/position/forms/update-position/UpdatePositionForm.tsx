@@ -9,6 +9,8 @@ import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
+import { useRefresh } from '../../../auth/Auth.hooks';
+import { useAuthStore } from '../../../auth/Auth.store';
 import { Position } from '../../Position.interface';
 import { usePositionStore } from '../../Position.store';
 import {
@@ -18,6 +20,9 @@ import {
 
 export const UpdatePositionForm = () => {
 	const navigate = useNavigate();
+
+	const { accessToken } = useAuthStore();
+	useRefresh();
 
 	const selectedPosition = usePositionStore(
 		(state) => state.selectedPosition
@@ -31,6 +36,7 @@ export const UpdatePositionForm = () => {
 				`${BASE_URL}/Positions/Update?Name=${selectedPosition.Name}`,
 				{
 					headers: {
+						'Authorization': `Bearer ${accessToken}`,
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
 					},

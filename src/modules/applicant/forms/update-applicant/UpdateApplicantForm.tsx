@@ -9,6 +9,8 @@ import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
+import { useRefresh } from '../../../auth/Auth.hooks';
+import { useAuthStore } from '../../../auth/Auth.store';
 import { Applicant } from '../../Applicant.interface';
 import { useApplicantStore } from '../../Applicant.store';
 import {
@@ -18,6 +20,8 @@ import {
 
 export const UpdateApplicantForm = () => {
 	const navigate = useNavigate();
+	const { accessToken } = useAuthStore();
+	useRefresh();
 
 	const selectedApplicant = useApplicantStore(
 		(state) => state.selectedApplicant
@@ -31,6 +35,7 @@ export const UpdateApplicantForm = () => {
 				`${BASE_URL}/Applicants/Update?NationalId=${selectedApplicant.NationalId}`,
 				{
 					headers: {
+						'Authorization': `Bearer ${accessToken}`,
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
 					},

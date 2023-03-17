@@ -11,6 +11,8 @@ import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/Date
 import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
+import { useRefresh } from '../../../auth/Auth.hooks';
+import { useAuthStore } from '../../../auth/Auth.store';
 import { Employee } from '../../Employee.interface';
 import { useEmployeeStore } from '../../Employee.store';
 import {
@@ -20,6 +22,8 @@ import {
 
 export const CreateEmployeeForm = () => {
 	const navigate = useNavigate();
+	const { accessToken } = useAuthStore();
+	useRefresh();
 
 	const showToast = useToastStore((state) => state.showToast);
 
@@ -29,6 +33,7 @@ export const CreateEmployeeForm = () => {
 		async (formData: Employee) => {
 			const res = await fetch(`${BASE_URL}/Employees/Create`, {
 				headers: {
+					'Authorization': `Bearer ${accessToken}`,
 					'Accept': 'application/json',
 					'Content-Type': 'application/json',
 				},

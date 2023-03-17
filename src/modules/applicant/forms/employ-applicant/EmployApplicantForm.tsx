@@ -13,6 +13,8 @@ import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/Date
 import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
+import { useRefresh } from '../../../auth/Auth.hooks';
+import { useAuthStore } from '../../../auth/Auth.store';
 import { Employee } from '../../../employee/Employee.interface';
 import { useEmployeeStore } from '../../../employee/Employee.store';
 import { Applicant } from '../../Applicant.interface';
@@ -24,6 +26,8 @@ import {
 
 export const EmployApplicantForm = () => {
 	const navigate = useNavigate();
+	const { accessToken } = useAuthStore();
+	useRefresh();
 
 	const showToast = useToastStore((state) => state.showToast);
 	const openConfirmDialog = useConfirmDialogStore(
@@ -41,6 +45,7 @@ export const EmployApplicantForm = () => {
 				`${BASE_URL}/Applicants/Employ?NationalId=${selectedApplicant.NationalId}`,
 				{
 					headers: {
+						'Authorization': `Bearer ${accessToken}`,
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
 					},

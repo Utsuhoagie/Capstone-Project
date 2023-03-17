@@ -25,7 +25,7 @@ export const Pagination = () => {
 		: undefined;
 
 	return (
-		<div className='mt-2 flex flex-row justify-end gap-2'>
+		<div className='mt-2 flex flex-row justify-start gap-2'>
 			<PaginationButton
 				content='prev'
 				disabled={!pagination.HasPrevious}

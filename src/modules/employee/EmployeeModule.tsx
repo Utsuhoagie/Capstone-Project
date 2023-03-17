@@ -15,9 +15,13 @@ import { ButtonSection } from './button-section/ButtonSection';
 import { DataTable } from './data-table/DataTable';
 import { DetailSection } from './detail-section/DetailSection';
 import { BASE_URL } from '../../app/App';
+import { useAuthStore } from '../auth/Auth.store';
+import { useRefresh } from '../auth/Auth.hooks';
 
 export const EmployeeModule = () => {
 	const navigate = useNavigate();
+	const { accessToken, refreshToken, setTokens } = useAuthStore();
+	useRefresh();
 
 	const [searchParams, setSearchParams] = useSearchParams();
 
@@ -37,7 +41,12 @@ export const EmployeeModule = () => {
 		async () => {
 			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
 			const res = await fetch(
-				`${BASE_URL}/Employees?${allQueryParamsAsQueryString}`
+				`${BASE_URL}/Employees?${allQueryParamsAsQueryString}`,
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				}
 			);
 
 			const pagedResponse: PagedResult<Employee_API_Response> =

@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface TableConfig extends React.ComponentPropsWithRef<'table'> {
-	// width?: '100%' | number;
+	width?: 'full' | 'fit-content'; // | number;
 	// onRowSelected: (index: number) => void;
 }
 

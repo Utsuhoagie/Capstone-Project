@@ -6,7 +6,8 @@ export const ProtectedRoute = ({
 }: {
 	element: React.ReactElement;
 }) => {
-	const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+	const accessToken = useAuthStore((state) => state.accessToken);
+	const isLoggedIn = Boolean(accessToken);
 
 	return isLoggedIn ? element : <Navigate to='auth' replace />;
 };

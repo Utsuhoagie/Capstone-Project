@@ -2,9 +2,14 @@ import { useMutation, useQueryClient } from 'react-query';
 import { BASE_URL } from '../../../app/App';
 import { useToastStore } from '../../../app/App.store';
 import { Button } from '../../../components/atoms/Button/Button';
+import { useRefresh } from '../../auth/Auth.hooks';
+import { useAuthStore } from '../../auth/Auth.store';
 import { useEmployeeStore } from '../Employee.store';
 
 export const DeleteButton = () => {
+	const { accessToken } = useAuthStore();
+	useRefresh();
+
 	const showToast = useToastStore((state) => state.showToast);
 
 	const selectedEmployee = useEmployeeStore((state) => state.selectedEmployee);
@@ -17,6 +22,7 @@ export const DeleteButton = () => {
 				`${BASE_URL}/Employees/Delete?NationalId=${selectedEmployee?.NationalId}`,
 				{
 					headers: {
+						'Authorization': `Bearer ${accessToken}`,
 						'Accept': 'application/json',
 						'Content-Type': 'application/json',
 					},

@@ -4,7 +4,7 @@ import {
 } from '../../../components/organisms/Table/Table.interface';
 
 export const APPLICANT_TABLE_CONFIGS: TableConfig = {
-	width: '100%',
+	width: 'full',
 };
 
 export const APPLICANT_COLUMN_CONFIGS: ColumnConfigs = {
