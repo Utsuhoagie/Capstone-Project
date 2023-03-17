@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../../../../app/App';
+import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
@@ -101,13 +101,15 @@ export const CreatePositionForm = () => {
 					<Button type='submit' width='medium'>
 						Thêm
 					</Button>
-					<Button
-						type='button'
-						width='medium'
-						onClick={() => console.log(methods.getValues())}
-					>
-						Xem form
-					</Button>
+					{IS_DEBUG_MODE && (
+						<Button
+							type='button'
+							width='medium'
+							onClick={() => console.log(methods.getValues())}
+						>
+							Xem form
+						</Button>
+					)}
 					<Button
 						type='button'
 						secondary
