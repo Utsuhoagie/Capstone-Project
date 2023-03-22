@@ -22,10 +22,6 @@ export const DetailSection = () => {
 							listItemConfigs={POSITION_LIST_ITEM_CONFIGS}
 						/>
 					</div>
-
-					<div className='flex-1 rounded-lg border border-neutral-gray-5 bg-neutral-white p-4'>
-						<div className='h-h-image-section w-full bg-red-300'></div>
-					</div>
 				</div>
 			)}
 		</div>

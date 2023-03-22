@@ -1,4 +1,10 @@
-import { Routes as ReactRouterRoutes, Route, Navigate } from 'react-router-dom';
+import {
+	Routes as ReactRouterRoutes,
+	Route,
+	Navigate,
+	json,
+} from 'react-router-dom';
+import { BASE_URL } from '../../app/App';
 import { AppLayout } from '../../components/layouts/AppLayout';
 import { AuthLayout } from '../../components/layouts/AuthLayout';
 import { ApplicantModule } from '../../modules/applicant/ApplicantModule';
@@ -41,7 +47,10 @@ export const Routes = () => {
 				<Route path='applicants' element={<ApplicantModule />} />
 				<Route path='applicants/create' element={<CreateApplicantForm />} />
 				<Route path='applicants/update' element={<UpdateApplicantForm />} />
-				<Route path='applicants/employ' element={<EmployApplicantForm />} />
+				<Route
+					path='applicants/employ/:NationalId'
+					element={<EmployApplicantForm />}
+				/>
 
 				<Route path='employees' element={<EmployeeModule />} />
 				<Route path='employees/create' element={<CreateEmployeeForm />} />

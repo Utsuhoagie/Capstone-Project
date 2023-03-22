@@ -9,7 +9,7 @@ import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
-import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
+import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useRefresh } from '../../../auth/Auth.hooks';
 import { useAuthStore } from '../../../auth/Auth.store';
@@ -135,7 +135,7 @@ export const CreateEmployeeForm = () => {
 						name='Gender'
 						placeholder='Chọn 1.'
 						width='medium'
-						options={['male', 'female', 'other']}
+						optionPairs={['male', 'female', 'other']}
 						displayConfigs={displayConfigs}
 					/>
 

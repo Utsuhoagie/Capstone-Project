@@ -8,7 +8,7 @@ import { WarningIcon } from '../../assets/icons/WarningIcon';
 import { SuccessIcon } from '../../assets/icons/SuccessIcon';
 import { ErrorIcon } from '../../assets/icons/ErrorIcon';
 import { TextAreaInput } from '../../components/atoms/Input/TextAreaInput';
-import { SelectInput } from '../../components/atoms/Input/SelectInput';
+import { SelectInput } from '../../components/atoms/Input/SelectInput/SelectInput';
 import { isNil } from 'ramda';
 import { CheckboxIcon } from '../../assets/icons/CheckboxIcon';
 import { RadioGroupInput } from '../../components/atoms/Input/RadioGroupInput';
@@ -108,14 +108,14 @@ export const ExampleForm = () => {
 						name='sex'
 						placeholder='Hãy chọn 1...'
 						label='Giới tính'
-						options={SEXES}
+						optionPairs={SEXES}
 					/>
 					<SelectInput
 						name='skills'
 						placeholder='Hãy chọn nhiều...'
 						label='Kĩ năng'
 						multiple
-						options={SKILLS}
+						optionPairs={SKILLS}
 					/>
 					<RadioGroupInput
 						name='level'

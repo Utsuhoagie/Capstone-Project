@@ -6,7 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import { useDialogStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
-import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
+import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useTableStore } from '../../../../components/organisms/Table/Table.store';
 import { useEmployeeStore } from '../../Employee.store';
@@ -89,7 +89,7 @@ export const FilterDialog = () => {
 
 				<SelectInput
 					name='Gender'
-					options={['', 'male', 'female', 'other']}
+					optionPairs={['', 'male', 'female', 'other']}
 					displayConfigs={displayConfigs}
 				/>
 

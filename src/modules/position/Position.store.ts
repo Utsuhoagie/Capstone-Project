@@ -14,8 +14,10 @@ import {
 
 interface PositionStore {
 	// Server state
+	allPositions: Position[];
+	setAllPositions: (_allPositions: Position[]) => void;
 	visiblePositions: Position[];
-	setVisiblePositions: (_positions: Position[]) => void;
+	setVisiblePositions: (_visiblePositions: Position[]) => void;
 
 	// Client state
 	/* positionsOnPage: Position[];
@@ -29,6 +31,13 @@ interface PositionStore {
 export const usePositionStore = create<PositionStore>()(
 	devtools((set) => ({
 		// Server state
+		allPositions: [],
+		setAllPositions: (_allPositions: Position[]) =>
+			set((prev) => {
+				let next = clone(prev);
+				next.allPositions = _allPositions;
+				return next;
+			}),
 		visiblePositions: [],
 		setVisiblePositions: (_visiblePositions: Position[]) =>
 			set((prev) => {

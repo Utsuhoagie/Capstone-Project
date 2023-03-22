@@ -9,3 +9,7 @@ export interface Position_API_Response {
 	ApplicantCount: number;
 	EmployeeCount: number;
 }
+
+export function mapToPosition(res: Position_API_Response): Position {
+	return { ...res };
+}

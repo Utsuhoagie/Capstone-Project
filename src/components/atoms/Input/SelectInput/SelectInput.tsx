@@ -1,32 +1,21 @@
 import { useState } from 'react';
 import { Listbox } from '@headlessui/react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Label } from './Label';
-import { DropdownIcon } from '../../../assets/icons/DropdownIcon';
-import { CheckboxIcon } from '../../../assets/icons/CheckboxIcon';
+import { Label } from '../Label';
+import { DropdownIcon } from '../../../../assets/icons/DropdownIcon';
+import { CheckboxIcon } from '../../../../assets/icons/CheckboxIcon';
 import {
 	DisplayConfigs,
 	getDisplayForFieldValue,
 	getLabelForField,
-} from '../../../app/App.display';
-import { useApplicantStore } from '../../../modules/applicant/Applicant.store';
-
-interface SelectInputProps extends React.ComponentPropsWithRef<'select'> {
-	name: string;
-	width: 'full' | 'medium';
-	options: any[];
-	displayConfigs: DisplayConfigs;
-}
-
-interface SelectInputSingleProps extends SelectInputProps {
-	optionPairs: { value: any; display: string | undefined }[];
-	selectedValue: any;
-}
-
-interface SelectInputMultipleProps extends SelectInputProps {
-	optionPairs: { value: any; display: string | undefined }[];
-	selectedValues: any[];
-}
+} from '../../../../app/App.display';
+import { useApplicantStore } from '../../../../modules/applicant/Applicant.store';
+import {
+	SelectInputMultipleProps,
+	SelectInputProps,
+	SelectInputSingleProps,
+} from './SelectInput.interface';
+import { ErrorIcon } from '../../../../assets/icons/ErrorIcon';
 
 /**
  * ======= NOTE:NOTE:NOTE:NOTE:NOTE:NOTE: =======
@@ -34,8 +23,63 @@ interface SelectInputMultipleProps extends SelectInputProps {
  * ======= NOTE:NOTE:NOTE:NOTE:NOTE:NOTE: =======
  */
 
+export const SelectInput = ({
+	// name,
+	// options,
+	// label,
+	// multiple,
+	// placeholder,
+	// required,
+	// ...props
+	...props
+}: SelectInputProps) => {
+	const { watch, formState } = useFormContext();
+	const error = formState.errors[props.name];
+
+	// Can be multiple; different vars used based on `multiple`
+	const selectedValue = watch(props.name) as string;
+	const selectedValues = watch(props.name) as string[];
+
+	/* 	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
+
+	const optionPairs = props.optionPairs.map((option) => ({
+		value: option,
+		display: getDisplayForFieldValue({
+			displayConfigs,
+			field: props.name,
+			value: option,
+		}),
+	})); */
+
+	return (
+		<div className='flex w-full flex-row gap-2'>
+			{props.multiple ? (
+				<SelectInputMultiple
+					selectedValues={selectedValues}
+					hasError={Boolean(error)}
+					{...props}
+				/>
+			) : (
+				<SelectInputSingle
+					selectedValue={selectedValue}
+					hasError={Boolean(error)}
+					{...props}
+				/>
+			)}
+
+			{error && (
+				<div className='flex flex-row items-center gap-2 text-state-error-normal'>
+					<ErrorIcon size={24} />
+					<p>{error?.message?.toString()}</p>
+				</div>
+			)}
+		</div>
+	);
+};
+
 const SelectInputSingle = ({
 	name,
+	hasError,
 	optionPairs,
 	width,
 	displayConfigs,
@@ -60,7 +104,7 @@ const SelectInputSingle = ({
 				<Listbox
 					disabled={disabled}
 					as='div'
-					className='flex w-full flex-row items-center gap-2'
+					className='flex flex-row items-center gap-2'
 					value={field.value}
 					onChange={field.onChange}
 				>
@@ -77,14 +121,23 @@ const SelectInputSingle = ({
 					<div className='flex flex-col'>
 						<Listbox.Button
 							className={
-								' flex h-h-input flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ' +
+								' flex h-h-input flex-row justify-between border bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ' +
 								` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} ` +
+								` ${
+									hasError
+										? 'border-state-error-normal'
+										: 'border-primary-normal'
+								} ` +
 								' ui-open:rounded-t ui-not-open:rounded ' +
 								' disabled:cursor-not-allowed disabled:bg-neutral-gray-3 disabled:opacity-75 '
 							}
 							disabled={disabled}
 						>
-							<p className='overflow-ellipsis'>
+							<p
+								className={`overflow-ellipsis ${
+									selectedValue !== '' ? '' : 'text-neutral-gray-5'
+								}`}
+							>
 								{selectedValue !== ''
 									? getDisplayForFieldValue({
 											displayConfigs,
@@ -125,6 +178,7 @@ const SelectInputSingle = ({
 
 const SelectInputMultiple = ({
 	name,
+	hasError,
 	optionPairs,
 	width,
 	displayConfigs,
@@ -143,7 +197,7 @@ const SelectInputMultiple = ({
 				<Listbox
 					disabled={disabled}
 					as='div'
-					className='flex w-full flex-row items-center gap-2'
+					className='flex flex-row items-center gap-2'
 					multiple
 					value={field.value}
 					onChange={field.onChange}
@@ -161,7 +215,12 @@ const SelectInputMultiple = ({
 					<div className='flex flex-col'>
 						<Listbox.Button
 							className={
-								' flex h-h-input w-w-input-medium flex-row justify-between border border-primary-normal bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ' +
+								' flex h-h-input w-w-input-medium flex-row justify-between border bg-neutral-white px-2 py-1.5 text-left text-neutral-gray-9 outline-none ' +
+								` ${
+									hasError
+										? 'border-state-error-normal'
+										: 'border-primary-normal'
+								} ` +
 								' ui-open:rounded-t ui-not-open:rounded ' +
 								' disabled:cursor-not-allowed disabled:bg-neutral-gray-3 disabled:opacity-75 '
 							}
@@ -204,50 +263,4 @@ const SelectInputMultiple = ({
 			)}
 		/>
 	);
-};
-
-export const SelectInput = ({
-	// name,
-	// options,
-	// label,
-	// multiple,
-	// placeholder,
-	// required,
-	// ...props
-	...props
-}: SelectInputProps) => {
-	const { watch } = useFormContext();
-
-	// Can be multiple; different vars used based on `multiple`
-	const selectedValue = watch(props.name) as string;
-	const selectedValues = watch(props.name) as string[];
-
-	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
-
-	const optionPairs = props.options.map((option) => ({
-		value: option,
-		display: getDisplayForFieldValue({
-			displayConfigs,
-			field: props.name,
-			value: option,
-		}),
-	}));
-
-	if (props.multiple) {
-		return (
-			<SelectInputMultiple
-				optionPairs={optionPairs}
-				selectedValues={selectedValues}
-				{...props}
-			/>
-		);
-	} else {
-		return (
-			<SelectInputSingle
-				optionPairs={optionPairs}
-				selectedValue={selectedValue}
-				{...props}
-			/>
-		);
-	}
 };

@@ -1,15 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
-import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
+import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
+import { PagedResult } from '../../../../components/organisms/Table/Pagination/Pagination.interface';
+import { useRefresh } from '../../../auth/Auth.hooks';
 import { useAuthStore } from '../../../auth/Auth.store';
+import {
+	Position,
+	Position_API_Response,
+} from '../../../position/Position.interface';
+import { usePositionStore } from '../../../position/Position.store';
 import { Applicant } from '../../Applicant.interface';
 import { useApplicantStore } from '../../Applicant.store';
 import {
@@ -21,9 +28,32 @@ export const CreateApplicantForm = () => {
 	const navigate = useNavigate();
 
 	const accessToken = useAuthStore((state) => state.accessToken);
+	useRefresh();
+
 	const showToast = useToastStore((state) => state.showToast);
+	const { allPositions, setAllPositions } = usePositionStore();
+	const allPositionOptions = allPositions.map((position) => position.Name);
 
 	const queryClient = useQueryClient();
+	useQuery('positions', async () => {
+		const res = await fetch(`${BASE_URL}/Positions`, {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+			},
+		});
+
+		if (!res.ok) {
+			showToast({ state: 'error' });
+		}
+
+		const pagedResult: PagedResult<Position_API_Response> = await res.json();
+
+		const responseAllPositions: Position[] = pagedResult.Items.map((Item) => ({
+			...Item,
+		}));
+
+		setAllPositions(responseAllPositions);
+	});
 	const mutation = useMutation(
 		'applicants/create',
 		async (formData: Applicant) => {
@@ -45,7 +75,7 @@ export const CreateApplicantForm = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant');
+				queryClient.invalidateQueries('applicants');
 			},
 		}
 	);
@@ -128,7 +158,7 @@ export const CreateApplicantForm = () => {
 						name='Gender'
 						width='medium'
 						placeholder='Chọn 1.'
-						options={['male', 'female', 'other']}
+						optionPairs={['male', 'female', 'other']}
 						displayConfigs={displayConfigs}
 					/>
 
@@ -172,11 +202,12 @@ export const CreateApplicantForm = () => {
 						displayConfigs={displayConfigs}
 					/>
 
-					<TextInput
+					<SelectInput
 						required
 						name='AppliedPositionName'
 						placeholder='Nhập vị trí ứng tuyển.'
 						width='medium'
+						optionPairs={allPositionOptions}
 						displayConfigs={displayConfigs}
 					/>
 

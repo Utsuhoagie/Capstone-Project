@@ -7,7 +7,7 @@ import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
-import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
+import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useRefresh } from '../../../auth/Auth.hooks';
 import { useAuthStore } from '../../../auth/Auth.store';
@@ -53,7 +53,7 @@ export const UpdatePositionForm = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('position');
+				queryClient.invalidateQueries('positions');
 			},
 		}
 	);
@@ -90,7 +90,7 @@ export const UpdatePositionForm = () => {
 
 	return (
 		<div className='flex flex-col gap-4'>
-			<h1 className='text-h1'>Chỉnh sửa hồ sơ Ứng viên</h1>
+			<h1 className='text-h1'>Chỉnh sửa Vị trí</h1>
 			<FormProvider {...methods}>
 				<form
 					className='flex flex-col gap-2 p-2'
@@ -99,7 +99,7 @@ export const UpdatePositionForm = () => {
 					<TextInput
 						required
 						name='Name'
-						placeholder='Nhập 9 hoặc 12 số.'
+						placeholder='Nhập tên vị trí.'
 						width='medium'
 						displayConfigs={displayConfigs}
 					/>

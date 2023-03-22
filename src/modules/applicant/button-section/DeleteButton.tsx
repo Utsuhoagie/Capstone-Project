@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { BASE_URL } from '../../../app/App';
 import { useToastStore } from '../../../app/App.store';
 import { Button } from '../../../components/atoms/Button/Button';
+import { useTableStore } from '../../../components/organisms/Table/Table.store';
 import { useRefresh } from '../../auth/Auth.hooks';
 import { useAuthStore } from '../../auth/Auth.store';
 import { useApplicantStore } from '../Applicant.store';
@@ -11,10 +12,11 @@ export const DeleteButton = () => {
 	useRefresh();
 
 	const showToast = useToastStore((state) => state.showToast);
-
-	const selectedApplicant = useApplicantStore(
-		(state) => state.selectedApplicant
+	const setSelectedRowIndex = useTableStore(
+		(state) => state.setSelectedRowIndex
 	);
+
+	const { selectedApplicant, setSelectedApplicant } = useApplicantStore();
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
@@ -40,7 +42,9 @@ export const DeleteButton = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant');
+				queryClient.invalidateQueries('applicants');
+				setSelectedApplicant(undefined);
+				setSelectedRowIndex(undefined);
 			},
 		}
 	);

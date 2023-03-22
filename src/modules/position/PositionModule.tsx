@@ -7,15 +7,22 @@ import {
 } from '../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../components/organisms/Table/Table.store';
 import { useAuthStore } from '../auth/Auth.store';
-import { Position, Position_API_Response } from './Position.interface';
+import {
+	mapToPosition,
+	Position,
+	Position_API_Response,
+} from './Position.interface';
 import { usePositionStore } from './Position.store';
 import { ButtonSection } from './button-section/ButtonSection';
 import { DataTable } from './data-table/DataTable';
 import { DetailSection } from './detail-section/DetailSection';
 import { BASE_URL } from '../../app/App';
+import { useRefresh } from '../auth/Auth.hooks';
 
 export const PositionModule = () => {
 	const accessToken = useAuthStore((state) => state.accessToken);
+	useRefresh();
+
 	const { selectedRowIndex, setPagination } = useTableStore();
 	const { visiblePositions, setVisiblePositions, setSelectedPosition } =
 		usePositionStore();
@@ -36,7 +43,9 @@ export const PositionModule = () => {
 			const responsePagination: Pagination = omit(['Items'], pagedResponse);
 			setPagination(responsePagination);
 
-			const responseVisiblePositions: Position[] = pagedResponse.Items;
+			const responseVisiblePositions: Position[] = pagedResponse.Items.map(
+				(Item) => mapToPosition(Item)
+			);
 			setVisiblePositions(responseVisiblePositions);
 		},
 		{ keepPreviousData: true, staleTime: 0, refetchOnWindowFocus: false }

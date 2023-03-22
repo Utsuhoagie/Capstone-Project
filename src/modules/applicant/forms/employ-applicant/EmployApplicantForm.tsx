@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
 import {
 	useConfirmDialogStore,
@@ -11,13 +11,16 @@ import {
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
-import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
+import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
+import { useSelectOptions } from '../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useRefresh } from '../../../auth/Auth.hooks';
 import { useAuthStore } from '../../../auth/Auth.store';
 import { Employee } from '../../../employee/Employee.interface';
 import { useEmployeeStore } from '../../../employee/Employee.store';
-import { Applicant } from '../../Applicant.interface';
+import { usePositionStore } from '../../../position/Position.store';
+import { APPLICANT_MAPPERS } from '../../Applicant.display';
+import { mapToApplicant } from '../../Applicant.interface';
 import { useApplicantStore } from '../../Applicant.store';
 import {
 	EmployApplicantFormIntermediateValues,
@@ -33,16 +36,19 @@ export const EmployApplicantForm = () => {
 	const openConfirmDialog = useConfirmDialogStore(
 		(state) => state.openConfirmDialog
 	);
-	const selectedApplicant = useApplicantStore(
-		(state) => state.selectedApplicant
-	) as Applicant;
 
+	const { NationalId } = useParams();
+
+	const { allPositions } = usePositionStore();
+	const allPositionOptions = allPositions.map((position) => position.Name);
+
+	const positionOptions = useSelectOptions({ module: 'Positions' });
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
 		'applicants/employ',
 		async (formData: Employee) => {
 			const res = await fetch(
-				`${BASE_URL}/Applicants/Employ?NationalId=${selectedApplicant.NationalId}`,
+				`${BASE_URL}/Applicants/Employ?NationalId=${NationalId}`,
 				{
 					headers: {
 						'Authorization': `Bearer ${accessToken}`,
@@ -62,7 +68,7 @@ export const EmployApplicantForm = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant');
+				queryClient.invalidateQueries('applicants');
 			},
 		}
 	);
@@ -70,25 +76,58 @@ export const EmployApplicantForm = () => {
 	const methods = useForm<EmployApplicantFormIntermediateValues>({
 		mode: 'onSubmit',
 		reValidateMode: 'onSubmit',
-		defaultValues: {
-			NationalId: selectedApplicant.NationalId,
-			FullName: selectedApplicant.FullName,
-			Gender: selectedApplicant.Gender,
-			BirthDate: selectedApplicant.BirthDate
-				? dayjs(selectedApplicant.BirthDate).toISOString()
-				: '',
-			Address: selectedApplicant.Address,
-			Phone: selectedApplicant.Phone,
-			Email: selectedApplicant.Email,
-			ExperienceYears: `${selectedApplicant.ExperienceYears}`,
-			Position: selectedApplicant.AppliedPositionName,
-			EmployedDate: dayjs().toISOString(),
-			Salary: `${selectedApplicant.AskingSalary}`,
-			StartHour: dayjs().hour(9).startOf('hour').toISOString(),
-			EndHour: dayjs().hour(18).startOf('hour').toISOString(),
+		defaultValues: async () => {
+			const res = await fetch(`${BASE_URL}/Applicants/${NationalId}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			});
+
+			if (!res.ok) {
+				console.log('not OK');
+				return {
+					NationalId: '',
+					FullName: '',
+					Gender: 'male',
+					BirthDate: '',
+					Address: '',
+					Phone: '',
+					Email: '',
+					ExperienceYears: '',
+					Position: '',
+					EmployedDate: dayjs().toISOString(),
+					Salary: '',
+					StartHour: dayjs().hour(9).startOf('hour').toISOString(),
+					EndHour: dayjs().hour(18).startOf('hour').toISOString(),
+				};
+			}
+
+			const data = await res.json();
+			const selectedApplicant = mapToApplicant(data);
+
+			console.log('OK', selectedApplicant);
+			return {
+				NationalId: selectedApplicant.NationalId,
+				FullName: selectedApplicant.FullName,
+				Gender: selectedApplicant.Gender,
+				BirthDate: selectedApplicant.BirthDate
+					? dayjs(selectedApplicant.BirthDate).toISOString()
+					: '',
+				Address: selectedApplicant.Address,
+				Phone: selectedApplicant.Phone,
+				Email: selectedApplicant.Email,
+				ExperienceYears: `${selectedApplicant.ExperienceYears}`,
+				Position: selectedApplicant.AppliedPositionName,
+				EmployedDate: dayjs().toISOString(),
+				Salary: `${selectedApplicant.AskingSalary}`,
+				StartHour: dayjs().hour(9).startOf('hour').toISOString(),
+				EndHour: dayjs().hour(18).startOf('hour').toISOString(),
+			};
 		},
 		resolver: zodResolver(employApplicantFormSchema),
 	});
+
+	const isFormLoading = methods.formState.isLoading;
 
 	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
 	const employeeDisplayConfigs = useEmployeeStore(
@@ -140,146 +179,148 @@ export const EmployApplicantForm = () => {
 	return (
 		<div className='flex flex-col gap-4'>
 			<h1 className='text-h1'>Tuyển Ứng viên</h1>
-			<FormProvider {...methods}>
-				<form
-					className='flex flex-col gap-2 p-2'
-					onSubmit={methods.handleSubmit(handleSubmit, handleError)}
-				>
-					<TextInput
-						disabled
-						required
-						name='NationalId'
-						placeholder='Nhập 9 hoặc 12 số.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+			{isFormLoading || (
+				<FormProvider {...methods}>
+					<form
+						className='flex flex-col gap-2 p-2'
+						onSubmit={methods.handleSubmit(handleSubmit, handleError)}
+					>
+						<TextInput
+							disabled
+							required
+							name='NationalId'
+							placeholder='Nhập 9 hoặc 12 số.'
+							width='medium'
+							displayConfigs={displayConfigs}
+						/>
 
-					<TextInput
-						disabled
-						required
-						name='FullName'
-						placeholder='Nhập họ tên đầy đủ.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+						<TextInput
+							disabled
+							required
+							name='FullName'
+							placeholder='Nhập họ tên đầy đủ.'
+							width='medium'
+							displayConfigs={displayConfigs}
+						/>
 
-					<SelectInput
-						disabled
-						required
-						name='Gender'
-						width='medium'
-						placeholder='Chọn 1.'
-						options={['male', 'female', 'other']}
-						displayConfigs={displayConfigs}
-					/>
+						<SelectInput
+							disabled
+							required
+							name='Gender'
+							width='medium'
+							placeholder='Chọn 1.'
+							optionPairs={APPLICANT_MAPPERS['Gender']}
+							displayConfigs={displayConfigs}
+						/>
 
-					<DateInput
-						disabled
-						name='BirthDate'
-						placeholder='Chọn ngày sinh.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+						<DateInput
+							disabled
+							name='BirthDate'
+							placeholder='Chọn ngày sinh.'
+							width='medium'
+							displayConfigs={displayConfigs}
+						/>
 
-					<TextInput
-						disabled
-						required
-						name='Address'
-						placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+						<TextInput
+							disabled
+							required
+							name='Address'
+							placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
+							width='medium'
+							displayConfigs={displayConfigs}
+						/>
 
-					<TextInput
-						disabled
-						required
-						name='Phone'
-						placeholder='Nhập số điện thoại.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+						<TextInput
+							disabled
+							required
+							name='Phone'
+							placeholder='Nhập số điện thoại.'
+							width='medium'
+							displayConfigs={displayConfigs}
+						/>
 
-					<TextInput
-						disabled
-						name='Email'
-						placeholder='Nhập địa chỉ email.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+						<TextInput
+							disabled
+							name='Email'
+							placeholder='Nhập địa chỉ email.'
+							width='medium'
+							displayConfigs={displayConfigs}
+						/>
 
-					<TextInput
-						disabled
-						required
-						name='ExperienceYears'
-						type='number'
-						placeholder='Nhập số năm kinh nghiệm.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+						<TextInput
+							required
+							name='ExperienceYears'
+							type='number'
+							placeholder='Nhập số năm kinh nghiệm.'
+							width='medium'
+							displayConfigs={displayConfigs}
+						/>
 
-					<TextInput
-						required
-						name='Position'
-						placeholder='Nhập vị trí.'
-						width='medium'
-						displayConfigs={employeeDisplayConfigs}
-					/>
+						<SelectInput
+							required
+							name='Position'
+							placeholder='Nhập vị trí.'
+							width='medium'
+							optionPairs={positionOptions}
+							displayConfigs={employeeDisplayConfigs}
+						/>
 
-					<DateInput
-						required
-						name='EmployedDate'
-						placeholder='Chọn ngày bắt đầu làm việc.'
-						width='medium'
-						displayConfigs={employeeDisplayConfigs}
-					/>
+						<DateInput
+							required
+							name='EmployedDate'
+							placeholder='Chọn ngày bắt đầu làm việc.'
+							width='medium'
+							displayConfigs={employeeDisplayConfigs}
+						/>
 
-					<TextInput
-						required
-						name='Salary'
-						type='number'
-						width='medium'
-						placeholder='Nhập mức lương.'
-						displayConfigs={employeeDisplayConfigs}
-					/>
+						<TextInput
+							required
+							name='Salary'
+							type='number'
+							width='medium'
+							placeholder='Nhập mức lương.'
+							displayConfigs={employeeDisplayConfigs}
+						/>
 
-					<TimeInput
-						required
-						name='StartHour'
-						width='medium'
-						placeholder='Chọn thời gian bắt đầu ca.'
-						displayConfigs={employeeDisplayConfigs}
-					/>
+						<TimeInput
+							required
+							name='StartHour'
+							width='medium'
+							placeholder='Chọn thời gian bắt đầu ca.'
+							displayConfigs={employeeDisplayConfigs}
+						/>
 
-					<TimeInput
-						required
-						name='EndHour'
-						width='medium'
-						placeholder='Chọn thời gian kết thúc ca.'
-						displayConfigs={employeeDisplayConfigs}
-					/>
+						<TimeInput
+							required
+							name='EndHour'
+							width='medium'
+							placeholder='Chọn thời gian kết thúc ca.'
+							displayConfigs={employeeDisplayConfigs}
+						/>
 
-					<Button type='submit' width='medium'>
-						Thêm
-					</Button>
-					{IS_DEBUG_MODE && (
+						<Button type='submit' width='medium'>
+							Thêm
+						</Button>
+						{IS_DEBUG_MODE && (
+							<Button
+								type='button'
+								width='medium'
+								onClick={() => console.table(methods.getValues())}
+							>
+								Xem form
+							</Button>
+						)}
 						<Button
 							type='button'
+							secondary
 							width='medium'
-							onClick={() => console.table(methods.getValues())}
+							onClick={() => navigate('/app/applicants')}
 						>
-							Xem form
+							Thoát
 						</Button>
-					)}
-					<Button
-						type='button'
-						secondary
-						width='medium'
-						onClick={() => navigate('/app/applicants')}
-					>
-						Thoát
-					</Button>
-				</form>
-			</FormProvider>
+					</form>
+				</FormProvider>
+			)}
 		</div>
 	);
 };

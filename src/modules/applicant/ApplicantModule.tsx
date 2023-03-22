@@ -1,22 +1,28 @@
 import dayjs from 'dayjs';
 import QueryString from 'query-string';
-import { clone, omit } from 'ramda';
+import { omit } from 'ramda';
 import { useEffect } from 'react';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { BASE_URL } from '../../app/App';
+import { useToastStore } from '../../app/App.store';
 import {
 	PagedResult,
 	Pagination,
 } from '../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../components/organisms/Table/Table.store';
-import {
-	useNOT_WORKING_YET_IsRefreshNeededAsync,
-	useRefresh,
-} from '../auth/Auth.hooks';
-import { Auth_API_Response } from '../auth/Auth.interface';
+import { useRefresh } from '../auth/Auth.hooks';
 import { useAuthStore } from '../auth/Auth.store';
-import { Applicant, Applicant_API_Response } from './Applicant.interface';
+import {
+	Position,
+	Position_API_Response,
+} from '../position/Position.interface';
+import { usePositionStore } from '../position/Position.store';
+import {
+	Applicant,
+	Applicant_API_Response,
+	mapToApplicant,
+} from './Applicant.interface';
 import { useApplicantStore } from './Applicant.store';
 import { ButtonSection } from './button-section/ButtonSection';
 import { DataTable } from './data-table/DataTable';
@@ -29,10 +35,11 @@ export const ApplicantModule = () => {
 	useRefresh();
 
 	const [searchParams, setSearchParams] = useSearchParams();
-
+	const { showToast } = useToastStore();
 	const { selectedRowIndex, pagination, setPagination } = useTableStore();
 	const { visibleApplicants, setVisibleApplicants, setSelectedApplicant } =
 		useApplicantStore();
+	const { setAllPositions } = usePositionStore();
 
 	const currentQueryParams = QueryString.parse(searchParams.toString());
 	const allQueryParams = {
@@ -42,7 +49,7 @@ export const ApplicantModule = () => {
 	};
 
 	const { isLoading, error, data } = useQuery(
-		// ['applicant', currentPageIndex],
+		// ['applicants', currentPageIndex],
 		['applicants', allQueryParams],
 		async () => {
 			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
@@ -63,14 +70,7 @@ export const ApplicantModule = () => {
 			setPagination(responsePagination);
 
 			const responseVisibleApplicants: Applicant[] = pagedResponse.Items.map(
-				(Item) => ({
-					...Item,
-					BirthDate: Item.BirthDate
-						? dayjs(Item.BirthDate).toDate()
-						: undefined,
-					Email: Item.Email ?? undefined,
-					AppliedDate: dayjs(Item.AppliedDate).toDate(),
-				})
+				(Item) => mapToApplicant(Item)
 			);
 			setVisibleApplicants(responseVisibleApplicants);
 		},

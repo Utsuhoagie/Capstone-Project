@@ -9,7 +9,11 @@ import {
 	Pagination,
 } from '../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../components/organisms/Table/Table.store';
-import { Employee, Employee_API_Response } from './Employee.interface';
+import {
+	Employee,
+	Employee_API_Response,
+	mapToEmployee,
+} from './Employee.interface';
 import { useEmployeeStore } from './Employee.store';
 import { ButtonSection } from './button-section/ButtonSection';
 import { DataTable } from './data-table/DataTable';
@@ -57,14 +61,7 @@ export const EmployeeModule = () => {
 			setPagination(responsePagination);
 
 			const responseVisibleEmployees: Employee[] = pagedResponse.Items.map(
-				(Item) => ({
-					...Item,
-					BirthDate: Item.BirthDate
-						? dayjs(Item.BirthDate).toDate()
-						: undefined,
-					Email: Item.Email ?? undefined,
-					EmployedDate: dayjs(Item.EmployedDate).toDate(),
-				})
+				(Item) => mapToEmployee(Item)
 			);
 			setVisibleEmployees(responseVisibleEmployees);
 		},

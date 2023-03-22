@@ -105,12 +105,12 @@ function mapValueToDisplay({
 	displayConfigs: { mappers },
 	field,
 	value,
-}: DisplayArgs): string | undefined {
+}: DisplayArgs): string {
 	const fieldValues = mappers[field];
 	const mappableFieldValue = fieldValues.find(
 		(fieldValue) => fieldValue.value === value
 	);
-	return mappableFieldValue?.display;
+	return mappableFieldValue?.display ?? value;
 }
 
 // ====== Formatted ======

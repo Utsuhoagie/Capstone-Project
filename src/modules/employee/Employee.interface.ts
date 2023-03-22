@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export interface Employee {
 	NationalId: string;
 	FullName: string;
@@ -28,4 +30,13 @@ export interface Employee_API_Response {
 	Salary: number;
 	StartHour: number;
 	EndHour: number;
+}
+
+export function mapToEmployee(res: Employee_API_Response): Employee {
+	return {
+		...res,
+		BirthDate: res.BirthDate ? dayjs(res.BirthDate).toDate() : undefined,
+		Email: res.Email ?? undefined,
+		EmployedDate: dayjs(res.EmployedDate).toDate(),
+	};
 }

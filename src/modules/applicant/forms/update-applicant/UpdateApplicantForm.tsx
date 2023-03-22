@@ -7,7 +7,7 @@ import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
 import { useToastStore } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
-import { SelectInput } from '../../../../components/atoms/Input/SelectInput';
+import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useRefresh } from '../../../auth/Auth.hooks';
 import { useAuthStore } from '../../../auth/Auth.store';
@@ -52,7 +52,7 @@ export const UpdateApplicantForm = () => {
 		},
 		{
 			onSuccess: () => {
-				queryClient.invalidateQueries('applicant');
+				queryClient.invalidateQueries('applicants');
 			},
 		}
 	);
@@ -138,7 +138,7 @@ export const UpdateApplicantForm = () => {
 						name='Gender'
 						width='medium'
 						placeholder='Chọn 1.'
-						options={['male', 'female', 'other']}
+						optionPairs={['male', 'female', 'other']}
 						displayConfigs={displayConfigs}
 					/>
 
