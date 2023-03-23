@@ -15,7 +15,7 @@ export interface EmployApplicantFormIntermediateValues {
 	Phone: string;
 	Email?: string;
 	ExperienceYears: string;
-	Position: string;
+	PositionName: string;
 	EmployedDate: string;
 	Salary: string;
 	StartHour: string;
@@ -78,7 +78,7 @@ export const employApplicantFormSchema = z
 			{ message: 'Số năm kinh nghiệm không hợp lệ.' }
 		),
 
-		Position: z
+		PositionName: z
 			.string()
 			.min(2, { message: 'Vị trí không hợp lệ.' })
 			.max(30, { message: 'Vị trí không hợp lệ.' }),
@@ -109,5 +109,6 @@ export const employApplicantFormSchema = z
 		EndHour: z.preprocess(preprocessStringToOptionalDate, z.date()),
 	})
 	.refine((schema) => schema.StartHour < schema.EndHour, {
+		path: ['StartHour'],
 		message: 'Giờ bắt đầu ca phải trước giờ kết thúc ca',
 	});

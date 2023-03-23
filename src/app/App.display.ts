@@ -31,7 +31,7 @@ export interface Labellers {
 // 	Address: 'Địa chỉ',
 // 	Phone: 'Số điện thoại',
 // 	Email: 'Email',
-// 	AppliedPosition: 'Vị trí ứng tuyển',
+// 	AppliedPositionName: 'Vị trí ứng tuyển',
 // 	AppliedDate: 'Ngày ứng tuyển',
 // 	AskingSalary: 'Mức lương đề nghị',
 // };
@@ -62,7 +62,7 @@ export interface DisplayModeMappers {
 // 	Address: 'normal',
 // 	Phone: 'formatted',
 // 	Email: 'normal',
-// 	AppliedPosition: 'mapped',
+// 	AppliedPositionName: 'mapped',
 // 	AppliedDate: 'formatted',
 // 	AskingSalary: 'formatted',
 // };

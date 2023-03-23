@@ -15,7 +15,7 @@ export interface CreateEmployeeFormIntermediateValues {
 	Phone: string;
 	Email?: string;
 	ExperienceYears: string;
-	Position: string;
+	PositionName: string;
 	EmployedDate: string;
 	Salary: string;
 	StartHour: string;
@@ -78,7 +78,7 @@ export const createEmployeeFormSchema = z
 			{ message: 'Số năm kinh nghiệm không hợp lệ.' }
 		),
 
-		Position: z
+		PositionName: z
 			.string()
 			.min(2, { message: 'Vị trí không hợp lệ.' })
 			.max(30, { message: 'Vị trí không hợp lệ.' }),

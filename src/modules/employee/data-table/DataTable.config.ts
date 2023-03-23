@@ -16,7 +16,7 @@ export const EMPLOYEE_COLUMN_CONFIGS: ColumnConfigs = {
 	Phone: { width: 140, isSortable: false },
 	Email: { width: 220, isSortable: false },
 	ExperienceYears: { width: 160, isSortable: true },
-	Position: { width: 180, isSortable: true },
+	PositionName: { width: 180, isSortable: true },
 	EmployedDate: { width: 145, isSortable: true },
 	Salary: { width: 130, isSortable: true },
 	StartHour: { width: 110, isSortable: true },

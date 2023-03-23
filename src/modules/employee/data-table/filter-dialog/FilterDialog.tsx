@@ -28,7 +28,7 @@ export const FilterDialog = () => {
 			Gender: (searchParams.get('Gender') as any) ?? '',
 			Address: searchParams.get('Address') ?? '',
 			ExperienceYears: searchParams.get('ExperienceYears') ?? '',
-			AppliedPosition: searchParams.get('AppliedPosition') ?? '',
+			AppliedPositionName: searchParams.get('AppliedPosition') ?? '',
 			AppliedDateFrom: searchParams.get('AppliedDateFrom') ?? '',
 			AppliedDateTo: searchParams.get('AppliedDateTo') ?? '',
 			AskingSalary: searchParams.get('AskingSalary') ?? '',
@@ -47,7 +47,7 @@ export const FilterDialog = () => {
 			Gender: rawData.Gender,
 			Address: rawData.Address,
 			ExperienceYears: rawData.ExperienceYears,
-			AppliedPosition: rawData.AppliedPosition,
+			AppliedPositionName: rawData.AppliedPosition,
 			AppliedDateFrom: rawData.AppliedDateFrom
 				? dayjs(rawData.AppliedDateFrom).toISOString()
 				: undefined,

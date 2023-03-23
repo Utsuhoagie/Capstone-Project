@@ -4,10 +4,14 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
-import { useToastStore } from '../../../../app/App.store';
+import {
+	useConfirmDialogStore,
+	useToastStore,
+} from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
+import { useSelectOptions } from '../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { PagedResult } from '../../../../components/organisms/Table/Pagination/Pagination.interface';
 import { useRefresh } from '../../../auth/Auth.hooks';
@@ -17,6 +21,7 @@ import {
 	Position_API_Response,
 } from '../../../position/Position.interface';
 import { usePositionStore } from '../../../position/Position.store';
+import { APPLICANT_MAPPERS } from '../../Applicant.display';
 import { Applicant } from '../../Applicant.interface';
 import { useApplicantStore } from '../../Applicant.store';
 import {
@@ -27,33 +32,15 @@ import {
 export const CreateApplicantForm = () => {
 	const navigate = useNavigate();
 
-	const accessToken = useAuthStore((state) => state.accessToken);
+	const { accessToken } = useAuthStore();
 	useRefresh();
 
-	const showToast = useToastStore((state) => state.showToast);
-	const { allPositions, setAllPositions } = usePositionStore();
-	const allPositionOptions = allPositions.map((position) => position.Name);
+	const { showToast } = useToastStore();
+	const { openConfirmDialog } = useConfirmDialogStore();
+	const { displayConfigs } = useApplicantStore();
+	const allPositionOptions = useSelectOptions({ module: 'Positions' });
 
 	const queryClient = useQueryClient();
-	useQuery('positions', async () => {
-		const res = await fetch(`${BASE_URL}/Positions`, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
-
-		if (!res.ok) {
-			showToast({ state: 'error' });
-		}
-
-		const pagedResult: PagedResult<Position_API_Response> = await res.json();
-
-		const responseAllPositions: Position[] = pagedResult.Items.map((Item) => ({
-			...Item,
-		}));
-
-		setAllPositions(responseAllPositions);
-	});
 	const mutation = useMutation(
 		'applicants/create',
 		async (formData: Applicant) => {
@@ -99,8 +86,6 @@ export const CreateApplicantForm = () => {
 		resolver: zodResolver(createApplicantFormSchema),
 	});
 
-	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
-
 	const handleSubmit: SubmitHandler<CreateApplicantFormIntermediateValues> = (
 		rawData
 	) => {
@@ -123,7 +108,18 @@ export const CreateApplicantForm = () => {
 		};
 
 		// console.log({ formData });
-		mutation.mutate(formData);
+		openConfirmDialog({
+			isClosable: true,
+			// title,
+			message: 'Xác nhận tuyển ứng viên này?',
+			onConfirm: () => {
+				mutation.mutate(formData);
+				navigate('/app/applicants');
+			},
+			onSuccess: () => {
+				window.alert('aaaaaa');
+			},
+		});
 	};
 	const handleError = (error) => {
 		console.table(error);
@@ -158,7 +154,7 @@ export const CreateApplicantForm = () => {
 						name='Gender'
 						width='medium'
 						placeholder='Chọn 1.'
-						optionPairs={['male', 'female', 'other']}
+						optionPairs={APPLICANT_MAPPERS['Gender']}
 						displayConfigs={displayConfigs}
 					/>
 

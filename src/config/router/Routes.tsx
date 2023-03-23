@@ -46,7 +46,10 @@ export const Routes = () => {
 
 				<Route path='applicants' element={<ApplicantModule />} />
 				<Route path='applicants/create' element={<CreateApplicantForm />} />
-				<Route path='applicants/update' element={<UpdateApplicantForm />} />
+				<Route
+					path='applicants/update/:NationalId'
+					element={<UpdateApplicantForm />}
+				/>
 				<Route
 					path='applicants/employ/:NationalId'
 					element={<EmployApplicantForm />}

@@ -9,7 +9,7 @@ export interface Employee {
 	Phone: string;
 	Email?: string;
 	ExperienceYears: number;
-	Position: string;
+	PositionName: string;
 	EmployedDate: Date;
 	Salary: number;
 	StartHour: number;
@@ -25,7 +25,7 @@ export interface Employee_API_Response {
 	Phone: string;
 	Email: string | null;
 	ExperienceYears: number;
-	Position: string;
+	PositionName: string;
 	EmployedDate: string;
 	Salary: number;
 	StartHour: number;

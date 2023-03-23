@@ -65,7 +65,7 @@ export const CreateEmployeeForm = () => {
 			Phone: '',
 			Email: '',
 			ExperienceYears: '',
-			Position: '',
+			PositionName: '',
 			EmployedDate: dayjs().toISOString(),
 			Salary: '',
 			StartHour: dayjs().hour(9).startOf('hour').toISOString(),
@@ -92,7 +92,7 @@ export const CreateEmployeeForm = () => {
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
-			Position: rawData.Position,
+			PositionName: rawData.Position,
 			EmployedDate: dayjs(rawData.BirthDate).toDate(),
 			Salary: parseInt(rawData.Salary),
 			StartHour: dayjs(rawData.StartHour).hour(),
@@ -180,7 +180,7 @@ export const CreateEmployeeForm = () => {
 
 					<TextInput
 						required
-						name='Position'
+						name='PositionName'
 						placeholder='Nhập vị trí ứng tuyển.'
 						width='medium'
 						displayConfigs={displayConfigs}

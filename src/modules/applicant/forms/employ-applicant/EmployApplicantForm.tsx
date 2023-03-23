@@ -32,16 +32,12 @@ export const EmployApplicantForm = () => {
 	const { accessToken } = useAuthStore();
 	useRefresh();
 
-	const showToast = useToastStore((state) => state.showToast);
-	const openConfirmDialog = useConfirmDialogStore(
-		(state) => state.openConfirmDialog
-	);
+	const { showToast } = useToastStore();
+	const { openConfirmDialog } = useConfirmDialogStore();
+	const { displayConfigs } = useApplicantStore();
+	const { displayConfigs: employeeDisplayConfigs } = useEmployeeStore();
 
 	const { NationalId } = useParams();
-
-	const { allPositions } = usePositionStore();
-	const allPositionOptions = allPositions.map((position) => position.Name);
-
 	const positionOptions = useSelectOptions({ module: 'Positions' });
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
@@ -94,7 +90,7 @@ export const EmployApplicantForm = () => {
 					Phone: '',
 					Email: '',
 					ExperienceYears: '',
-					Position: '',
+					PositionName: '',
 					EmployedDate: dayjs().toISOString(),
 					Salary: '',
 					StartHour: dayjs().hour(9).startOf('hour').toISOString(),
@@ -117,7 +113,7 @@ export const EmployApplicantForm = () => {
 				Phone: selectedApplicant.Phone,
 				Email: selectedApplicant.Email,
 				ExperienceYears: `${selectedApplicant.ExperienceYears}`,
-				Position: selectedApplicant.AppliedPositionName,
+				PositionName: selectedApplicant.AppliedPositionName,
 				EmployedDate: dayjs().toISOString(),
 				Salary: `${selectedApplicant.AskingSalary}`,
 				StartHour: dayjs().hour(9).startOf('hour').toISOString(),
@@ -128,11 +124,6 @@ export const EmployApplicantForm = () => {
 	});
 
 	const isFormLoading = methods.formState.isLoading;
-
-	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
-	const employeeDisplayConfigs = useEmployeeStore(
-		(state) => state.displayConfigs
-	);
 
 	const handleSubmit: SubmitHandler<EmployApplicantFormIntermediateValues> = (
 		rawData
@@ -150,7 +141,7 @@ export const EmployApplicantForm = () => {
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
-			Position: rawData.Position,
+			PositionName: rawData.PositionName,
 			EmployedDate: dayjs(rawData.EmployedDate).toDate(),
 			Salary: parseInt(rawData.Salary),
 			StartHour: dayjs(rawData.StartHour).hour(),
@@ -258,7 +249,7 @@ export const EmployApplicantForm = () => {
 
 						<SelectInput
 							required
-							name='Position'
+							name='PositionName'
 							placeholder='Nhập vị trí.'
 							width='medium'
 							optionPairs={positionOptions}

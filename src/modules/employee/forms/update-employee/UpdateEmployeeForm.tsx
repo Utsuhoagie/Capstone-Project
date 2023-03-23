@@ -73,7 +73,7 @@ export const UpdateEmployeeForm = () => {
 			Phone: selectedEmployee.Phone,
 			Email: selectedEmployee.Email,
 			ExperienceYears: `${selectedEmployee.ExperienceYears}`,
-			Position: selectedEmployee.Position,
+			PositionName: selectedEmployee.PositionName,
 			EmployedDate: dayjs(selectedEmployee.EmployedDate).toISOString(),
 			Salary: `${selectedEmployee.Salary}`,
 			StartHour: dayjs()
@@ -106,7 +106,7 @@ export const UpdateEmployeeForm = () => {
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
-			Position: rawData.Position,
+			PositionName: rawData.Position,
 			EmployedDate: dayjs(rawData.EmployedDate).toDate(),
 			Salary: parseInt(rawData.Salary),
 			StartHour: dayjs(rawData.StartHour).hour(),
@@ -194,7 +194,7 @@ export const UpdateEmployeeForm = () => {
 
 					<TextInput
 						required
-						name='Position'
+						name='PositionName'
 						placeholder='Nhập vị trí.'
 						width='medium'
 						displayConfigs={displayConfigs}

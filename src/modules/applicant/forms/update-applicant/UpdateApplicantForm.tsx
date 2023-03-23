@@ -2,16 +2,21 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
-import { useToastStore } from '../../../../app/App.store';
+import {
+	useConfirmDialogStore,
+	useToastStore,
+} from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
+import { useSelectOptions } from '../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useRefresh } from '../../../auth/Auth.hooks';
 import { useAuthStore } from '../../../auth/Auth.store';
-import { Applicant } from '../../Applicant.interface';
+import { APPLICANT_MAPPERS } from '../../Applicant.display';
+import { Applicant, mapToApplicant } from '../../Applicant.interface';
 import { useApplicantStore } from '../../Applicant.store';
 import {
 	UpdateApplicantFormIntermediateValues,
@@ -23,16 +28,15 @@ export const UpdateApplicantForm = () => {
 	const { accessToken } = useAuthStore();
 	useRefresh();
 
-	const selectedApplicant = useApplicantStore(
-		(state) => state.selectedApplicant
-	) as Applicant;
+	const { NationalId } = useParams();
 
 	const queryClient = useQueryClient();
+	const positionOptions = useSelectOptions({ module: 'Positions' });
 	const mutation = useMutation(
 		'applicants/update',
 		async (formData: Applicant) => {
 			const res = await fetch(
-				`${BASE_URL}/Applicants/Update?NationalId=${selectedApplicant.NationalId}`,
+				`${BASE_URL}/Applicants/Update?NationalId=${NationalId}`,
 				{
 					headers: {
 						'Authorization': `Bearer ${accessToken}`,
@@ -57,29 +61,58 @@ export const UpdateApplicantForm = () => {
 		}
 	);
 
-	const showToast = useToastStore((state) => state.showToast);
+	const { showToast } = useToastStore();
+	const { openConfirmDialog } = useConfirmDialogStore();
+	const { displayConfigs } = useApplicantStore();
 
 	const methods = useForm<UpdateApplicantFormIntermediateValues>({
 		mode: 'onSubmit',
-		defaultValues: {
-			NationalId: selectedApplicant.NationalId,
-			FullName: selectedApplicant.FullName,
-			Gender: selectedApplicant.Gender,
-			BirthDate: Boolean(selectedApplicant.BirthDate)
-				? dayjs(selectedApplicant.BirthDate).toISOString()
-				: undefined,
-			Address: selectedApplicant.Address,
-			Phone: selectedApplicant.Phone,
-			Email: selectedApplicant.Email,
-			ExperienceYears: `${selectedApplicant.ExperienceYears}`,
-			AppliedPositionName: selectedApplicant.AppliedPositionName,
-			AppliedDate: dayjs(selectedApplicant.AppliedDate).toISOString(),
-			AskingSalary: `${selectedApplicant.AskingSalary}`,
+		defaultValues: async () => {
+			const res = await fetch(`${BASE_URL}/Applicants/${NationalId}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			});
+
+			if (!res.ok) {
+				console.log('not OK');
+				return {
+					NationalId: '',
+					FullName: '',
+					Gender: 'male',
+					BirthDate: '',
+					Address: '',
+					Phone: '',
+					Email: '',
+					ExperienceYears: '',
+					AppliedPositionName: '',
+					AppliedDate: dayjs().toISOString(),
+					AskingSalary: '',
+				};
+			}
+
+			const data = await res.json();
+			const selectedApplicant = mapToApplicant(data);
+
+			console.log('OK', selectedApplicant);
+			return {
+				NationalId: selectedApplicant.NationalId,
+				FullName: selectedApplicant.FullName,
+				Gender: selectedApplicant.Gender,
+				BirthDate: selectedApplicant.BirthDate
+					? dayjs(selectedApplicant.BirthDate).toISOString()
+					: '',
+				Address: selectedApplicant.Address,
+				Phone: selectedApplicant.Phone,
+				Email: selectedApplicant.Email,
+				ExperienceYears: `${selectedApplicant.ExperienceYears}`,
+				AppliedPositionName: selectedApplicant.AppliedPositionName,
+				AppliedDate: dayjs().toISOString(),
+				AskingSalary: `${selectedApplicant.AskingSalary}`,
+			};
 		},
 		resolver: zodResolver(updateApplicantFormSchema),
 	});
-
-	const displayConfigs = useApplicantStore((state) => state.displayConfigs);
 
 	const handleSubmit: SubmitHandler<UpdateApplicantFormIntermediateValues> = (
 		rawData
@@ -103,7 +136,18 @@ export const UpdateApplicantForm = () => {
 		};
 
 		// console.log({ formData });
-		mutation.mutate(formData);
+		openConfirmDialog({
+			isClosable: true,
+			// title,
+			message: 'Xác nhận cập nhật thông tin ứng viên này?',
+			onConfirm: () => {
+				mutation.mutate(formData);
+				navigate('/app/applicants');
+			},
+			onSuccess: () => {
+				window.alert('aaaaaa');
+			},
+		});
 	};
 	const handleError = (error) => {
 		console.log({ error });
@@ -138,7 +182,7 @@ export const UpdateApplicantForm = () => {
 						name='Gender'
 						width='medium'
 						placeholder='Chọn 1.'
-						optionPairs={['male', 'female', 'other']}
+						optionPairs={APPLICANT_MAPPERS['Gender']}
 						displayConfigs={displayConfigs}
 					/>
 
@@ -182,11 +226,12 @@ export const UpdateApplicantForm = () => {
 						displayConfigs={displayConfigs}
 					/>
 
-					<TextInput
+					<SelectInput
 						required
 						name='AppliedPositionName'
 						placeholder='Nhập vị trí ứng tuyển.'
 						width='medium'
+						optionPairs={positionOptions}
 						displayConfigs={displayConfigs}
 					/>
 
