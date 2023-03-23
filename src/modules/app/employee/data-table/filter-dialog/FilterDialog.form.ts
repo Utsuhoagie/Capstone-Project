@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import { z } from 'zod';
-import { RangeValue } from '../../../../app/App.interface';
 
 export interface FilterEmployeeFormIntermediateValues {
 	// NationalId?: string;

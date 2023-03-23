@@ -4,9 +4,9 @@ import { useQuery } from 'react-query';
 import {
 	PagedResult,
 	Pagination,
-} from '../../components/organisms/Table/Pagination/Pagination.interface';
-import { useTableStore } from '../../components/organisms/Table/Table.store';
-import { useAuthStore } from '../auth/Auth.store';
+} from '../../../components/organisms/Table/Pagination/Pagination.interface';
+import { useTableStore } from '../../../components/organisms/Table/Table.store';
+import { useAuthStore } from '../../auth/Auth.store';
 import {
 	mapToPosition,
 	Position,
@@ -16,8 +16,8 @@ import { usePositionStore } from './Position.store';
 import { ButtonSection } from './button-section/ButtonSection';
 import { DataTable } from './data-table/DataTable';
 import { DetailSection } from './detail-section/DetailSection';
-import { BASE_URL } from '../../app/App';
-import { useRefresh } from '../auth/Auth.hooks';
+import { BASE_URL } from '../../../app/App';
+import { useRefresh } from '../../auth/Auth.hooks';
 
 export const PositionModule = () => {
 	const accessToken = useAuthStore((state) => state.accessToken);

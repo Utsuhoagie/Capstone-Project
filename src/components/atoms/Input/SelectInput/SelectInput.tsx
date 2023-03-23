@@ -9,7 +9,7 @@ import {
 	getDisplayForFieldValue,
 	getLabelForField,
 } from '../../../../app/App.display';
-import { useApplicantStore } from '../../../../modules/applicant/Applicant.store';
+import { useApplicantStore } from '../../../../modules/app/applicant/Applicant.store';
 import {
 	SelectInputMultipleProps,
 	SelectInputProps,

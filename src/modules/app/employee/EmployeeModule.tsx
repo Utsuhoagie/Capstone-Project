@@ -7,8 +7,8 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
 	PagedResult,
 	Pagination,
-} from '../../components/organisms/Table/Pagination/Pagination.interface';
-import { useTableStore } from '../../components/organisms/Table/Table.store';
+} from '../../../components/organisms/Table/Pagination/Pagination.interface';
+import { useTableStore } from '../../../components/organisms/Table/Table.store';
 import {
 	Employee,
 	Employee_API_Response,
@@ -18,9 +18,9 @@ import { useEmployeeStore } from './Employee.store';
 import { ButtonSection } from './button-section/ButtonSection';
 import { DataTable } from './data-table/DataTable';
 import { DetailSection } from './detail-section/DetailSection';
-import { BASE_URL } from '../../app/App';
-import { useAuthStore } from '../auth/Auth.store';
-import { useRefresh } from '../auth/Auth.hooks';
+import { BASE_URL } from '../../../app/App';
+import { useAuthStore } from '../../auth/Auth.store';
+import { useRefresh } from '../../auth/Auth.hooks';
 
 export const EmployeeModule = () => {
 	const navigate = useNavigate();

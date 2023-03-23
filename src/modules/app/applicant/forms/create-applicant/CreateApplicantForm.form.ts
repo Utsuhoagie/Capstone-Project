@@ -4,7 +4,7 @@ import {
 	isIntValid,
 	preprocessStringToOptionalDate,
 	preprocessStringToOptionalString,
-} from '../../../../app/App.form';
+} from '../../../../../app/App.form';
 
 export interface CreateApplicantFormIntermediateValues {
 	NationalId: string;

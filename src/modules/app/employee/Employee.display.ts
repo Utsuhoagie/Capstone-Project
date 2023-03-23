@@ -7,7 +7,7 @@ import {
 	Formatters,
 	Labellers,
 	Mappers,
-} from '../../app/App.display';
+} from '../../../app/App.display';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

@@ -1,13 +1,13 @@
-import { Table } from '../../../components/organisms/Table/Table';
+import { Table } from '../../../../components/organisms/Table/Table';
 import {
 	APPLICANT_TABLE_CONFIGS,
 	APPLICANT_COLUMN_CONFIGS,
 } from './DataTable.config';
 import { useApplicantStore } from '../Applicant.store';
 import { omit } from 'ramda';
-import { Button } from '../../../components/atoms/Button/Button';
+import { Button } from '../../../../components/atoms/Button/Button';
 import { useNavigate } from 'react-router';
-import { useDialogStore } from '../../../app/App.store';
+import { useDialogStore } from '../../../../app/App.store';
 import { FilterDialog } from './filter-dialog/FilterDialog';
 
 export const DataTable = () => {

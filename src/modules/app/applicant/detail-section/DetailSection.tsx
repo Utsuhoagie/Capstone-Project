@@ -1,4 +1,4 @@
-import { List } from '../../../components/organisms/List/List';
+import { List } from '../../../../components/organisms/List/List';
 import { useApplicantStore } from '../Applicant.store';
 import { APPLICANT_LIST_ITEM_CONFIGS } from './DetailSection.config';
 

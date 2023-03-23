@@ -4,15 +4,15 @@ import { omit } from 'ramda';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { BASE_URL } from '../../app/App';
-import { useToastStore } from '../../app/App.store';
+import { BASE_URL } from '../../../app/App';
+import { useToastStore } from '../../../app/App.store';
 import {
 	PagedResult,
 	Pagination,
-} from '../../components/organisms/Table/Pagination/Pagination.interface';
-import { useTableStore } from '../../components/organisms/Table/Table.store';
-import { useRefresh } from '../auth/Auth.hooks';
-import { useAuthStore } from '../auth/Auth.store';
+} from '../../../components/organisms/Table/Pagination/Pagination.interface';
+import { useTableStore } from '../../../components/organisms/Table/Table.store';
+import { useRefresh } from '../../auth/Auth.hooks';
+import { useAuthStore } from '../../auth/Auth.store';
 import {
 	Position,
 	Position_API_Response,

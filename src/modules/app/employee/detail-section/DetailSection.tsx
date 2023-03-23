@@ -1,4 +1,4 @@
-import { List } from '../../../components/organisms/List/List';
+import { List } from '../../../../components/organisms/List/List';
 import { useEmployeeStore } from '../Employee.store';
 import { EMPLOYEE_LIST_ITEM_CONFIGS } from './DetailSection.config';
 

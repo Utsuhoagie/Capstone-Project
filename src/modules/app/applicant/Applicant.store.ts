@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { clone } from 'ramda';
 import { Applicant } from './Applicant.interface';
-import { DisplayConfigs } from '../../app/App.display';
+import { DisplayConfigs } from '../../../app/App.display';
 import {
 	APPLICANT_FIELDS,
 	APPLICANT_DISPLAY_MODE_MAPPERS,

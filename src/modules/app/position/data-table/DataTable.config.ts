@@ -1,7 +1,7 @@
 import {
 	ColumnConfigs,
 	TableConfig,
-} from '../../../components/organisms/Table/Table.interface';
+} from '../../../../components/organisms/Table/Table.interface';
 
 export const POSITION_TABLE_CONFIGS: TableConfig = {
 	width: 'fit-content',

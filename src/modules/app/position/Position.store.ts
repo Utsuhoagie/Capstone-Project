@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { clone } from 'ramda';
 import { Position } from './Position.interface';
-import { DisplayConfigs } from '../../app/App.display';
+import { DisplayConfigs } from '../../../app/App.display';
 import {
 	POSITION_FIELDS,
 	POSITION_DISPLAY_MODE_MAPPERS,

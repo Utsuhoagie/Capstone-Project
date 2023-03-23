@@ -1,7 +1,7 @@
 import {
 	ColumnConfigs,
 	TableConfig,
-} from '../../../components/organisms/Table/Table.interface';
+} from '../../../../components/organisms/Table/Table.interface';
 
 export const APPLICANT_TABLE_CONFIGS: TableConfig = {
 	width: 'full',

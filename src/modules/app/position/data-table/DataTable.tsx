@@ -1,10 +1,10 @@
-import { Table } from '../../../components/organisms/Table/Table';
+import { Table } from '../../../../components/organisms/Table/Table';
 import {
 	POSITION_TABLE_CONFIGS,
 	POSITION_COLUMN_CONFIGS,
 } from './DataTable.config';
 import { usePositionStore } from '../Position.store';
-import { Button } from '../../../components/atoms/Button/Button';
+import { Button } from '../../../../components/atoms/Button/Button';
 import { useNavigate } from 'react-router';
 
 export const DataTable = () => {

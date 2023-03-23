@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { clone } from 'ramda';
 import { Employee } from './Employee.interface';
-import { DisplayConfigs } from '../../app/App.display';
+import { DisplayConfigs } from '../../../app/App.display';
 import {
 	EMPLOYEE_FIELDS,
 	EMPLOYEE_DISPLAY_MODE_MAPPERS,

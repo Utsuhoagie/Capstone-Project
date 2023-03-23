@@ -1,4 +1,4 @@
-import { useTableStore } from '../../../components/organisms/Table/Table.store';
+import { useTableStore } from '../../../../components/organisms/Table/Table.store';
 import { DeleteButton } from './DeleteButton';
 import { EmployButton } from './EmployButton';
 import { UpdateButton } from './UpdateButton';

@@ -1,4 +1,4 @@
-import { List } from '../../../components/organisms/List/List';
+import { List } from '../../../../components/organisms/List/List';
 import { usePositionStore } from '../Position.store';
 import { POSITION_LIST_ITEM_CONFIGS } from './DetailSection.config';
 

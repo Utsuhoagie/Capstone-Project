@@ -1,10 +1,13 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { BASE_URL } from '../../../app/App';
-import { useConfirmDialogStore, useToastStore } from '../../../app/App.store';
-import { Button } from '../../../components/atoms/Button/Button';
-import { useTableStore } from '../../../components/organisms/Table/Table.store';
-import { useRefresh } from '../../auth/Auth.hooks';
-import { useAuthStore } from '../../auth/Auth.store';
+import { BASE_URL } from '../../../../app/App';
+import {
+	useConfirmDialogStore,
+	useToastStore,
+} from '../../../../app/App.store';
+import { Button } from '../../../../components/atoms/Button/Button';
+import { useTableStore } from '../../../../components/organisms/Table/Table.store';
+import { useRefresh } from '../../../auth/Auth.hooks';
+import { useAuthStore } from '../../../auth/Auth.store';
 import { useEmployeeStore } from '../Employee.store';
 
 export const DeleteButton = () => {
