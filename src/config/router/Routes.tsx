@@ -57,11 +57,14 @@ export const Routes = () => {
 
 				<Route path='employees' element={<EmployeeModule />} />
 				<Route path='employees/create' element={<CreateEmployeeForm />} />
-				<Route path='employees/update' element={<UpdateEmployeeForm />} />
+				<Route
+					path='employees/update/:NationalId'
+					element={<UpdateEmployeeForm />}
+				/>
 
 				<Route path='positions' element={<PositionModule />} />
 				<Route path='positions/create' element={<CreatePositionForm />} />
-				<Route path='positions/update' element={<UpdatePositionForm />} />
+				<Route path='positions/update/:Name' element={<UpdatePositionForm />} />
 
 				<Route path='ex' element={<Example />} />
 				<Route path='ex-form' element={<ExampleForm />} />

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { BASE_URL } from '../../../app/App';
-import { useToastStore } from '../../../app/App.store';
+import { useConfirmDialogStore, useToastStore } from '../../../app/App.store';
 import { Button } from '../../../components/atoms/Button/Button';
 import { useTableStore } from '../../../components/organisms/Table/Table.store';
 import { useRefresh } from '../../auth/Auth.hooks';
@@ -11,10 +11,9 @@ export const DeleteButton = () => {
 	const { accessToken } = useAuthStore();
 	useRefresh();
 
-	const showToast = useToastStore((state) => state.showToast);
-	const setSelectedRowIndex = useTableStore(
-		(state) => state.setSelectedRowIndex
-	);
+	const { showToast } = useToastStore();
+	const { openConfirmDialog } = useConfirmDialogStore();
+	const { setSelectedRowIndex } = useTableStore();
 
 	const { selectedApplicant, setSelectedApplicant } = useApplicantStore();
 
@@ -23,7 +22,7 @@ export const DeleteButton = () => {
 		'applicants/delete',
 		async () => {
 			const res = await fetch(
-				`${BASE_URL}/Applicants/Delete?NationalId=${selectedApplicant?.NationalId}`,
+				`${BASE_URL}/Applicants/Delete/${selectedApplicant?.NationalId}`,
 				{
 					headers: {
 						'Authorization': `Bearer ${accessToken}`,
@@ -50,7 +49,17 @@ export const DeleteButton = () => {
 	);
 
 	function handleDelete() {
-		mutation.mutate();
+		openConfirmDialog({
+			isClosable: true,
+			// title,
+			message: 'Xác nhận xóa hồ sơ ứng viên này?',
+			onConfirm: () => {
+				mutation.mutate();
+			},
+			onSuccess: () => {
+				window.alert('aaaaaa');
+			},
+		});
 	}
 
 	return (

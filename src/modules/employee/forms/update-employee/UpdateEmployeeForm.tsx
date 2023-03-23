@@ -2,17 +2,22 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
-import { useToastStore } from '../../../../app/App.store';
+import {
+	useConfirmDialogStore,
+	useToastStore,
+} from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
+import { useSelectOptions } from '../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useRefresh } from '../../../auth/Auth.hooks';
 import { useAuthStore } from '../../../auth/Auth.store';
-import { Employee } from '../../Employee.interface';
+import { EMPLOYEE_MAPPERS } from '../../Employee.display';
+import { Employee, mapToEmployee } from '../../Employee.interface';
 import { useEmployeeStore } from '../../Employee.store';
 import {
 	UpdateEmployeeFormIntermediateValues,
@@ -24,26 +29,25 @@ export const UpdateEmployeeForm = () => {
 	const { accessToken } = useAuthStore();
 	useRefresh();
 
-	const selectedEmployee = useEmployeeStore(
-		(state) => state.selectedEmployee
-	) as Employee;
+	const { showToast } = useToastStore();
+	const { openConfirmDialog } = useConfirmDialogStore();
+	const { displayConfigs } = useEmployeeStore();
+	const { NationalId } = useParams();
+	const positionOptions = useSelectOptions({ module: 'Positions' });
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
 		'employees/update',
 		async (formData: Employee) => {
-			const res = await fetch(
-				`${BASE_URL}/Employees/Update?NationalId=${selectedEmployee.NationalId}`,
-				{
-					headers: {
-						'Authorization': `Bearer ${accessToken}`,
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-					method: 'PUT',
-					body: JSON.stringify(formData),
-				}
-			);
+			const res = await fetch(`${BASE_URL}/Employees/Update/${NationalId}`, {
+				headers: {
+					'Authorization': `Bearer ${accessToken}`,
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				method: 'PUT',
+				body: JSON.stringify(formData),
+			});
 
 			if (res.ok) {
 				showToast({ state: 'success' });
@@ -58,37 +62,64 @@ export const UpdateEmployeeForm = () => {
 		}
 	);
 
-	const showToast = useToastStore((state) => state.showToast);
-
 	const methods = useForm<UpdateEmployeeFormIntermediateValues>({
 		mode: 'onSubmit',
-		defaultValues: {
-			NationalId: selectedEmployee.NationalId,
-			FullName: selectedEmployee.FullName,
-			Gender: selectedEmployee.Gender,
-			BirthDate: selectedEmployee.BirthDate
-				? dayjs(selectedEmployee.BirthDate).toISOString()
-				: undefined,
-			Address: selectedEmployee.Address,
-			Phone: selectedEmployee.Phone,
-			Email: selectedEmployee.Email,
-			ExperienceYears: `${selectedEmployee.ExperienceYears}`,
-			PositionName: selectedEmployee.PositionName,
-			EmployedDate: dayjs(selectedEmployee.EmployedDate).toISOString(),
-			Salary: `${selectedEmployee.Salary}`,
-			StartHour: dayjs()
-				.hour(selectedEmployee.StartHour)
-				.startOf('hour')
-				.toISOString(),
-			EndHour: dayjs()
-				.hour(selectedEmployee.EndHour)
-				.startOf('hour')
-				.toISOString(),
+		defaultValues: async () => {
+			const res = await fetch(`${BASE_URL}/Employees/${NationalId}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			});
+
+			if (!res.ok) {
+				console.log('not OK');
+				return {
+					NationalId: '',
+					FullName: '',
+					Gender: 'male',
+					BirthDate: '',
+					Address: '',
+					Phone: '',
+					Email: '',
+					ExperienceYears: '',
+					PositionName: '',
+					EmployedDate: dayjs().toISOString(),
+					Salary: '',
+					StartHour: dayjs().hour(9).startOf('hour').toISOString(),
+					EndHour: dayjs().hour(18).startOf('hour').toISOString(),
+				};
+			}
+
+			const data = await res.json();
+			const selectedEmployee = mapToEmployee(data);
+
+			console.log('OK', selectedEmployee);
+			return {
+				NationalId: selectedEmployee.NationalId,
+				FullName: selectedEmployee.FullName,
+				Gender: selectedEmployee.Gender,
+				BirthDate: selectedEmployee.BirthDate
+					? dayjs(selectedEmployee.BirthDate).toISOString()
+					: '',
+				Address: selectedEmployee.Address,
+				Phone: selectedEmployee.Phone,
+				Email: selectedEmployee.Email,
+				ExperienceYears: `${selectedEmployee.ExperienceYears}`,
+				PositionName: selectedEmployee.PositionName,
+				EmployedDate: dayjs(selectedEmployee.EmployedDate).toISOString(),
+				Salary: `${selectedEmployee.Salary}`,
+				StartHour: dayjs()
+					.hour(selectedEmployee.StartHour)
+					.startOf('hour')
+					.toISOString(),
+				EndHour: dayjs()
+					.hour(selectedEmployee.EndHour)
+					.startOf('hour')
+					.toISOString(),
+			};
 		},
 		resolver: zodResolver(updateEmployeeFormSchema),
 	});
-
-	const displayConfigs = useEmployeeStore((state) => state.displayConfigs);
 
 	const handleSubmit: SubmitHandler<UpdateEmployeeFormIntermediateValues> = (
 		rawData
@@ -106,7 +137,7 @@ export const UpdateEmployeeForm = () => {
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
-			PositionName: rawData.Position,
+			PositionName: rawData.PositionName,
 			EmployedDate: dayjs(rawData.EmployedDate).toDate(),
 			Salary: parseInt(rawData.Salary),
 			StartHour: dayjs(rawData.StartHour).hour(),
@@ -114,7 +145,18 @@ export const UpdateEmployeeForm = () => {
 		};
 
 		// console.log({ formData });
-		mutation.mutate(formData);
+		openConfirmDialog({
+			isClosable: true,
+			// title,
+			message: 'Xác nhận cập nhật hồ sơ nhân viên này?',
+			onConfirm: () => {
+				mutation.mutate(formData);
+				navigate('/app/employees');
+			},
+			onSuccess: () => {
+				window.alert('aaaaaa');
+			},
+		});
 	};
 	const handleError = (error) => {
 		console.log({ error });
@@ -149,7 +191,7 @@ export const UpdateEmployeeForm = () => {
 						name='Gender'
 						placeholder='Chọn 1.'
 						width='medium'
-						optionPairs={['male', 'female', 'other']}
+						optionPairs={EMPLOYEE_MAPPERS['Gender']}
 						displayConfigs={displayConfigs}
 					/>
 
@@ -157,6 +199,7 @@ export const UpdateEmployeeForm = () => {
 						name='BirthDate'
 						placeholder='Chọn ngày sinh.'
 						width='medium'
+						maxDate={dayjs().subtract(18, 'year').toDate()}
 						displayConfigs={displayConfigs}
 					/>
 
@@ -192,11 +235,12 @@ export const UpdateEmployeeForm = () => {
 						displayConfigs={displayConfigs}
 					/>
 
-					<TextInput
+					<SelectInput
 						required
 						name='PositionName'
 						placeholder='Nhập vị trí.'
 						width='medium'
+						optionPairs={positionOptions}
 						displayConfigs={displayConfigs}
 					/>
 

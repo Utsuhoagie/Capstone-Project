@@ -5,15 +5,13 @@ import { useApplicantStore } from '../Applicant.store';
 
 export const EmployButton = () => {
 	const navigate = useNavigate();
-	const selectedApplicant = useApplicantStore(
-		(state) => state.selectedApplicant
-	) as Applicant;
+	const { selectedApplicant } = useApplicantStore();
 
 	return (
 		<Button
 			width='big'
 			onClick={() =>
-				navigate(`/app/applicants/employ/${selectedApplicant.NationalId}`)
+				navigate(`/app/applicants/employ/${selectedApplicant?.NationalId}`)
 			}
 		>
 			Tuyển

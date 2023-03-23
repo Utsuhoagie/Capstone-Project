@@ -111,7 +111,7 @@ export const CreateApplicantForm = () => {
 		openConfirmDialog({
 			isClosable: true,
 			// title,
-			message: 'Xác nhận tuyển ứng viên này?',
+			message: 'Xác nhận tạo hồ sơ ứng viên?',
 			onConfirm: () => {
 				mutation.mutate(formData);
 				navigate('/app/applicants');
@@ -163,6 +163,7 @@ export const CreateApplicantForm = () => {
 						name='BirthDate'
 						placeholder='Chọn ngày sinh.'
 						width='medium'
+						maxDate={dayjs().subtract(18, 'year').toDate()}
 						displayConfigs={displayConfigs}
 					/>
 

@@ -135,5 +135,6 @@ export const updateEmployeeFormSchema = z
 		EndHour: z.preprocess(preprocessStringToOptionalDate, z.date()),
 	})
 	.refine((schema) => schema.StartHour < schema.EndHour, {
+		path: ['StartHour'],
 		message: 'Giờ bắt đầu ca phải trước giờ kết thúc ca.',
 	});

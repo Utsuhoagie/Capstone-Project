@@ -2,16 +2,23 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
-import { useToastStore } from '../../../../app/App.store';
+import {
+	useConfirmDialogStore,
+	useToastStore,
+} from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useRefresh } from '../../../auth/Auth.hooks';
 import { useAuthStore } from '../../../auth/Auth.store';
-import { Position } from '../../Position.interface';
+import {
+	mapToPosition,
+	Position,
+	Position_API_Response,
+} from '../../Position.interface';
 import { usePositionStore } from '../../Position.store';
 import {
 	UpdatePositionFormIntermediateValues,
@@ -20,30 +27,46 @@ import {
 
 export const UpdatePositionForm = () => {
 	const navigate = useNavigate();
-
 	const { accessToken } = useAuthStore();
 	useRefresh();
 
-	const selectedPosition = usePositionStore(
-		(state) => state.selectedPosition
-	) as Position;
+	const { Name } = useParams();
+	const { displayConfigs } = usePositionStore();
+	const { showToast } = useToastStore();
+	const { openConfirmDialog } = useConfirmDialogStore();
 
 	const queryClient = useQueryClient();
+	// Query position, to send back UNCHANGED Applicant/Employee counts
+	const { data: selectedPosition } = useQuery(
+		['positions', { Name }],
+		async () => {
+			const res = await fetch(`${BASE_URL}/Positions/${Name}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			});
+
+			if (!res.ok) {
+				return undefined;
+			}
+
+			const data: Position_API_Response = await res.json();
+
+			return mapToPosition(data);
+		}
+	);
 	const mutation = useMutation(
 		'positions/update',
 		async (formData: Position) => {
-			const res = await fetch(
-				`${BASE_URL}/Positions/Update?Name=${selectedPosition.Name}`,
-				{
-					headers: {
-						'Authorization': `Bearer ${accessToken}`,
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-					method: 'PUT',
-					body: JSON.stringify(formData),
-				}
-			);
+			const res = await fetch(`${BASE_URL}/Positions/Update/${Name}`, {
+				headers: {
+					'Authorization': `Bearer ${accessToken}`,
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				method: 'PUT',
+				body: JSON.stringify(formData),
+			});
 
 			if (res.ok) {
 				showToast({ state: 'success' });
@@ -53,22 +76,19 @@ export const UpdatePositionForm = () => {
 		},
 		{
 			onSuccess: () => {
+				console.log('invalidated');
 				queryClient.invalidateQueries('positions');
 			},
 		}
 	);
 
-	const showToast = useToastStore((state) => state.showToast);
-
 	const methods = useForm<UpdatePositionFormIntermediateValues>({
 		mode: 'onSubmit',
 		defaultValues: {
-			Name: selectedPosition.Name,
+			Name: Name,
 		},
 		resolver: zodResolver(updatePositionFormSchema),
 	});
-
-	const displayConfigs = usePositionStore((state) => state.displayConfigs);
 
 	const handleSubmit: SubmitHandler<UpdatePositionFormIntermediateValues> = (
 		rawData
@@ -77,12 +97,23 @@ export const UpdatePositionForm = () => {
 
 		const formData: Position = {
 			Name: rawData.Name,
-			ApplicantCount: selectedPosition.ApplicantCount,
-			EmployeeCount: selectedPosition.EmployeeCount,
+			ApplicantCount: selectedPosition ? selectedPosition.ApplicantCount : 0,
+			EmployeeCount: selectedPosition ? selectedPosition.EmployeeCount : 0,
 		};
 
 		// console.log({ formData });
-		mutation.mutate(formData);
+		openConfirmDialog({
+			isClosable: true,
+			// title,
+			message: 'Xác nhận cập nhật vị trí này?',
+			onConfirm: () => {
+				mutation.mutate(formData);
+				navigate('/app/positions');
+			},
+			onSuccess: () => {
+				window.alert('aaaaaa');
+			},
+		});
 	};
 	const handleError = (error) => {
 		console.log({ error });

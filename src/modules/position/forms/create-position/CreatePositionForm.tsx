@@ -4,7 +4,10 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
-import { useToastStore } from '../../../../app/App.store';
+import {
+	useConfirmDialogStore,
+	useToastStore,
+} from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
@@ -24,7 +27,9 @@ export const CreatePositionForm = () => {
 	const { accessToken } = useAuthStore();
 	useRefresh();
 
-	const showToast = useToastStore((state) => state.showToast);
+	const { displayConfigs } = usePositionStore();
+	const { openConfirmDialog } = useConfirmDialogStore();
+	const { showToast } = useToastStore();
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
@@ -62,8 +67,6 @@ export const CreatePositionForm = () => {
 		resolver: zodResolver(createPositionFormSchema),
 	});
 
-	const displayConfigs = usePositionStore((state) => state.displayConfigs);
-
 	const handleSubmit: SubmitHandler<CreatePositionFormIntermediateValues> = (
 		rawData
 	) => {
@@ -76,7 +79,18 @@ export const CreatePositionForm = () => {
 		};
 
 		// console.log({ formData });
-		mutation.mutate(formData);
+		openConfirmDialog({
+			isClosable: true,
+			// title,
+			message: 'Xác nhận tạo vị trí?',
+			onConfirm: () => {
+				mutation.mutate(formData);
+				navigate('/app/positions');
+			},
+			onSuccess: () => {
+				window.alert('aaaaaa');
+			},
+		});
 	};
 	const handleError = (error) => {
 		console.table(error);

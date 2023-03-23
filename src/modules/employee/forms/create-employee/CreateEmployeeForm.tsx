@@ -5,14 +5,19 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL, IS_DEBUG_MODE } from '../../../../app/App';
-import { useToastStore } from '../../../../app/App.store';
+import {
+	useConfirmDialogStore,
+	useToastStore,
+} from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { TimeInput } from '../../../../components/atoms/Input/DateTimeInput/TimeInput';
 import { SelectInput } from '../../../../components/atoms/Input/SelectInput/SelectInput';
+import { useSelectOptions } from '../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../components/atoms/Input/TextInput';
 import { useRefresh } from '../../../auth/Auth.hooks';
 import { useAuthStore } from '../../../auth/Auth.store';
+import { EMPLOYEE_MAPPERS } from '../../Employee.display';
 import { Employee } from '../../Employee.interface';
 import { useEmployeeStore } from '../../Employee.store';
 import {
@@ -25,8 +30,10 @@ export const CreateEmployeeForm = () => {
 	const { accessToken } = useAuthStore();
 	useRefresh();
 
-	const showToast = useToastStore((state) => state.showToast);
-
+	const { showToast } = useToastStore();
+	const { openConfirmDialog } = useConfirmDialogStore();
+	const { displayConfigs } = useEmployeeStore();
+	const positionOptions = useSelectOptions({ module: 'Positions' });
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
 		'employees/create',
@@ -74,8 +81,6 @@ export const CreateEmployeeForm = () => {
 		resolver: zodResolver(createEmployeeFormSchema),
 	});
 
-	const displayConfigs = useEmployeeStore((state) => state.displayConfigs);
-
 	const handleSubmit: SubmitHandler<CreateEmployeeFormIntermediateValues> = (
 		rawData
 	) => {
@@ -92,7 +97,7 @@ export const CreateEmployeeForm = () => {
 			Phone: rawData.Phone,
 			Email: rawData.Email,
 			ExperienceYears: parseInt(rawData.ExperienceYears),
-			PositionName: rawData.Position,
+			PositionName: rawData.PositionName,
 			EmployedDate: dayjs(rawData.BirthDate).toDate(),
 			Salary: parseInt(rawData.Salary),
 			StartHour: dayjs(rawData.StartHour).hour(),
@@ -100,7 +105,18 @@ export const CreateEmployeeForm = () => {
 		};
 
 		// console.log({ formData });
-		mutation.mutate(formData);
+		openConfirmDialog({
+			isClosable: true,
+			// title,
+			message: 'Xác nhận tạo hồ sơ nhân viên?',
+			onConfirm: () => {
+				mutation.mutate(formData);
+				navigate('/app/employees');
+			},
+			onSuccess: () => {
+				window.alert('aaaaaa');
+			},
+		});
 	};
 	const handleError = (error) => {
 		console.log({ error });
@@ -135,7 +151,7 @@ export const CreateEmployeeForm = () => {
 						name='Gender'
 						placeholder='Chọn 1.'
 						width='medium'
-						optionPairs={['male', 'female', 'other']}
+						optionPairs={EMPLOYEE_MAPPERS['Gender']}
 						displayConfigs={displayConfigs}
 					/>
 
@@ -143,6 +159,7 @@ export const CreateEmployeeForm = () => {
 						name='BirthDate'
 						placeholder='Chọn ngày sinh.'
 						width='medium'
+						maxDate={dayjs().subtract(18, 'year').toDate()}
 						displayConfigs={displayConfigs}
 					/>
 
@@ -178,11 +195,12 @@ export const CreateEmployeeForm = () => {
 						displayConfigs={displayConfigs}
 					/>
 
-					<TextInput
+					<SelectInput
 						required
 						name='PositionName'
 						placeholder='Nhập vị trí ứng tuyển.'
 						width='medium'
+						optionPairs={positionOptions}
 						displayConfigs={displayConfigs}
 					/>
 
@@ -202,15 +220,6 @@ export const CreateEmployeeForm = () => {
 						placeholder='Nhập mức lương.'
 						displayConfigs={displayConfigs}
 					/>
-
-					{/* <SelectInput
-						required
-						name='StartHour'
-						placeholder=''
-						width='medium'
-						displayConfigs={displayConfigs}
-						options={range(0, 23)}
-					/> */}
 
 					<TimeInput
 						required

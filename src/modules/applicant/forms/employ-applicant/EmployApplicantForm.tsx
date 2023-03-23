@@ -43,18 +43,15 @@ export const EmployApplicantForm = () => {
 	const mutation = useMutation(
 		'applicants/employ',
 		async (formData: Employee) => {
-			const res = await fetch(
-				`${BASE_URL}/Applicants/Employ?NationalId=${NationalId}`,
-				{
-					headers: {
-						'Authorization': `Bearer ${accessToken}`,
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-					method: 'POST',
-					body: JSON.stringify(formData),
-				}
-			);
+			const res = await fetch(`${BASE_URL}/Applicants/Employ/${NationalId}`, {
+				headers: {
+					'Authorization': `Bearer ${accessToken}`,
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				method: 'POST',
+				body: JSON.stringify(formData),
+			});
 
 			if (res.ok) {
 				showToast({ state: 'success' });

@@ -4,14 +4,14 @@ import { usePositionStore } from '../Position.store';
 
 export const UpdateButton = () => {
 	const navigate = useNavigate();
-	const selectedPosition = usePositionStore((state) => state.selectedPosition);
+	const { selectedPosition } = usePositionStore();
 
 	return (
 		<Button
 			secondary
 			width='big'
 			onClick={() =>
-				navigate(`/app/positions/update?id=${selectedPosition?.Name}`)
+				navigate(`/app/positions/update/${selectedPosition?.Name}`)
 			}
 		>
 			Chỉnh sửa vị trí

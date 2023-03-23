@@ -35,18 +35,15 @@ export const UpdateApplicantForm = () => {
 	const mutation = useMutation(
 		'applicants/update',
 		async (formData: Applicant) => {
-			const res = await fetch(
-				`${BASE_URL}/Applicants/Update?NationalId=${NationalId}`,
-				{
-					headers: {
-						'Authorization': `Bearer ${accessToken}`,
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-					method: 'PUT',
-					body: JSON.stringify(formData),
-				}
-			);
+			const res = await fetch(`${BASE_URL}/Applicants/Update/${NationalId}`, {
+				headers: {
+					'Authorization': `Bearer ${accessToken}`,
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+				},
+				method: 'PUT',
+				body: JSON.stringify(formData),
+			});
 
 			if (res.ok) {
 				showToast({ state: 'success' });
@@ -107,7 +104,7 @@ export const UpdateApplicantForm = () => {
 				Email: selectedApplicant.Email,
 				ExperienceYears: `${selectedApplicant.ExperienceYears}`,
 				AppliedPositionName: selectedApplicant.AppliedPositionName,
-				AppliedDate: dayjs().toISOString(),
+				AppliedDate: dayjs(selectedApplicant.AppliedDate).toISOString(),
 				AskingSalary: `${selectedApplicant.AskingSalary}`,
 			};
 		},
@@ -139,7 +136,7 @@ export const UpdateApplicantForm = () => {
 		openConfirmDialog({
 			isClosable: true,
 			// title,
-			message: 'Xác nhận cập nhật thông tin ứng viên này?',
+			message: 'Xác nhận cập nhật hồ sơ ứng viên này?',
 			onConfirm: () => {
 				mutation.mutate(formData);
 				navigate('/app/applicants');
@@ -191,6 +188,7 @@ export const UpdateApplicantForm = () => {
 						name='BirthDate'
 						placeholder='Chọn ngày sinh.'
 						width='medium'
+						maxDate={dayjs().subtract(18, 'year').toDate()}
 						displayConfigs={displayConfigs}
 					/>
 
