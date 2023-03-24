@@ -26,7 +26,7 @@ export const Example = () => {
 						setIndex((index) => (index + 1) % 4);
 					}}
 				>
-					Click
+					Clickf
 				</Button>
 
 				<Button
