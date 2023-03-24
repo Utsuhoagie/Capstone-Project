@@ -14,6 +14,7 @@ export interface Employee {
 	Salary: number;
 	StartHour: number;
 	EndHour: number;
+	HasUser: boolean;
 }
 
 export interface Employee_API_Response {
@@ -30,6 +31,7 @@ export interface Employee_API_Response {
 	Salary: number;
 	StartHour: number;
 	EndHour: number;
+	HasUser: boolean;
 }
 
 export function mapToEmployee(res: Employee_API_Response): Employee {

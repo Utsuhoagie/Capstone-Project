@@ -86,7 +86,7 @@ export const employApplicantFormSchema = z
 		EmployedDate: z.preprocess(
 			preprocessStringToOptionalDate,
 			z.date().max(dayjs().add(1, 'hour').toDate(), {
-				message: 'Thời điểm nộp hồ sơ không hợp lệ.',
+				message: 'Ngày bắt đầu làm việc không hợp lệ.',
 			})
 		),
 

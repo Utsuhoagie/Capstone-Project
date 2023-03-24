@@ -1,12 +1,18 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
+import { Link } from 'react-router-dom';
 import { BASE_URL } from '../../../app/App';
 import { Button } from '../../../components/atoms/Button/Button';
 import { TextInput } from '../../../components/atoms/Input/TextInput';
 import { Auth_API_Response } from '../Auth.interface';
 import { useAuthStore } from '../Auth.store';
-import { LoginFormIntermediateValues, LoginModel } from './Login.form';
+import {
+	LoginFormIntermediateValues,
+	loginFormSchema,
+	LoginModel,
+} from './Login.form';
 
 export const Login = () => {
 	const { setTokens } = useAuthStore();
@@ -15,6 +21,7 @@ export const Login = () => {
 			Email: '',
 			Password: '',
 		},
+		resolver: zodResolver(loginFormSchema),
 	});
 	const [error, setError] = useState<string>('');
 
@@ -32,8 +39,11 @@ export const Login = () => {
 
 		if (!res.ok) {
 			// console.table(data);
-			if (res.status === 404) setError('Có lỗi xảy ra.');
-			if (res.status === 401) setError('Email hoặc mật khẩu sai.');
+			// if (res.status === 404)
+			if (data && data.Errors)
+				setError(data.Errors.map((error) => error.Description).join('. '));
+			else setError('Có lỗi xảy ra.');
+			// if (res.status === 401) setError('Email hoặc mật khẩu sai.');
 			return;
 		}
 
@@ -71,9 +81,15 @@ export const Login = () => {
 						{error}
 					</p>
 
-					<Button className='mt-4 self-center' type='submit' width='medium'>
+					<Button className='my-2 self-center' type='submit' width='medium'>
 						Đăng nhập
 					</Button>
+					<Link
+						className='text-center text-body text-primary-dark-2 underline'
+						to='/auth/register-employee'
+					>
+						Là nhân viên mới?
+					</Link>
 				</div>
 			</form>
 		</FormProvider>

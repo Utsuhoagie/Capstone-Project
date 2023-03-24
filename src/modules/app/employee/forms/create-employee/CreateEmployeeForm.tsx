@@ -102,6 +102,7 @@ export const CreateEmployeeForm = () => {
 			Salary: parseInt(rawData.Salary),
 			StartHour: dayjs(rawData.StartHour).hour(),
 			EndHour: dayjs(rawData.EndHour).hour(),
+			HasUser: false,
 		};
 
 		// console.log({ formData });

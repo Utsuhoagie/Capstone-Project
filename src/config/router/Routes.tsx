@@ -24,6 +24,7 @@ import { CreatePositionForm } from '../../modules/app/position/forms/create-posi
 import { UpdatePositionForm } from '../../modules/app/position/forms/update-position/UpdatePositionForm';
 import { PositionModule } from '../../modules/app/position/PositionModule';
 import { ProtectedRoute } from './ProtectedRoute';
+import { RegisterEmployee } from '../../modules/auth/RegisterEmployee/RegisterEmployee';
 
 export const Routes = () => {
 	const accessToken = useAuthStore((state) => state.accessToken);
@@ -39,6 +40,7 @@ export const Routes = () => {
 			<Route path='auth' element={<AuthLayout />}>
 				<Route index element={<Login />} />
 				<Route path='login' element={<Login />} />
+				<Route path='register-employee' element={<RegisterEmployee />} />
 			</Route>
 
 			<Route path='app' element={<ProtectedRoute element={<AppLayout />} />}>

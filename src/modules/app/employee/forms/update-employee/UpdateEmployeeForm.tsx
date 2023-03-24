@@ -121,6 +121,8 @@ export const UpdateEmployeeForm = () => {
 		resolver: zodResolver(updateEmployeeFormSchema),
 	});
 
+	console.table(methods.formState.defaultValues);
+
 	const handleSubmit: SubmitHandler<UpdateEmployeeFormIntermediateValues> = (
 		rawData
 	) => {
@@ -141,7 +143,8 @@ export const UpdateEmployeeForm = () => {
 			EmployedDate: dayjs(rawData.EmployedDate).toDate(),
 			Salary: parseInt(rawData.Salary),
 			StartHour: dayjs(rawData.StartHour).hour(),
-			EndHour: dayjs(rawData.StartHour).hour(),
+			EndHour: dayjs(rawData.EndHour).hour(),
+			HasUser: false,
 		};
 
 		// console.log({ formData });
