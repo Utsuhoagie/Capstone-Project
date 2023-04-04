@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"dev": "vite",
+		"start": "vite",
 		"build": "tsc && vite build",
 		"preview": "vite preview"
 	},
@@ -14,7 +14,7 @@
 		"@hookform/resolvers": "^2.9.10",
 		"@tanstack/react-table": "^8.7.9",
 		"@types/prettier": "^2.7.2",
-		"@types/ramda": "^0.28.21",
+		"@types/ramda": "^0.28.23",
 		"@types/react-datepicker": "^4.8.0",
 		"autoprefixer": "^10.4.13",
 		"dayjs": "^1.11.7",

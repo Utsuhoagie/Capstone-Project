@@ -189,6 +189,7 @@ export const UpdateApplicantForm = () => {
 						placeholder='Chọn ngày sinh.'
 						width='medium'
 						maxDate={dayjs().subtract(18, 'year').toDate()}
+						openToDate={dayjs().year(2000).startOf('year').toDate()}
 						displayConfigs={displayConfigs}
 					/>
 
@@ -251,7 +252,7 @@ export const UpdateApplicantForm = () => {
 					/>
 
 					<Button type='submit' width='medium'>
-						Thêm
+						Cập nhật
 					</Button>
 					{IS_DEBUG_MODE && (
 						<Button

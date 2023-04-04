@@ -161,6 +161,7 @@ export const CreateEmployeeForm = () => {
 						placeholder='Chọn ngày sinh.'
 						width='medium'
 						maxDate={dayjs().subtract(18, 'year').toDate()}
+						openToDate={dayjs().year(2000).startOf('year').toDate()}
 						displayConfigs={displayConfigs}
 					/>
 

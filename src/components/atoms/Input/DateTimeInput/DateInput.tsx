@@ -16,6 +16,7 @@ interface DateInputProps {
 	placeholder?: string;
 	width: 'medium' | 'full';
 	maxDate?: Date;
+	openToDate?: Date;
 	displayConfigs: DisplayConfigs;
 }
 
@@ -28,6 +29,7 @@ export const DateInput = ({
 	placeholder,
 	width,
 	maxDate,
+	openToDate,
 	displayConfigs,
 }: DateInputProps) => {
 	const { formState, setValue, getValues } = useFormContext();
@@ -71,6 +73,7 @@ export const DateInput = ({
 								scrollableYearDropdown
 								minDate={dayjs().subtract(55, 'year').toDate()}
 								maxDate={maxDate ?? dayjs().toDate()}
+								openToDate={openToDate}
 								isClearable={isClearable}
 								placeholderText={placeholder}
 								dateFormat='dd/MM/yyyy'

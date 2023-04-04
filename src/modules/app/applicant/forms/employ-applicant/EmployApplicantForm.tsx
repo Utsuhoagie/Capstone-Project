@@ -288,7 +288,7 @@ export const EmployApplicantForm = () => {
 						/>
 
 						<Button type='submit' width='medium'>
-							Thêm
+							Tuyển
 						</Button>
 						{IS_DEBUG_MODE && (
 							<Button

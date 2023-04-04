@@ -3,12 +3,14 @@ import dayjs from 'dayjs';
 import QueryString from 'query-string';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useSearchParams } from 'react-router-dom';
+import { addEmptySelectOption } from '../../../../../app/App.display';
 import { useDialogStore } from '../../../../../app/App.store';
 import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
 import { useTableStore } from '../../../../../components/organisms/Table/Table.store';
+import { EMPLOYEE_MAPPERS } from '../../Employee.display';
 import { useEmployeeStore } from '../../Employee.store';
 import {
 	FilterEmployeeFormIntermediateValues,
@@ -89,7 +91,10 @@ export const FilterDialog = () => {
 
 				<SelectInput
 					name='Gender'
-					optionPairs={['', 'male', 'female', 'other']}
+					optionPairs={addEmptySelectOption({
+						selectOptions: EMPLOYEE_MAPPERS['Gender'],
+					})}
+					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 

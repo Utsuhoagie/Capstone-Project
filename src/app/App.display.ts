@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { SelectOptionPair } from '../components/atoms/Input/SelectInput/SelectInput.interface';
 
 // ====== Table of contents ======
 // TODO:
@@ -111,6 +112,14 @@ function mapValueToDisplay({
 		(fieldValue) => fieldValue.value === value
 	);
 	return mappableFieldValue?.display ?? value;
+}
+
+export function addEmptySelectOption({
+	selectOptions,
+}: {
+	selectOptions: SelectOptionPair[];
+}): SelectOptionPair[] {
+	return [{ value: '', display: '' }, ...selectOptions];
 }
 
 // ====== Formatted ======
