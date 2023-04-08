@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { BASE_URL, IS_DEBUG_MODE } from '../../../../../app/App';
+import { IS_DEBUG_MODE } from '../../../../../app/App';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -13,7 +13,7 @@ import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/D
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
-import { useRefresh } from '../../../../auth/Auth.hooks';
+import { API } from '../../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../auth/Auth.store';
 import { APPLICANT_MAPPERS } from '../../Applicant.display';
 import { Applicant, mapToApplicant } from '../../Applicant.interface';
@@ -26,8 +26,6 @@ import {
 export const UpdateApplicantForm = () => {
 	const navigate = useNavigate();
 	const { accessToken } = useAuthStore();
-	useRefresh();
-
 	const { NationalId } = useParams();
 
 	const queryClient = useQueryClient();
@@ -35,17 +33,9 @@ export const UpdateApplicantForm = () => {
 	const mutation = useMutation(
 		'applicants/update',
 		async (formData: Applicant) => {
-			const res = await fetch(`${BASE_URL}/Applicants/Update/${NationalId}`, {
-				headers: {
-					'Authorization': `Bearer ${accessToken}`,
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				method: 'PUT',
-				body: JSON.stringify(formData),
-			});
+			const res = await API.put(`Applicants/Update/${NationalId}`, formData);
 
-			if (res.ok) {
+			if (res.status <= 299) {
 				showToast({ state: 'success' });
 			} else {
 				showToast({ state: 'error' });
@@ -65,13 +55,9 @@ export const UpdateApplicantForm = () => {
 	const methods = useForm<UpdateApplicantFormIntermediateValues>({
 		mode: 'onSubmit',
 		defaultValues: async () => {
-			const res = await fetch(`${BASE_URL}/Applicants/${NationalId}`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
+			const res = await API.get(`Applicants/${NationalId}`);
 
-			if (!res.ok) {
+			if (res.status >= 300) {
 				console.log('not OK');
 				return {
 					NationalId: '',
@@ -88,8 +74,7 @@ export const UpdateApplicantForm = () => {
 				};
 			}
 
-			const data = await res.json();
-			const selectedApplicant = mapToApplicant(data);
+			const selectedApplicant = mapToApplicant(res.data);
 
 			console.log('OK', selectedApplicant);
 			return {

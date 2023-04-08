@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { BASE_URL, IS_DEBUG_MODE } from '../../../../../app/App';
+import { IS_DEBUG_MODE } from '../../../../../app/App';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -12,7 +12,7 @@ import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
-import { useRefresh } from '../../../../auth/Auth.hooks';
+import { API } from '../../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../auth/Auth.store';
 import {
 	mapToPosition,
@@ -28,8 +28,6 @@ import {
 export const UpdatePositionForm = () => {
 	const navigate = useNavigate();
 	const { accessToken } = useAuthStore();
-	useRefresh();
-
 	const { Name } = useParams();
 	const { displayConfigs } = usePositionStore();
 	const { showToast } = useToastStore();
@@ -40,17 +38,13 @@ export const UpdatePositionForm = () => {
 	const { data: selectedPosition } = useQuery(
 		['positions', { Name }],
 		async () => {
-			const res = await fetch(`${BASE_URL}/Positions/${Name}`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
+			const res = await API.get(`Positions/${Name}`);
 
-			if (!res.ok) {
+			if (res.status > 299) {
 				return undefined;
 			}
 
-			const data: Position_API_Response = await res.json();
+			const data: Position_API_Response = res.data;
 
 			return mapToPosition(data);
 		}
@@ -58,17 +52,9 @@ export const UpdatePositionForm = () => {
 	const mutation = useMutation(
 		'positions/update',
 		async (formData: Position) => {
-			const res = await fetch(`${BASE_URL}/Positions/Update/${Name}`, {
-				headers: {
-					'Authorization': `Bearer ${accessToken}`,
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				method: 'PUT',
-				body: JSON.stringify(formData),
-			});
+			const res = await API.put(`Positions/Update/${Name}`, formData);
 
-			if (res.ok) {
+			if (res.status <= 299) {
 				showToast({ state: 'success' });
 			} else {
 				showToast({ state: 'error' });

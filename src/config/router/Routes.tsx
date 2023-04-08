@@ -4,7 +4,6 @@ import {
 	Navigate,
 	json,
 } from 'react-router-dom';
-import { BASE_URL } from '../../app/App';
 import { AppLayout } from '../../components/layouts/AppLayout';
 import { AuthLayout } from '../../components/layouts/AuthLayout';
 import { ApplicantModule } from '../../modules/app/applicant/ApplicantModule';
@@ -25,10 +24,21 @@ import { UpdatePositionForm } from '../../modules/app/position/forms/update-posi
 import { PositionModule } from '../../modules/app/position/PositionModule';
 import { ProtectedRoute } from './ProtectedRoute';
 import { RegisterEmployee } from '../../modules/auth/RegisterEmployee/RegisterEmployee';
+import { QrDisplay } from '../../modules/app/qr-display/QrDisplay';
+import jwtDecode from 'jwt-decode';
+import { JWT_Claims } from '../../modules/auth/Auth.interface';
+import dayjs from 'dayjs';
 
 export const Routes = () => {
-	const accessToken = useAuthStore((state) => state.accessToken);
-	const isLoggedIn = Boolean(accessToken);
+	const { accessToken } = useAuthStore();
+	const claims: JWT_Claims | undefined = accessToken
+		? jwtDecode(accessToken)
+		: undefined;
+	const isLoggedIn = claims
+		? dayjs(claims.exp * 1000).isBefore(dayjs())
+		: false;
+
+	console.log(claims && dayjs(claims.exp * 1000).toDate());
 
 	return (
 		<ReactRouterRoutes>
@@ -63,6 +73,8 @@ export const Routes = () => {
 					path='employees/update/:NationalId'
 					element={<UpdateEmployeeForm />}
 				/>
+
+				<Route path='qr' element={<QrDisplay />} />
 
 				<Route path='positions' element={<PositionModule />} />
 				<Route path='positions/create' element={<CreatePositionForm />} />

@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
-import { BASE_URL } from '../../../../app/App';
 import { Module } from '../../../../app/App.modules';
+import { API } from '../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../modules/auth/Auth.store';
 import { PagedResult } from '../../../organisms/Table/Pagination/Pagination.interface';
 import { SelectOptionPair } from './SelectInput.interface';
@@ -16,22 +16,16 @@ type useSelectOptionsReturn = (
 export const useSelectOptions: useSelectOptionsReturn = ({
 	module,
 }: useSelectOptionsProps) => {
-	const url = `${BASE_URL}/${module}`;
-
 	const { accessToken } = useAuthStore();
 
 	const { data } = useQuery(module, async () => {
-		const res = await fetch(url, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-			},
-		});
+		const res = await API.get(module);
 
-		if (!res.ok) {
+		if (res.status >= 300) {
 			return [];
 		}
 
-		const pagedResponse: PagedResult<any> = await res.json();
+		const pagedResponse: PagedResult<any> = res.data;
 		const options = pagedResponse.Items;
 
 		return options;

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL, IS_DEBUG_MODE } from '../../../../../app/App';
+import { IS_DEBUG_MODE } from '../../../../../app/App';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -12,7 +12,7 @@ import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
-import { useRefresh } from '../../../../auth/Auth.hooks';
+import { API } from '../../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../auth/Auth.store';
 import { Position } from '../../Position.interface';
 import { usePositionStore } from '../../Position.store';
@@ -25,8 +25,6 @@ export const CreatePositionForm = () => {
 	const navigate = useNavigate();
 
 	const { accessToken } = useAuthStore();
-	useRefresh();
-
 	const { displayConfigs } = usePositionStore();
 	const { openConfirmDialog } = useConfirmDialogStore();
 	const { showToast } = useToastStore();
@@ -35,17 +33,9 @@ export const CreatePositionForm = () => {
 	const mutation = useMutation(
 		'positions/create',
 		async (formData: Position) => {
-			const res = await fetch(`${BASE_URL}/Positions/Create`, {
-				headers: {
-					'Authorization': `Bearer ${accessToken}`,
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				method: 'POST',
-				body: JSON.stringify(formData),
-			});
+			const res = await API.post('Positions/Create', formData);
 
-			if (res.ok) {
+			if (res.status <= 299) {
 				showToast({ state: 'success' });
 			} else {
 				showToast({ state: 'error' });

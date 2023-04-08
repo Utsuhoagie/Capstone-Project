@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Link } from 'react-router-dom';
-import { BASE_URL } from '../../../app/App';
 import { Button } from '../../../components/atoms/Button/Button';
 import { TextInput } from '../../../components/atoms/Input/TextInput';
+import { AuthAPI } from '../../../config/axios/axios.config';
 import { Auth_API_Response } from '../Auth.interface';
 import { useAuthStore } from '../Auth.store';
 import {
@@ -26,18 +26,11 @@ export const Login = () => {
 	const [error, setError] = useState<string>('');
 
 	const mutation = useMutation('login', async (formData: LoginModel) => {
-		const res = await fetch(`${BASE_URL}/Auth/Login`, {
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-			},
-			method: 'POST',
-			body: JSON.stringify(formData),
-		});
+		const res = await AuthAPI.post('Login', formData);
 
-		const data: Auth_API_Response = await res.json();
+		const data: Auth_API_Response = res.data;
 
-		if (!res.ok) {
+		if (res.status >= 299) {
 			// console.table(data);
 			// if (res.status === 404)
 			if (data && data.Errors)

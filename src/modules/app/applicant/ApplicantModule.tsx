@@ -4,14 +4,13 @@ import { omit } from 'ramda';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { BASE_URL } from '../../../app/App';
 import { useToastStore } from '../../../app/App.store';
 import {
 	PagedResult,
 	Pagination,
 } from '../../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../../components/organisms/Table/Table.store';
-import { useRefresh } from '../../auth/Auth.hooks';
+import { API } from '../../../config/axios/axios.config';
 import { useAuthStore } from '../../auth/Auth.store';
 import {
 	Position,
@@ -32,8 +31,6 @@ export const ApplicantModule = () => {
 	const navigate = useNavigate();
 	const { accessToken, refreshToken, setTokens, unsetLogin } = useAuthStore();
 	// TODO: should ideally NOT refresh every time
-	useRefresh();
-
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { showToast } = useToastStore();
 	const { selectedRowIndex, pagination, setPagination } = useTableStore();
@@ -53,17 +50,9 @@ export const ApplicantModule = () => {
 		['applicants', allQueryParams],
 		async () => {
 			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
-			const res = await fetch(
-				`${BASE_URL}/Applicants?${allQueryParamsAsQueryString}`,
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				}
-			);
+			const res = await API.get(`Applicants?${allQueryParamsAsQueryString}`);
 
-			const pagedResponse: PagedResult<Applicant_API_Response> =
-				await res.json();
+			const pagedResponse: PagedResult<Applicant_API_Response> = res.data;
 			console.log('Paged API response: ', pagedResponse);
 
 			const responsePagination: Pagination = omit(['Items'], pagedResponse);

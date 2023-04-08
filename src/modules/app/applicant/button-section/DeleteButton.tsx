@@ -1,19 +1,16 @@
 import { useMutation, useQueryClient } from 'react-query';
-import { BASE_URL } from '../../../../app/App';
 import {
 	useConfirmDialogStore,
 	useToastStore,
 } from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { useTableStore } from '../../../../components/organisms/Table/Table.store';
-import { useRefresh } from '../../../auth/Auth.hooks';
+import { API } from '../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../auth/Auth.store';
 import { useApplicantStore } from '../Applicant.store';
 
 export const DeleteButton = () => {
 	const { accessToken } = useAuthStore();
-	useRefresh();
-
 	const { showToast } = useToastStore();
 	const { openConfirmDialog } = useConfirmDialogStore();
 	const { setSelectedRowIndex } = useTableStore();
@@ -24,19 +21,11 @@ export const DeleteButton = () => {
 	const mutation = useMutation(
 		'applicants/delete',
 		async () => {
-			const res = await fetch(
-				`${BASE_URL}/Applicants/Delete/${selectedApplicant?.NationalId}`,
-				{
-					headers: {
-						'Authorization': `Bearer ${accessToken}`,
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-					},
-					method: 'DELETE',
-				}
+			const res = await API.delete(
+				`Applicants/Delete/${selectedApplicant?.NationalId}`
 			);
 
-			if (res.ok) {
+			if (res.status <= 299) {
 				showToast({ state: 'success' });
 			} else {
 				showToast({ state: 'error' });

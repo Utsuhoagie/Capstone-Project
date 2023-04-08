@@ -6,7 +6,6 @@ import {
 	Pagination,
 } from '../../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../../components/organisms/Table/Table.store';
-import { useAuthStore } from '../../auth/Auth.store';
 import {
 	mapToPosition,
 	Position,
@@ -16,13 +15,9 @@ import { usePositionStore } from './Position.store';
 import { ButtonSection } from './button-section/ButtonSection';
 import { DataTable } from './data-table/DataTable';
 import { DetailSection } from './detail-section/DetailSection';
-import { BASE_URL } from '../../../app/App';
-import { useRefresh } from '../../auth/Auth.hooks';
+import { API } from '../../../config/axios/axios.config';
 
 export const PositionModule = () => {
-	const accessToken = useAuthStore((state) => state.accessToken);
-	useRefresh();
-
 	const { selectedRowIndex, setPagination } = useTableStore();
 	const { visiblePositions, setVisiblePositions, setSelectedPosition } =
 		usePositionStore();
@@ -30,14 +25,9 @@ export const PositionModule = () => {
 	const { isLoading, error, data } = useQuery(
 		'positions',
 		async () => {
-			const res = await fetch(`${BASE_URL}/Positions`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
+			const res = await API.get('Positions');
 
-			const pagedResponse: PagedResult<Position_API_Response> =
-				await res.json();
+			const pagedResponse: PagedResult<Position_API_Response> = await res.data;
 			console.log('Paged API response: ', pagedResponse);
 
 			const responsePagination: Pagination = omit(['Items'], pagedResponse);

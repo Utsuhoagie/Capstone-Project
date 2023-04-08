@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { BASE_URL, IS_DEBUG_MODE } from '../../../../../app/App';
+import { IS_DEBUG_MODE } from '../../../../../app/App';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -14,7 +14,7 @@ import { TimeInput } from '../../../../../components/atoms/Input/DateTimeInput/T
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
-import { useRefresh } from '../../../../auth/Auth.hooks';
+import { API } from '../../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../auth/Auth.store';
 import { EMPLOYEE_MAPPERS } from '../../Employee.display';
 import { Employee, mapToEmployee } from '../../Employee.interface';
@@ -27,8 +27,6 @@ import {
 export const UpdateEmployeeForm = () => {
 	const navigate = useNavigate();
 	const { accessToken } = useAuthStore();
-	useRefresh();
-
 	const { showToast } = useToastStore();
 	const { openConfirmDialog } = useConfirmDialogStore();
 	const { displayConfigs } = useEmployeeStore();
@@ -39,17 +37,9 @@ export const UpdateEmployeeForm = () => {
 	const mutation = useMutation(
 		'employees/update',
 		async (formData: Employee) => {
-			const res = await fetch(`${BASE_URL}/Employees/Update/${NationalId}`, {
-				headers: {
-					'Authorization': `Bearer ${accessToken}`,
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				method: 'PUT',
-				body: JSON.stringify(formData),
-			});
+			const res = await API.put(`/Employees/Update/${NationalId}`, formData);
 
-			if (res.ok) {
+			if (res.status <= 299) {
 				showToast({ state: 'success' });
 			} else {
 				showToast({ state: 'error' });
@@ -65,13 +55,9 @@ export const UpdateEmployeeForm = () => {
 	const methods = useForm<UpdateEmployeeFormIntermediateValues>({
 		mode: 'onSubmit',
 		defaultValues: async () => {
-			const res = await fetch(`${BASE_URL}/Employees/${NationalId}`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
+			const res = await API.get(`Employees/${NationalId}`);
 
-			if (!res.ok) {
+			if (res.status >= 300) {
 				console.log('not OK');
 				return {
 					NationalId: '',
@@ -90,8 +76,7 @@ export const UpdateEmployeeForm = () => {
 				};
 			}
 
-			const data = await res.json();
-			const selectedEmployee = mapToEmployee(data);
+			const selectedEmployee = mapToEmployee(res.data);
 
 			console.log('OK', selectedEmployee);
 			return {

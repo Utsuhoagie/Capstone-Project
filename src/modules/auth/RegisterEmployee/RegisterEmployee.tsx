@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../../../app/App';
 import { Button } from '../../../components/atoms/Button/Button';
 import { TextInput } from '../../../components/atoms/Input/TextInput';
+import { AuthAPI } from '../../../config/axios/axios.config';
 import { Auth_API_Response } from '../Auth.interface';
 import { useAuthStore } from '../Auth.store';
 import {
@@ -29,18 +29,11 @@ export const RegisterEmployee = () => {
 	const mutation = useMutation(
 		'registerEmployee',
 		async (formData: RegisterEmployeeModel) => {
-			const res = await fetch(`${BASE_URL}/Auth/RegisterEmployee`, {
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				method: 'POST',
-				body: JSON.stringify(formData),
-			});
+			const res = await AuthAPI.post(`RegisterEmployee`, formData);
 
-			const data: Auth_API_Response = await res.json();
+			const data: Auth_API_Response = res.data;
 
-			if (!res.ok) {
+			if (res.status >= 300) {
 				if (data)
 					setError(data.Errors.map((error) => error.Description).join('. '));
 				else setError('Có lỗi xảy ra.');

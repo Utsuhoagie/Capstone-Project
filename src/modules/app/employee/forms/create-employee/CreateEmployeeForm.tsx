@@ -4,7 +4,7 @@ import { range } from 'ramda';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { BASE_URL, IS_DEBUG_MODE } from '../../../../../app/App';
+import { IS_DEBUG_MODE } from '../../../../../app/App';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -15,7 +15,7 @@ import { TimeInput } from '../../../../../components/atoms/Input/DateTimeInput/T
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
-import { useRefresh } from '../../../../auth/Auth.hooks';
+import { API } from '../../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../auth/Auth.store';
 import { EMPLOYEE_MAPPERS } from '../../Employee.display';
 import { Employee } from '../../Employee.interface';
@@ -28,8 +28,6 @@ import {
 export const CreateEmployeeForm = () => {
 	const navigate = useNavigate();
 	const { accessToken } = useAuthStore();
-	useRefresh();
-
 	const { showToast } = useToastStore();
 	const { openConfirmDialog } = useConfirmDialogStore();
 	const { displayConfigs } = useEmployeeStore();
@@ -38,17 +36,9 @@ export const CreateEmployeeForm = () => {
 	const mutation = useMutation(
 		'employees/create',
 		async (formData: Employee) => {
-			const res = await fetch(`${BASE_URL}/Employees/Create`, {
-				headers: {
-					'Authorization': `Bearer ${accessToken}`,
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-				},
-				method: 'POST',
-				body: JSON.stringify(formData),
-			});
+			const res = await API.post('Employees/Create', formData);
 
-			if (res.ok) {
+			if (res.status <= 299) {
 				showToast({ state: 'success' });
 			} else {
 				showToast({ state: 'error' });
