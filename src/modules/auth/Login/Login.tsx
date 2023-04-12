@@ -1,12 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import jwtDecode from 'jwt-decode';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useMutation } from 'react-query';
 import { Link } from 'react-router-dom';
+import { useToastStore } from '../../../app/App.store';
 import { Button } from '../../../components/atoms/Button/Button';
 import { TextInput } from '../../../components/atoms/Input/TextInput';
 import { AuthAPI } from '../../../config/axios/axios.config';
-import { Auth_API_Response } from '../Auth.interface';
+import { Auth_API_Response, JWT_Claims } from '../Auth.interface';
 import { useAuthStore } from '../Auth.store';
 import {
 	LoginFormIntermediateValues,
@@ -15,6 +17,7 @@ import {
 } from './Login.form';
 
 export const Login = () => {
+	const { showToast } = useToastStore();
 	const { setTokens } = useAuthStore();
 	const methods = useForm<LoginFormIntermediateValues>({
 		defaultValues: {
@@ -26,22 +29,35 @@ export const Login = () => {
 	const [error, setError] = useState<string>('');
 
 	const mutation = useMutation('login', async (formData: LoginModel) => {
-		const res = await AuthAPI.post('Login', formData);
+		try {
+			const res = await AuthAPI.post('Login', formData);
 
-		const data: Auth_API_Response = res.data;
+			const data: Auth_API_Response = res.data;
 
-		if (res.status >= 299) {
-			// console.table(data);
-			// if (res.status === 404)
-			if (data && data.Errors)
-				setError(data.Errors.map((error) => error.Description).join('. '));
-			else setError('Có lỗi xảy ra.');
-			// if (res.status === 401) setError('Email hoặc mật khẩu sai.');
-			return;
+			if (res.status > 299) {
+				console.table(data);
+				// if (res.status === 404)
+				if (data && data.Errors)
+					setError(data.Errors.map((error) => error.Description).join('. '));
+				else setError('Có lỗi xảy ra.');
+				// if (res.status === 401) setError('Email hoặc mật khẩu sai.');
+				return;
+			}
+
+			const claims: JWT_Claims = jwtDecode(data.AccessToken);
+			if (claims.Role === 'Employee') {
+				showToast({
+					state: 'error',
+				});
+				return;
+			}
+
+			console.table(data);
+			setTokens(data.AccessToken, data.RefreshToken);
+		} catch (error) {
+			console.log(error);
+			showToast({ state: 'error' });
 		}
-
-		console.table(data);
-		setTokens(data.AccessToken, data.RefreshToken);
 	});
 
 	function handleLogin(data) {

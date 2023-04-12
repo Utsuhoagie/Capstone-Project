@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../../modules/auth/Auth.store';
+import { Toast } from '../molecules/Toast/Toast';
 
 export const AuthLayout = () => {
 	const accessToken = useAuthStore((state) => state.accessToken);
@@ -15,6 +16,8 @@ export const AuthLayout = () => {
 			<div className='min-h-[350px] w-w-auth border border-primary-dark-2'>
 				<Outlet />
 			</div>
+
+			<Toast />
 		</div>
 	);
 };

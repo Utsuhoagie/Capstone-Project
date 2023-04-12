@@ -1,9 +1,4 @@
-import {
-	Routes as ReactRouterRoutes,
-	Route,
-	Navigate,
-	json,
-} from 'react-router-dom';
+import { Routes as ReactRouterRoutes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '../../components/layouts/AppLayout';
 import { AuthLayout } from '../../components/layouts/AuthLayout';
 import { ApplicantModule } from '../../modules/app/applicant/ApplicantModule';
@@ -28,17 +23,17 @@ import { QrDisplay } from '../../modules/app/qr-display/QrDisplay';
 import jwtDecode from 'jwt-decode';
 import { JWT_Claims } from '../../modules/auth/Auth.interface';
 import dayjs from 'dayjs';
+import { AttendanceModule } from '../../modules/app/attendance/AttendanceModule';
 
 export const Routes = () => {
 	const { accessToken } = useAuthStore();
+	// NOTE: This still doesn't work (after expire, still won't redirect to 'app')
 	const claims: JWT_Claims | undefined = accessToken
 		? jwtDecode(accessToken)
 		: undefined;
-	const isLoggedIn = claims
-		? dayjs(claims.exp * 1000).isBefore(dayjs())
-		: false;
-
-	console.log(claims && dayjs(claims.exp * 1000).toDate());
+	const exp = claims && dayjs(claims.exp * 1000);
+	const isExpAfterNow = exp && exp.isAfter(dayjs());
+	const isLoggedIn = Boolean(isExpAfterNow);
 
 	return (
 		<ReactRouterRoutes>
@@ -75,6 +70,8 @@ export const Routes = () => {
 				/>
 
 				<Route path='qr' element={<QrDisplay />} />
+
+				<Route path='attendances' element={<AttendanceModule />} />
 
 				<Route path='positions' element={<PositionModule />} />
 				<Route path='positions/create' element={<CreatePositionForm />} />

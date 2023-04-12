@@ -5,7 +5,7 @@ interface EmptyTextProps {
 
 export const EmptyText = ({ canHover, isHovered }: EmptyTextProps) => {
 	return (
-		<p
+		<span
 			className={` italic 
 			${
 				isHovered
@@ -15,6 +15,6 @@ export const EmptyText = ({ canHover, isHovered }: EmptyTextProps) => {
 			${canHover ? '' /* ' group-hover:text-neutral-gray-1 ' */ : ''}`}
 		>
 			Không có
-		</p>
+		</span>
 	);
 };
