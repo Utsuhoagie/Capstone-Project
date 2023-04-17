@@ -27,6 +27,7 @@
 		"query-string": "^8.1.0",
 		"ramda": "^0.28.0",
 		"react": "^18.2.0",
+		"react-calendar": "^4.2.1",
 		"react-datepicker": "^4.10.0",
 		"react-dom": "^18.2.0",
 		"react-hook-form": "^7.41.5",

@@ -8,11 +8,11 @@ import { EmptyText } from '../../../../components/atoms/EmptyText/EmptyText';
 import { API } from '../../../../config/axios/axios.config';
 import { Attendance, getStatusLabel, Status } from '../Attendance.interface';
 
-interface EmployeeAttendanceProps {
+interface DailyAttendanceProps {
 	attendance: Attendance;
 }
 
-export const EmployeeAttendance = ({ attendance }: EmployeeAttendanceProps) => {
+export const DailyAttendance = ({ attendance }: DailyAttendanceProps) => {
 	const {
 		EmployeeNationalId,
 		EmployeeFullName,
@@ -95,7 +95,7 @@ export const EmployeeAttendance = ({ attendance }: EmployeeAttendanceProps) => {
 		<Disclosure as='div'>
 			<Disclosure.Button
 				className={
-					' w-w-input-medium cursor-pointer rounded-sm border border-primary-dark-2 px-2 py-1 text-left ' +
+					' w-w-attendance-item cursor-pointer rounded-sm border border-primary-dark-2 px-2 py-1 text-left ' +
 					(attendance.Status === Status.Pending
 						? ' bg-neutral-white hover:bg-primary-bright-4 ui-open:bg-primary-bright-4 '
 						: attendance.Status === Status.Accepted
@@ -108,7 +108,7 @@ export const EmployeeAttendance = ({ attendance }: EmployeeAttendanceProps) => {
 
 			<Disclosure.Panel
 				className={
-					' rounded-sm border border-primary-dark-2 p-2 ' +
+					' w-w-attendance-item rounded-sm border border-primary-dark-2 px-4 py-2 ' +
 					(attendance.Status === Status.Pending
 						? ' bg-neutral-white '
 						: attendance.Status === Status.Accepted
@@ -116,41 +116,44 @@ export const EmployeeAttendance = ({ attendance }: EmployeeAttendanceProps) => {
 						: ' bg-state-error-bright ')
 				}
 			>
-				<p>Bắt đầu: {dayjs(StartTimestamp).format('H:mm D/MM/YYYY')}</p>
-				<p>
-					Kết thúc:{' '}
-					{EndTimestamp ? (
-						dayjs(EndTimestamp).format('H:mm D/MM/YYYY')
-					) : (
-						<EmptyText />
-					)}
-				</p>
+				<div className='flex flex-row justify-between'>
+					<div>
+						<p>Bắt đầu: {dayjs(StartTimestamp).format('H:mm D/MM/YYYY')}</p>
+						<p>
+							Kết thúc:{' '}
+							{EndTimestamp ? (
+								dayjs(EndTimestamp).format('H:mm D/MM/YYYY')
+							) : (
+								<EmptyText />
+							)}
+						</p>
+						<p>Trạng thái: {getStatusLabel(attendance.Status)}</p>
+					</div>
+					<div className='flex flex-col gap-2'>
+						<CheckIcon
+							className={`rounded ${
+								canStatusUpdate
+									? 'cursor-pointer fill-state-success-normal hover:bg-state-success-bright hover:fill-state-success-dark'
+									: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
+							}`}
+							size={32}
+							onClick={() => canStatusUpdate && handleStatus(Status.Accepted)}
+						/>
+						<CloseIcon
+							className={`rounded ${
+								canStatusUpdate
+									? 'cursor-pointer fill-state-error-normal hover:bg-state-error-bright hover:fill-state-error-dark'
+									: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
+							}`}
+							size={32}
+							onClick={() => canStatusUpdate && handleStatus(Status.Rejected)}
+						/>
+					</div>
+				</div>
 
-				<p>Trạng thái: {getStatusLabel(attendance.Status)}</p>
-
-				<div className='flex flex-row gap-2 py-2'>
+				<div className='mt-4 mb-2 flex flex-row justify-between'>
 					<img className='w-36' src={startImgQuery.data} />
 					<img className='w-36' src={endImgQuery.data} />
-				</div>
-				<div className='flex flex-row justify-around'>
-					<CheckIcon
-						className={`rounded ${
-							canStatusUpdate
-								? 'cursor-pointer fill-state-success-normal hover:bg-state-success-bright hover:fill-state-success-dark'
-								: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
-						}`}
-						size={24}
-						onClick={() => canStatusUpdate && handleStatus(Status.Accepted)}
-					/>
-					<CloseIcon
-						className={`rounded ${
-							canStatusUpdate
-								? 'cursor-pointer fill-state-error-normal hover:bg-state-error-bright hover:fill-state-error-dark'
-								: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
-						}`}
-						size={24}
-						onClick={() => canStatusUpdate && handleStatus(Status.Rejected)}
-					/>
 				</div>
 			</Disclosure.Panel>
 		</Disclosure>

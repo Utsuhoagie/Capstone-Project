@@ -14,7 +14,9 @@ export const ArrowBigIcon = ({
 			height={size}
 			viewBox='0 0 24 24'
 			className={
-				getTailwindRotateClassFromDirection(direction) + ' fill-neutral-gray-1 '
+				getTailwindRotateClassFromDirection(direction) +
+				' fill-neutral-gray-1 ' +
+				className
 			}
 			xmlns='http://www.w3.org/2000/svg'
 		>

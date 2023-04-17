@@ -24,6 +24,7 @@ import jwtDecode from 'jwt-decode';
 import { JWT_Claims } from '../../modules/auth/Auth.interface';
 import dayjs from 'dayjs';
 import { AttendanceModule } from '../../modules/app/attendance/AttendanceModule';
+import { DailyAttendanceList } from '../../modules/app/attendance/daily-attendance-list/DailyAttendanceList';
 
 export const Routes = () => {
 	const { accessToken } = useAuthStore();
@@ -72,6 +73,7 @@ export const Routes = () => {
 				<Route path='qr' element={<QrDisplay />} />
 
 				<Route path='attendances' element={<AttendanceModule />} />
+				<Route path='attendances/daily' element={<DailyAttendanceList />} />
 
 				<Route path='positions' element={<PositionModule />} />
 				<Route path='positions/create' element={<CreatePositionForm />} />

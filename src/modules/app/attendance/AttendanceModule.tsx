@@ -8,12 +8,14 @@ import {
 	mapToAttendance,
 } from './Attendance.interface';
 import { Buffer } from 'buffer';
-import { EmployeeAttendanceList } from './employee-attendance-list/EmployeeAttendanceList';
+import { DailyAttendanceList } from './daily-attendance-list/DailyAttendanceList';
+import { AttendanceCalendar } from './attendance-calendar/AttendanceCalendar';
 
 export const AttendanceModule = () => {
 	return (
 		<div className='max-h-screen'>
-			<EmployeeAttendanceList />
+			{/* <EmployeeAttendanceList /> */}
+			<AttendanceCalendar />
 		</div>
 	);
 };

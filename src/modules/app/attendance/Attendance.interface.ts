@@ -39,6 +39,14 @@ export enum Status {
 	Rejected = -1,
 }
 
+export enum DailyStatus {
+	Pending = 0,
+	Finished = 1,
+	Empty = -1,
+}
+
+export type DailyStatus_API_Response = DailyStatus[];
+
 export function getStatusLabel(status: Status): string {
 	if (status === Status.Pending) {
 		return 'Chưa xác nhận';

@@ -5,15 +5,23 @@ import {
 } from './_Icon.interface';
 
 // Default direction is DOWN
-export const ArrowSmallIcon = ({ size, direction }: DirectionalIconProps) => {
+export const ArrowSmallIcon = ({
+	size,
+	direction,
+	className,
+	...props
+}: DirectionalIconProps) => {
 	return (
 		<svg
 			width={size}
 			height={size}
 			viewBox='0 0 24 24'
 			fill='none'
-			className={getTailwindRotateClassFromDirection(direction)}
+			className={
+				getTailwindRotateClassFromDirection(direction) + ' ' + className
+			}
 			xmlns='http://www.w3.org/2000/svg'
+			{...props}
 		>
 			<g clipPath='url(#clip0_406_12677)'>
 				<path

@@ -8,21 +8,21 @@ import {
 	Attendance_API_Response,
 	mapToAttendance,
 } from '../Attendance.interface';
-import { EmployeeAttendance } from './EmployeeAttendance';
+import { DailyAttendance } from './DailyAttendance';
+import { useSearchParams } from 'react-router-dom';
 
-export const EmployeeAttendanceList = () => {
+export const DailyAttendanceList = () => {
+	const [searchParams, setSearchParams] = useSearchParams();
+	const queryParams = QueryString.parse(searchParams.toString());
 	const { isLoading, error, data } = useQuery(
-		[
-			'attendances',
-			{ page: 1, pageSize: 30, date: dayjs().startOf('day').toISOString() },
-		],
+		['attendances', { page: 1, pageSize: 30, ...queryParams }],
 		async () => {
-			const queryParams = QueryString.stringify({
+			const allQueryParams = QueryString.stringify({
 				page: 1,
 				pageSize: 30,
-				date: dayjs().startOf('day').toISOString(),
+				...queryParams,
 			});
-			const res = await API.get(`Attendances/Daily?${queryParams}`);
+			const res = await API.get(`Attendances/Daily?${allQueryParams}`);
 
 			if (res.status >= 299) {
 				window.alert(res.status);
@@ -51,7 +51,7 @@ export const EmployeeAttendanceList = () => {
 			<div className='flex flex-col items-start justify-start gap-2'>
 				{data?.map((attendance) => {
 					return (
-						<EmployeeAttendance
+						<DailyAttendance
 							key={attendance.EmployeeFullName}
 							attendance={attendance}
 						/>
