@@ -11,12 +11,16 @@ import {
 import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { TimeInput } from '../../../../../components/atoms/Input/DateTimeInput/TimeInput';
+import { ImageInput } from '../../../../../components/atoms/Input/ImageInput/ImageInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
 import { API } from '../../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../auth/Auth.store';
-import { Employee } from '../../../employee/Employee.interface';
+import {
+	Employee,
+	Employee_API_Request,
+} from '../../../employee/Employee.interface';
 import { useEmployeeStore } from '../../../employee/Employee.store';
 import { usePositionStore } from '../../../position/Position.store';
 import { APPLICANT_MAPPERS } from '../../Applicant.display';
@@ -60,11 +64,7 @@ export const EmployApplicantForm = () => {
 		mode: 'onSubmit',
 		reValidateMode: 'onSubmit',
 		defaultValues: async () => {
-			const res = await API.get(`Applicants/${NationalId}`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`,
-				},
-			});
+			const res = await API.get(`Applicants/${NationalId}`);
 
 			if (res.status >= 300) {
 				console.log('not OK');
@@ -80,12 +80,14 @@ export const EmployApplicantForm = () => {
 					PositionName: '',
 					EmployedDate: dayjs().toISOString(),
 					Salary: '',
-					StartHour: dayjs().hour(9).startOf('hour').toISOString(),
-					EndHour: dayjs().hour(18).startOf('hour').toISOString(),
 				};
 			}
 
 			const selectedApplicant = mapToApplicant(res.data);
+			const imageRes = await API.get(
+				`Files/Image/Applicants/${selectedApplicant.ImageFileName}`,
+				{ responseType: 'blob' }
+			);
 
 			console.log('OK', selectedApplicant);
 			return {
@@ -102,8 +104,7 @@ export const EmployApplicantForm = () => {
 				PositionName: selectedApplicant.AppliedPositionName,
 				EmployedDate: dayjs().toISOString(),
 				Salary: `${selectedApplicant.AskingSalary}`,
-				StartHour: dayjs().hour(9).startOf('hour').toISOString(),
-				EndHour: dayjs().hour(18).startOf('hour').toISOString(),
+				Image: imageRes.data ? imageRes.data : undefined,
 			};
 		},
 		resolver: zodResolver(employApplicantFormSchema),
@@ -116,7 +117,7 @@ export const EmployApplicantForm = () => {
 	) => {
 		console.table(rawData);
 
-		const formData: Employee = {
+		const formData: Employee_API_Request = {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
@@ -130,9 +131,8 @@ export const EmployApplicantForm = () => {
 			PositionName: rawData.PositionName,
 			EmployedDate: dayjs(rawData.EmployedDate).toDate(),
 			Salary: parseInt(rawData.Salary),
-			StartHour: dayjs(rawData.StartHour).hour(),
-			EndHour: dayjs(rawData.EndHour).hour(),
 			HasUser: false,
+			Image: rawData.Image,
 		};
 
 		// console.log({ formData });
@@ -163,118 +163,98 @@ export const EmployApplicantForm = () => {
 						className='flex flex-col gap-2 p-2'
 						onSubmit={methods.handleSubmit(handleSubmit, handleError)}
 					>
-						<TextInput
-							disabled
-							required
-							name='NationalId'
-							placeholder='Nhập 9 hoặc 12 số.'
-							width='medium'
-							displayConfigs={displayConfigs}
-						/>
+						<div className='flex flex-row justify-between'>
+							<div className='flex flex-col gap-2'>
+								<TextInput
+									disabled
+									required
+									name='NationalId'
+									placeholder='Nhập 9 hoặc 12 số.'
+									width='medium'
+									displayConfigs={displayConfigs}
+								/>
+								<TextInput
+									disabled
+									required
+									name='FullName'
+									placeholder='Nhập họ tên đầy đủ.'
+									width='medium'
+									displayConfigs={displayConfigs}
+								/>
+								<SelectInput
+									disabled
+									required
+									name='Gender'
+									width='medium'
+									placeholder='Chọn 1.'
+									optionPairs={APPLICANT_MAPPERS['Gender']}
+									displayConfigs={displayConfigs}
+								/>
+								<DateInput
+									disabled
+									name='BirthDate'
+									placeholder='Chọn ngày sinh.'
+									width='medium'
+									displayConfigs={displayConfigs}
+								/>
+								<TextInput
+									disabled
+									required
+									name='Address'
+									placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
+									width='medium'
+									displayConfigs={displayConfigs}
+								/>
+								<TextInput
+									disabled
+									required
+									name='Phone'
+									placeholder='Nhập số điện thoại.'
+									width='medium'
+									displayConfigs={displayConfigs}
+								/>
+								<TextInput
+									disabled
+									name='Email'
+									placeholder='Nhập địa chỉ email.'
+									width='medium'
+									displayConfigs={displayConfigs}
+								/>
+								<TextInput
+									required
+									name='ExperienceYears'
+									type='number'
+									placeholder='Nhập số năm kinh nghiệm.'
+									width='medium'
+									displayConfigs={displayConfigs}
+								/>
+								<SelectInput
+									required
+									name='PositionName'
+									placeholder='Nhập vị trí.'
+									width='medium'
+									optionPairs={positionOptions}
+									displayConfigs={employeeDisplayConfigs}
+								/>
+								<DateInput
+									required
+									name='EmployedDate'
+									placeholder='Chọn ngày bắt đầu làm việc.'
+									width='medium'
+									displayConfigs={employeeDisplayConfigs}
+								/>
+								<TextInput
+									required
+									name='Salary'
+									type='number'
+									width='medium'
+									placeholder='Nhập mức lương.'
+									displayConfigs={employeeDisplayConfigs}
+								/>
+							</div>
 
-						<TextInput
-							disabled
-							required
-							name='FullName'
-							placeholder='Nhập họ tên đầy đủ.'
-							width='medium'
-							displayConfigs={displayConfigs}
-						/>
-
-						<SelectInput
-							disabled
-							required
-							name='Gender'
-							width='medium'
-							placeholder='Chọn 1.'
-							optionPairs={APPLICANT_MAPPERS['Gender']}
-							displayConfigs={displayConfigs}
-						/>
-
-						<DateInput
-							disabled
-							name='BirthDate'
-							placeholder='Chọn ngày sinh.'
-							width='medium'
-							displayConfigs={displayConfigs}
-						/>
-
-						<TextInput
-							disabled
-							required
-							name='Address'
-							placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
-							width='medium'
-							displayConfigs={displayConfigs}
-						/>
-
-						<TextInput
-							disabled
-							required
-							name='Phone'
-							placeholder='Nhập số điện thoại.'
-							width='medium'
-							displayConfigs={displayConfigs}
-						/>
-
-						<TextInput
-							disabled
-							name='Email'
-							placeholder='Nhập địa chỉ email.'
-							width='medium'
-							displayConfigs={displayConfigs}
-						/>
-
-						<TextInput
-							required
-							name='ExperienceYears'
-							type='number'
-							placeholder='Nhập số năm kinh nghiệm.'
-							width='medium'
-							displayConfigs={displayConfigs}
-						/>
-
-						<SelectInput
-							required
-							name='PositionName'
-							placeholder='Nhập vị trí.'
-							width='medium'
-							optionPairs={positionOptions}
-							displayConfigs={employeeDisplayConfigs}
-						/>
-
-						<DateInput
-							required
-							name='EmployedDate'
-							placeholder='Chọn ngày bắt đầu làm việc.'
-							width='medium'
-							displayConfigs={employeeDisplayConfigs}
-						/>
-
-						<TextInput
-							required
-							name='Salary'
-							type='number'
-							width='medium'
-							placeholder='Nhập mức lương.'
-							displayConfigs={employeeDisplayConfigs}
-						/>
-
-						<TimeInput
-							required
-							name='StartHour'
-							width='medium'
-							placeholder='Chọn thời gian bắt đầu ca.'
-							displayConfigs={employeeDisplayConfigs}
-						/>
-
-						<TimeInput
-							required
-							name='EndHour'
-							width='medium'
-							placeholder='Chọn thời gian kết thúc ca.'
-							displayConfigs={employeeDisplayConfigs}
-						/>
+							<ImageInput name='Image' />
+						</div>
 
 						<Button type='submit' width='medium'>
 							Tuyển

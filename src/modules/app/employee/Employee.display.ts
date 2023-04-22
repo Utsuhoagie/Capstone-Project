@@ -29,8 +29,6 @@ export const EMPLOYEE_FIELDS: string[] = [
 	'PositionName',
 	'Salary',
 	'EmployedDate',
-	'StartHour',
-	'EndHour',
 ];
 
 export const EMPLOYEE_LABELLERS: Labellers = {
@@ -45,8 +43,6 @@ export const EMPLOYEE_LABELLERS: Labellers = {
 	PositionName: 'Vị trí',
 	Salary: 'Mức lương',
 	EmployedDate: 'Ngày được tuyển',
-	StartHour: 'Giờ bắt đầu',
-	EndHour: 'Giờ kết thúc',
 };
 
 export const EMPLOYEE_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
@@ -61,8 +57,6 @@ export const EMPLOYEE_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
 	PositionName: 'normal',
 	Salary: 'formatted',
 	EmployedDate: 'formatted',
-	StartHour: 'formatted',
-	EndHour: 'formatted',
 };
 
 export const EMPLOYEE_MAPPERS: Mappers = {
@@ -89,8 +83,6 @@ export const EMPLOYEE_FORMATTABLE_FIELD_MAPPERS: FormattableFieldMappers = {
 	ExperienceYears: 'ExperienceYears',
 	Salary: 'Money',
 	EmployedDate: 'Date',
-	StartHour: 'Time',
-	EndHour: 'Time',
 };
 
 export const EMPLOYEE_FORMATTERS: Formatters = {

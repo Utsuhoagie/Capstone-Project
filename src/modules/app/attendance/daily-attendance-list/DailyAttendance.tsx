@@ -2,80 +2,125 @@ import { Disclosure } from '@headlessui/react';
 import dayjs from 'dayjs';
 import React from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useSearchParams } from 'react-router-dom';
 import { CheckIcon } from '../../../../assets/icons/CheckIcon';
 import { CloseIcon } from '../../../../assets/icons/CloseIcon';
 import { EmptyText } from '../../../../components/atoms/EmptyText/EmptyText';
 import { API } from '../../../../config/axios/axios.config';
-import { Attendance, getStatusLabel, Status } from '../Attendance.interface';
+import { Employee } from '../../employee/Employee.interface';
+import { createImageUrl } from '../../file/File.utils';
+import {
+	Attendance,
+	Attendance_API_Response,
+	getStatusLabel,
+	mapToAttendance,
+	StatusEnum,
+} from '../Attendance.interface';
+import QueryString from 'query-string';
 
 interface DailyAttendanceProps {
-	attendance: Attendance;
+	// attendance: Attendance;
+	employee: Employee;
 }
 
-export const DailyAttendance = ({ attendance }: DailyAttendanceProps) => {
+export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
+	const [searchParams, setSearchParams] = useSearchParams();
+	const queryParams = QueryString.parse(searchParams.toString());
+	const getAttendanceOfEmployeeQuery = useQuery(
+		[
+			'AttendanceOfEmployee',
+			{ NationalId: employee.NationalId, date: queryParams.date },
+		],
+		async () => {
+			const allQueryParams = QueryString.stringify({
+				NationalId: employee.NationalId,
+				date: queryParams.date,
+			});
+
+			const res = await API.get(
+				`Attendances/AttendanceOfEmployee?${allQueryParams}`
+			);
+
+			if (res.status > 299) {
+				window.alert(res.status);
+				return;
+			}
+
+			const data: Attendance_API_Response | null = res.data;
+			const attendance = data ? mapToAttendance(data) : undefined;
+			return attendance;
+		}
+	);
 	const {
 		EmployeeNationalId,
 		EmployeeFullName,
+		Status,
 		StartTimestamp,
 		StartImageFileName,
 		EndTimestamp,
 		EndImageFileName,
-	} = attendance;
+	} = getAttendanceOfEmployeeQuery.data ?? {};
+
+	console.log(
+		`for employee ${employee.NationalId}-${employee.FullName}: `,
+		getAttendanceOfEmployeeQuery.data
+	);
 
 	const canStatusUpdate =
-		attendance.Status === Status.Pending && Boolean(EndTimestamp);
+		Status === StatusEnum.Pending && Boolean(EndTimestamp);
 
 	const queryClient = useQueryClient();
-	const startImgQuery = useQuery(
+	const startImageQuery = useQuery(
 		['files', { StartImageFileName: StartImageFileName }],
 		async () => {
-			const res = await API.get(`Files/Image/${StartImageFileName}`, {
-				responseType: 'blob',
-			});
+			const res = await API.get(
+				`Files/Image/Attendances/${StartImageFileName}`,
+				{
+					responseType: 'blob',
+				}
+			);
 
-			if (res.status >= 299) {
+			if (res.status > 299) {
 				window.alert(res.status);
 				return;
 			}
 
 			// const b64 = Buffer.from(res.data, 'binary').toString('base64');
 
-			console.log({ imgResData: res.data, headers: res.headers });
-			const imgObjectURL = URL.createObjectURL(res.data);
-			return imgObjectURL;
+			// console.log({ imageResData: res.data, headers: res.headers });
+			return createImageUrl(res.data);
 		}
 	);
 
-	const endImgQuery = useQuery(
+	const endImageQuery = useQuery(
 		['files', { EndImageFileName: EndImageFileName }],
 		async () => {
-			const res = await API.get(`Files/Image/${EndImageFileName}`, {
+			const res = await API.get(`Files/Image/Attendances/${EndImageFileName}`, {
 				responseType: 'blob',
 			});
 
-			if (res.status >= 299) {
+			if (res.status > 299) {
 				window.alert(res.status);
 				return;
 			}
 
 			// const b64 = Buffer.from(res.data, 'binary').toString('base64');
 
-			console.log({ imgResData: res.data, headers: res.headers });
-			const imgObjectURL = URL.createObjectURL(res.data);
-			return imgObjectURL;
+			// console.log({ imageResData: res.data, headers: res.headers });
+			return createImageUrl(res.data);
 		}
 	);
 
 	const updateStatusMutation = useMutation(
 		'UpdateStatus',
-		async (status: Status) => {
+		async (status: StatusEnum) => {
 			const res = await API.put('Attendances/UpdateStatus', {
 				EmployeeNationalId: EmployeeNationalId,
 				StartTimestamp: dayjs(StartTimestamp).toDate(),
 				Status: status,
 			});
 
-			if (res.status <= 299) {
+			if (res.status > 299) {
 				window.alert(res.status);
 				return;
 			}
@@ -87,8 +132,15 @@ export const DailyAttendance = ({ attendance }: DailyAttendanceProps) => {
 		}
 	);
 
-	function handleStatus(status: Status) {
+	function handleStatus(status: StatusEnum) {
 		updateStatusMutation.mutate(status);
+	}
+
+	if (
+		getAttendanceOfEmployeeQuery.isLoading ||
+		getAttendanceOfEmployeeQuery.isError
+	) {
+		return <p>...</p>;
 	}
 
 	return (
@@ -96,29 +148,37 @@ export const DailyAttendance = ({ attendance }: DailyAttendanceProps) => {
 			<Disclosure.Button
 				className={
 					' w-w-attendance-item cursor-pointer rounded-sm border border-primary-dark-2 px-2 py-1 text-left ' +
-					(attendance.Status === Status.Pending
+					(Status === StatusEnum.Pending || Status === undefined
 						? ' bg-neutral-white hover:bg-primary-bright-4 ui-open:bg-primary-bright-4 '
-						: attendance.Status === Status.Accepted
+						: Status === StatusEnum.Accepted
 						? ' bg-state-success-bright hover:bg-state-success-normal ui-open:bg-state-success-bright '
 						: ' bg-state-error-bright hover:bg-state-error-normal ui-open:bg-state-error-bright ')
 				}
 			>
-				{attendance.EmployeeFullName}
+				{employee.FullName}
 			</Disclosure.Button>
 
 			<Disclosure.Panel
 				className={
 					' w-w-attendance-item rounded-sm border border-primary-dark-2 px-4 py-2 ' +
-					(attendance.Status === Status.Pending
+					(Status === StatusEnum.Pending || Status === undefined
 						? ' bg-neutral-white '
-						: attendance.Status === Status.Accepted
+						: Status === StatusEnum.Accepted
 						? ' bg-state-success-bright '
 						: ' bg-state-error-bright ')
 				}
 			>
 				<div className='flex flex-row justify-between'>
 					<div>
-						<p>Bắt đầu: {dayjs(StartTimestamp).format('H:mm D/MM/YYYY')}</p>
+						<p>CMND: {employee.NationalId}</p>
+						<p>
+							Bắt đầu:{' '}
+							{StartTimestamp ? (
+								dayjs(StartTimestamp).format('H:mm D/MM/YYYY')
+							) : (
+								<EmptyText />
+							)}
+						</p>
 						<p>
 							Kết thúc:{' '}
 							{EndTimestamp ? (
@@ -127,7 +187,7 @@ export const DailyAttendance = ({ attendance }: DailyAttendanceProps) => {
 								<EmptyText />
 							)}
 						</p>
-						<p>Trạng thái: {getStatusLabel(attendance.Status)}</p>
+						<p>Trạng thái: {Status ? getStatusLabel(Status) : <EmptyText />}</p>
 					</div>
 					<div className='flex flex-col gap-2'>
 						<CheckIcon
@@ -137,7 +197,9 @@ export const DailyAttendance = ({ attendance }: DailyAttendanceProps) => {
 									: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
 							}`}
 							size={32}
-							onClick={() => canStatusUpdate && handleStatus(Status.Accepted)}
+							onClick={() =>
+								canStatusUpdate && handleStatus(StatusEnum.Accepted)
+							}
 						/>
 						<CloseIcon
 							className={`rounded ${
@@ -146,14 +208,16 @@ export const DailyAttendance = ({ attendance }: DailyAttendanceProps) => {
 									: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
 							}`}
 							size={32}
-							onClick={() => canStatusUpdate && handleStatus(Status.Rejected)}
+							onClick={() =>
+								canStatusUpdate && handleStatus(StatusEnum.Rejected)
+							}
 						/>
 					</div>
 				</div>
 
 				<div className='mt-4 mb-2 flex flex-row justify-between'>
-					<img className='w-36' src={startImgQuery.data} />
-					<img className='w-36' src={endImgQuery.data} />
+					<img className='w-36' src={startImageQuery.data} />
+					<img className='w-36' src={endImageQuery.data} />
 				</div>
 			</Disclosure.Panel>
 		</Disclosure>

@@ -17,6 +17,9 @@ module.exports = {
 				'w-input-medium': 300,
 				'h-input': 40,
 
+				'w-image-input': 250,
+				'h-image-input': 375,
+
 				'w-list-section': 550,
 				// 'w-attachment-section':
 				'w-navbar': 240,

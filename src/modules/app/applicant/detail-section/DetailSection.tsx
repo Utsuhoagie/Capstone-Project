@@ -1,9 +1,28 @@
+import { useQuery } from 'react-query';
 import { List } from '../../../../components/organisms/List/List';
+import { API } from '../../../../config/axios/axios.config';
+import { createImageUrl } from '../../file/File.utils';
 import { useApplicantStore } from '../Applicant.store';
 import { APPLICANT_LIST_ITEM_CONFIGS } from './DetailSection.config';
+import PLACEHOLDER_PERSON_IMAGE from '../../../../assets/img/PLACEHOLDER_PERSON_IMAGE.png';
 
 export const DetailSection = () => {
 	const { selectedApplicant, displayConfigs } = useApplicantStore();
+	const hasImage = Boolean(
+		selectedApplicant && selectedApplicant.ImageFileName
+	);
+
+	const applicantImageQuery = useQuery(
+		['files', { applicant: selectedApplicant }],
+		async () => {
+			const res = await API.get(
+				`Files/Image/Applicants/${selectedApplicant?.ImageFileName}`,
+				{ responseType: 'blob' }
+			);
+
+			return createImageUrl(res.data);
+		}
+	);
 
 	return (
 		<div className='flex-1 rounded border border-semantic-section-border p-4 shadow-md'>
@@ -23,8 +42,13 @@ export const DetailSection = () => {
 						/>
 					</div>
 
-					<div className='flex-1 rounded-lg border border-neutral-gray-5 bg-neutral-white p-4'>
-						<div className='h-h-image-section w-full bg-red-300'></div>
+					<div className='flex flex-1 flex-row justify-center rounded-lg border border-neutral-gray-5 bg-neutral-white p-4'>
+						<img
+							className='h-h-image-section'
+							src={
+								hasImage ? applicantImageQuery.data : PLACEHOLDER_PERSON_IMAGE
+							}
+						/>
 					</div>
 				</div>
 			)}

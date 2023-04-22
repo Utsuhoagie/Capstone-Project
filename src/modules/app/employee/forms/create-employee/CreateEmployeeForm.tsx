@@ -12,13 +12,14 @@ import {
 import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { TimeInput } from '../../../../../components/atoms/Input/DateTimeInput/TimeInput';
+import { ImageInput } from '../../../../../components/atoms/Input/ImageInput/ImageInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
 import { API } from '../../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../auth/Auth.store';
 import { EMPLOYEE_MAPPERS } from '../../Employee.display';
-import { Employee } from '../../Employee.interface';
+import { Employee, Employee_API_Request } from '../../Employee.interface';
 import { useEmployeeStore } from '../../Employee.store';
 import {
 	CreateEmployeeFormIntermediateValues,
@@ -65,8 +66,6 @@ export const CreateEmployeeForm = () => {
 			PositionName: '',
 			EmployedDate: dayjs().toISOString(),
 			Salary: '',
-			StartHour: dayjs().hour(9).startOf('hour').toISOString(),
-			EndHour: dayjs().hour(18).startOf('hour').toISOString(),
 		},
 		resolver: zodResolver(createEmployeeFormSchema),
 	});
@@ -76,7 +75,7 @@ export const CreateEmployeeForm = () => {
 	) => {
 		console.log(rawData);
 
-		const formData: Employee = {
+		const formData: Employee_API_Request = {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
@@ -90,9 +89,8 @@ export const CreateEmployeeForm = () => {
 			PositionName: rawData.PositionName,
 			EmployedDate: dayjs(rawData.BirthDate).toDate(),
 			Salary: parseInt(rawData.Salary),
-			StartHour: dayjs(rawData.StartHour).hour(),
-			EndHour: dayjs(rawData.EndHour).hour(),
 			HasUser: false,
+			Image: rawData.Image,
 		};
 
 		// console.log({ formData });
@@ -121,113 +119,93 @@ export const CreateEmployeeForm = () => {
 					className='flex flex-col gap-2 p-2'
 					onSubmit={methods.handleSubmit(handleSubmit, handleError)}
 				>
-					<TextInput
-						required
-						name='NationalId'
-						placeholder='Nhập 9 hoặc 12 số.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+					<div className='flex flex-row justify-between'>
+						<div className='flex flex-col gap-2'>
+							<TextInput
+								required
+								name='NationalId'
+								placeholder='Nhập 9 hoặc 12 số.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='FullName'
+								placeholder='Nhập họ tên đầy đủ.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<SelectInput
+								required
+								name='Gender'
+								placeholder='Chọn 1.'
+								width='medium'
+								optionPairs={EMPLOYEE_MAPPERS['Gender']}
+								displayConfigs={displayConfigs}
+							/>
+							<DateInput
+								name='BirthDate'
+								placeholder='Chọn ngày sinh.'
+								width='medium'
+								maxDate={dayjs().subtract(18, 'year').toDate()}
+								openToDate={dayjs().year(2000).startOf('year').toDate()}
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='Address'
+								placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='Phone'
+								placeholder='Nhập số điện thoại.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								name='Email'
+								placeholder='Nhập địa chỉ email.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								type='number'
+								name='ExperienceYears'
+								placeholder='Nhập số năm kinh nghiệm.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<SelectInput
+								required
+								name='PositionName'
+								placeholder='Nhập vị trí ứng tuyển.'
+								width='medium'
+								optionPairs={positionOptions}
+								displayConfigs={displayConfigs}
+							/>
+							<DateInput
+								required
+								name='EmployedDate'
+								placeholder='Chọn ngày bắt đầu làm việc.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								type='number'
+								name='Salary'
+								width='medium'
+								placeholder='Nhập mức lương.'
+								displayConfigs={displayConfigs}
+							/>
+						</div>
 
-					<TextInput
-						required
-						name='FullName'
-						placeholder='Nhập họ tên đầy đủ.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<SelectInput
-						required
-						name='Gender'
-						placeholder='Chọn 1.'
-						width='medium'
-						optionPairs={EMPLOYEE_MAPPERS['Gender']}
-						displayConfigs={displayConfigs}
-					/>
-
-					<DateInput
-						name='BirthDate'
-						placeholder='Chọn ngày sinh.'
-						width='medium'
-						maxDate={dayjs().subtract(18, 'year').toDate()}
-						openToDate={dayjs().year(2000).startOf('year').toDate()}
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						name='Address'
-						placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						name='Phone'
-						placeholder='Nhập số điện thoại.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						name='Email'
-						placeholder='Nhập địa chỉ email.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						type='number'
-						name='ExperienceYears'
-						placeholder='Nhập số năm kinh nghiệm.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<SelectInput
-						required
-						name='PositionName'
-						placeholder='Nhập vị trí ứng tuyển.'
-						width='medium'
-						optionPairs={positionOptions}
-						displayConfigs={displayConfigs}
-					/>
-
-					<DateInput
-						required
-						name='EmployedDate'
-						placeholder='Chọn ngày bắt đầu làm việc.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						type='number'
-						name='Salary'
-						width='medium'
-						placeholder='Nhập mức lương.'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TimeInput
-						required
-						name='StartHour'
-						placeholder='Chọn thời gian bắt đầu ca.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TimeInput
-						required
-						name='EndHour'
-						placeholder='Chọn thời gian kết thúc ca.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+						<ImageInput name='Image' />
+					</div>
 
 					<Button type='submit' width='medium'>
 						Thêm

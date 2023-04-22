@@ -10,13 +10,19 @@ import {
 } from '../../../../../app/App.store';
 import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
+import { ImageInput } from '../../../../../components/atoms/Input/ImageInput/ImageInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
 import { API } from '../../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../auth/Auth.store';
+import { createImageUrl } from '../../../file/File.utils';
 import { APPLICANT_MAPPERS } from '../../Applicant.display';
-import { Applicant, mapToApplicant } from '../../Applicant.interface';
+import {
+	Applicant,
+	Applicant_API_Request,
+	mapToApplicant,
+} from '../../Applicant.interface';
 import { useApplicantStore } from '../../Applicant.store';
 import {
 	UpdateApplicantFormIntermediateValues,
@@ -76,7 +82,14 @@ export const UpdateApplicantForm = () => {
 
 			const selectedApplicant = mapToApplicant(res.data);
 
-			console.log('OK', selectedApplicant);
+			const imageRes = await API.get(
+				`Files/Image/Applicants/${selectedApplicant.ImageFileName}`,
+				{ responseType: 'blob' }
+			);
+			// const image = createImageUrl(imageRes);
+
+			console.log('OK', selectedApplicant, imageRes);
+
 			return {
 				NationalId: selectedApplicant.NationalId,
 				FullName: selectedApplicant.FullName,
@@ -91,6 +104,7 @@ export const UpdateApplicantForm = () => {
 				AppliedPositionName: selectedApplicant.AppliedPositionName,
 				AppliedDate: dayjs(selectedApplicant.AppliedDate).toISOString(),
 				AskingSalary: `${selectedApplicant.AskingSalary}`,
+				Image: imageRes.data ? imageRes.data : undefined,
 			};
 		},
 		resolver: zodResolver(updateApplicantFormSchema),
@@ -101,7 +115,7 @@ export const UpdateApplicantForm = () => {
 	) => {
 		console.log(rawData);
 
-		const formData: Applicant = {
+		const formData: Applicant_API_Request = {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
@@ -115,6 +129,7 @@ export const UpdateApplicantForm = () => {
 			AppliedPositionName: rawData.AppliedPositionName,
 			AppliedDate: dayjs(rawData.AppliedDate).toDate(),
 			AskingSalary: parseInt(rawData.AskingSalary),
+			Image: rawData.Image,
 		};
 
 		// console.log({ formData });
@@ -143,98 +158,94 @@ export const UpdateApplicantForm = () => {
 					className='flex flex-col gap-2 p-2'
 					onSubmit={methods.handleSubmit(handleSubmit, handleError)}
 				>
-					<TextInput
-						required
-						name='NationalId'
-						placeholder='Nhập 9 hoặc 12 số.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+					<div className='flex flex-row justify-between'>
+						<div className='flex flex-col gap-2'>
+							<TextInput
+								required
+								name='NationalId'
+								placeholder='Nhập 9 hoặc 12 số.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='FullName'
+								placeholder='Nhập họ tên đầy đủ.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<SelectInput
+								required
+								name='Gender'
+								width='medium'
+								placeholder='Chọn 1.'
+								optionPairs={APPLICANT_MAPPERS['Gender']}
+								displayConfigs={displayConfigs}
+							/>
+							<DateInput
+								isClearable
+								name='BirthDate'
+								placeholder='Chọn ngày sinh.'
+								width='medium'
+								maxDate={dayjs().subtract(18, 'year').toDate()}
+								openToDate={dayjs().year(2000).startOf('year').toDate()}
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='Address'
+								placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='Phone'
+								placeholder='Nhập số điện thoại.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								name='Email'
+								placeholder='Nhập địa chỉ email.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								type='number'
+								name='ExperienceYears'
+								placeholder='Nhập số năm kinh nghiệm.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<SelectInput
+								required
+								name='AppliedPositionName'
+								placeholder='Nhập vị trí ứng tuyển.'
+								width='medium'
+								optionPairs={positionOptions}
+								displayConfigs={displayConfigs}
+							/>
+							<DateInput
+								required
+								name='AppliedDate'
+								placeholder='Chọn ngày nộp hồ sơ ứng tuyển.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								type='number'
+								name='AskingSalary'
+								width='medium'
+								placeholder='Nhập mức lương đề nghị.'
+								displayConfigs={displayConfigs}
+							/>
+						</div>
 
-					<TextInput
-						required
-						name='FullName'
-						placeholder='Nhập họ tên đầy đủ.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<SelectInput
-						required
-						name='Gender'
-						width='medium'
-						placeholder='Chọn 1.'
-						optionPairs={APPLICANT_MAPPERS['Gender']}
-						displayConfigs={displayConfigs}
-					/>
-
-					<DateInput
-						isClearable
-						name='BirthDate'
-						placeholder='Chọn ngày sinh.'
-						width='medium'
-						maxDate={dayjs().subtract(18, 'year').toDate()}
-						openToDate={dayjs().year(2000).startOf('year').toDate()}
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						name='Address'
-						placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						name='Phone'
-						placeholder='Nhập số điện thoại.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						name='Email'
-						placeholder='Nhập địa chỉ email.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						type='number'
-						name='ExperienceYears'
-						placeholder='Nhập số năm kinh nghiệm.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<SelectInput
-						required
-						name='AppliedPositionName'
-						placeholder='Nhập vị trí ứng tuyển.'
-						width='medium'
-						optionPairs={positionOptions}
-						displayConfigs={displayConfigs}
-					/>
-
-					<DateInput
-						required
-						name='AppliedDate'
-						placeholder='Chọn ngày nộp hồ sơ ứng tuyển.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						type='number'
-						name='AskingSalary'
-						width='medium'
-						placeholder='Nhập mức lương đề nghị.'
-						displayConfigs={displayConfigs}
-					/>
+						<ImageInput name='Image' />
+					</div>
 
 					<Button type='submit' width='medium'>
 						Cập nhật

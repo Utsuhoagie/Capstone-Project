@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { z } from 'zod';
 import {
 	isIntValid,
+	preprocessFileListToFirstFile,
 	preprocessStringToOptionalDate,
 	preprocessStringToOptionalString,
 } from '../../../../../app/App.form';
@@ -18,6 +19,7 @@ export interface CreateApplicantFormIntermediateValues {
 	AppliedPositionName: string;
 	AppliedDate: string;
 	AskingSalary: string;
+	Image?: File;
 }
 
 export const createApplicantFormSchema = z.object({
@@ -103,5 +105,15 @@ export const createApplicantFormSchema = z.object({
 			message:
 				'Mức lương đề nghị phải là số nguyên lớn hơn 0, nhỏ hơn 999 triệu.',
 		}
+	),
+
+	Image: z.preprocess(
+		preprocessFileListToFirstFile,
+		z.custom((val) => {
+			if (val instanceof File || val === undefined) {
+				return true;
+			}
+			return false;
+		})
 	),
 });

@@ -12,6 +12,22 @@ export interface Applicant {
 	AppliedPositionName: string;
 	AppliedDate: Date;
 	AskingSalary: number;
+	ImageFileName?: string;
+}
+
+export interface Applicant_API_Request {
+	NationalId: string;
+	FullName: string;
+	Gender: 'male' | 'female' | 'other';
+	BirthDate?: Date;
+	Address: string;
+	Phone: string;
+	Email?: string;
+	ExperienceYears: number;
+	AppliedPositionName: string;
+	AppliedDate: Date;
+	AskingSalary: number;
+	Image?: File;
 }
 
 export interface Applicant_API_Response {
@@ -26,6 +42,7 @@ export interface Applicant_API_Response {
 	AppliedPositionName: string;
 	AppliedDate: string;
 	AskingSalary: number;
+	ImageFileName: string | null;
 }
 
 export function mapToApplicant(res: Applicant_API_Response): Applicant {
@@ -34,5 +51,6 @@ export function mapToApplicant(res: Applicant_API_Response): Applicant {
 		BirthDate: res.BirthDate ? dayjs(res.BirthDate).toDate() : undefined,
 		Email: res.Email ?? undefined,
 		AppliedDate: dayjs(res.AppliedDate).toDate(),
+		ImageFileName: res.ImageFileName ? res.ImageFileName : undefined,
 	};
 }

@@ -10,38 +10,44 @@ import {
 } from '../Attendance.interface';
 import { DailyAttendance } from './DailyAttendance';
 import { useSearchParams } from 'react-router-dom';
+import {
+	Employee_API_Response,
+	mapToEmployee,
+} from '../../employee/Employee.interface';
 
 export const DailyAttendanceList = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const queryParams = QueryString.parse(searchParams.toString());
-	const { isLoading, error, data } = useQuery(
-		['attendances', { page: 1, pageSize: 30, ...queryParams }],
+	const getEmployeesNotOnLeaveQuery = useQuery(
+		['EmployeesNotOnLeave', { page: 1, pageSize: 30, date: queryParams.date }],
 		async () => {
 			const allQueryParams = QueryString.stringify({
 				page: 1,
 				pageSize: 30,
-				...queryParams,
+				date: queryParams.date,
 			});
-			const res = await API.get(`Attendances/Daily?${allQueryParams}`);
+			const res = await API.get(
+				`Attendances/EmployeesNotOnLeave?${allQueryParams}`
+			);
 
-			if (res.status >= 299) {
+			if (res.status > 299) {
 				window.alert(res.status);
 				return;
 			}
 
-			const data: PagedResult<Attendance_API_Response> = res.data;
+			const data: PagedResult<Employee_API_Response> = res.data;
 
-			const attendances = data.Items.map((Item) => mapToAttendance(Item));
+			const employeesNotOnLeave = data.Items.map((Item) => mapToEmployee(Item));
 
-			return attendances;
+			return employeesNotOnLeave;
 		}
 	);
 
-	if (isLoading) {
+	if (getEmployeesNotOnLeaveQuery.isLoading) {
 		return <p>Loading...</p>;
 	}
 
-	if (error) {
+	if (getEmployeesNotOnLeaveQuery.error) {
 		return <p>Error!</p>;
 	}
 
@@ -49,12 +55,9 @@ export const DailyAttendanceList = () => {
 		<div>
 			Các nhân viên có lịch làm hôm nay
 			<div className='flex flex-col items-start justify-start gap-2'>
-				{data?.map((attendance) => {
+				{getEmployeesNotOnLeaveQuery.data?.map((employee) => {
 					return (
-						<DailyAttendance
-							key={attendance.EmployeeFullName}
-							attendance={attendance}
-						/>
+						<DailyAttendance key={employee.NationalId} employee={employee} />
 					);
 				})}
 			</div>

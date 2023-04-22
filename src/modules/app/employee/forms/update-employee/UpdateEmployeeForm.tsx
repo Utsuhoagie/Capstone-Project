@@ -17,7 +17,11 @@ import { TextInput } from '../../../../../components/atoms/Input/TextInput';
 import { API } from '../../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../auth/Auth.store';
 import { EMPLOYEE_MAPPERS } from '../../Employee.display';
-import { Employee, mapToEmployee } from '../../Employee.interface';
+import {
+	Employee,
+	Employee_API_Request,
+	mapToEmployee,
+} from '../../Employee.interface';
 import { useEmployeeStore } from '../../Employee.store';
 import {
 	UpdateEmployeeFormIntermediateValues,
@@ -71,12 +75,16 @@ export const UpdateEmployeeForm = () => {
 					PositionName: '',
 					EmployedDate: dayjs().toISOString(),
 					Salary: '',
-					StartHour: dayjs().hour(9).startOf('hour').toISOString(),
-					EndHour: dayjs().hour(18).startOf('hour').toISOString(),
 				};
 			}
 
 			const selectedEmployee = mapToEmployee(res.data);
+			const imageRes = selectedEmployee.ImageFileName
+				? await API.get(
+						`Files/Image/Employees/${selectedEmployee.ImageFileName}`,
+						{ responseType: 'blob' }
+				  )
+				: undefined;
 
 			console.log('OK', selectedEmployee);
 			return {
@@ -93,14 +101,7 @@ export const UpdateEmployeeForm = () => {
 				PositionName: selectedEmployee.PositionName,
 				EmployedDate: dayjs(selectedEmployee.EmployedDate).toISOString(),
 				Salary: `${selectedEmployee.Salary}`,
-				StartHour: dayjs()
-					.hour(selectedEmployee.StartHour)
-					.startOf('hour')
-					.toISOString(),
-				EndHour: dayjs()
-					.hour(selectedEmployee.EndHour)
-					.startOf('hour')
-					.toISOString(),
+				Image: imageRes && imageRes.data ? imageRes.data : undefined,
 			};
 		},
 		resolver: zodResolver(updateEmployeeFormSchema),
@@ -113,7 +114,7 @@ export const UpdateEmployeeForm = () => {
 	) => {
 		console.log(rawData);
 
-		const formData: Employee = {
+		const formData: Employee_API_Request = {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
@@ -127,9 +128,8 @@ export const UpdateEmployeeForm = () => {
 			PositionName: rawData.PositionName,
 			EmployedDate: dayjs(rawData.EmployedDate).toDate(),
 			Salary: parseInt(rawData.Salary),
-			StartHour: dayjs(rawData.StartHour).hour(),
-			EndHour: dayjs(rawData.EndHour).hour(),
 			HasUser: false,
+			Image: rawData.Image,
 		};
 
 		// console.log({ formData });
@@ -247,20 +247,6 @@ export const UpdateEmployeeForm = () => {
 						type='number'
 						width='medium'
 						placeholder='Nhập mức lương.'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TimeInput
-						required
-						name='StartHour'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TimeInput
-						required
-						name='EndHour'
-						width='medium'
 						displayConfigs={displayConfigs}
 					/>
 
