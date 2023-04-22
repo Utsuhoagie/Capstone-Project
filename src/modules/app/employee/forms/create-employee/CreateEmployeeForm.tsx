@@ -166,6 +166,7 @@ export const CreateEmployeeForm = () => {
 								displayConfigs={displayConfigs}
 							/>
 							<TextInput
+								required
 								name='Email'
 								placeholder='Nhập địa chỉ email.'
 								width='medium'

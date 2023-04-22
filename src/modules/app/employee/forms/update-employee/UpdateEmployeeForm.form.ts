@@ -14,7 +14,7 @@ export interface UpdateEmployeeFormIntermediateValues {
 	BirthDate?: string;
 	Address: string;
 	Phone: string;
-	Email?: string;
+	Email: string;
 	ExperienceYears: string;
 	PositionName: string;
 	EmployedDate: string;
@@ -56,10 +56,7 @@ export const updateEmployeeFormSchema = z.object({
 		message: 'Số điện thoại phải có 10 hoặc 11 số.',
 	}),
 
-	Email: z.preprocess(
-		preprocessStringToOptionalString,
-		z.string().email({ message: 'Email không hợp lệ.' }).optional()
-	),
+	Email: z.string().email({ message: 'Email không hợp lệ.' }),
 
 	ExperienceYears: z.custom(
 		(val) => {

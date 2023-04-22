@@ -209,6 +209,7 @@ export const UpdateEmployeeForm = () => {
 					/>
 
 					<TextInput
+						required
 						name='Email'
 						placeholder='Nhập địa chỉ email.'
 						width='medium'

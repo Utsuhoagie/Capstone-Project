@@ -7,7 +7,7 @@ export interface Employee {
 	BirthDate?: Date;
 	Address: string;
 	Phone: string;
-	Email?: string;
+	Email: string;
 	ExperienceYears: number;
 	PositionName: string;
 	EmployedDate: Date;
@@ -23,7 +23,7 @@ export interface Employee_API_Request {
 	BirthDate?: Date;
 	Address: string;
 	Phone: string;
-	Email?: string;
+	Email: string;
 	ExperienceYears: number;
 	PositionName: string;
 	EmployedDate: Date;
@@ -39,7 +39,7 @@ export interface Employee_API_Response {
 	BirthDate: string | null;
 	Address: string;
 	Phone: string;
-	Email: string | null;
+	Email: string;
 	ExperienceYears: number;
 	PositionName: string;
 	EmployedDate: string;
@@ -52,7 +52,6 @@ export function mapToEmployee(res: Employee_API_Response): Employee {
 	return {
 		...res,
 		BirthDate: res.BirthDate ? dayjs(res.BirthDate).toDate() : undefined,
-		Email: res.Email ?? undefined,
 		EmployedDate: dayjs(res.EmployedDate).toDate(),
 		ImageFileName: res.ImageFileName ? res.ImageFileName : undefined,
 	};

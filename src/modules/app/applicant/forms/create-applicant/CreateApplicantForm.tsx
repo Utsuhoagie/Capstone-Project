@@ -179,6 +179,7 @@ export const CreateApplicantForm = () => {
 								displayConfigs={displayConfigs}
 							/>
 							<TextInput
+								required
 								name='Email'
 								placeholder='Nhập địa chỉ email.'
 								width='medium'

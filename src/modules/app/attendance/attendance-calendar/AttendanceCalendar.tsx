@@ -139,7 +139,11 @@ export const AttendanceCalendar = () => {
 				{range(0, daysInMonth).map((_, index) => {
 					const dailyStatus = attendanceDailyStatusesOfMonthQuery.data[index];
 					const day = currentDate.startOf('month').add(index, 'day');
-					const isWeekend = day.day() === 0 || day.day() === 6;
+
+					// NOTE: fix weekends here
+					// const isWeekend = day.day() === 0 || day.day() === 6;
+					const isWeekend = false;
+
 					const hasRightBorder = day.day() === 6;
 					const hasBottomBorder = day.isAfter(
 						currentDate.endOf('month').subtract(7 - lastSaturdayOffset, 'day'),
@@ -149,14 +153,18 @@ export const AttendanceCalendar = () => {
 					return (
 						<div
 							className={` h-10 w-10 border-t border-l border-black text-center ${
-								dailyStatus === DailyStatus.Finished
-									? ' bg-state-success-bright hover:bg-state-success-normal '
-									: dailyStatus === DailyStatus.Pending
-									? ' bg-state-error-bright hover:bg-state-error-normal '
-									: ' hover:bg-neutral-gray-4 '
-							} ${isWeekend ? ' bg-neutral-gray-4 ' : ' cursor-pointer '} ${
-								hasRightBorder && 'border-r'
-							} ${hasBottomBorder && 'border-b'}`}
+								isWeekend
+									? ' bg-neutral-gray-4 '
+									: ` cursor-pointer ${
+											dailyStatus === DailyStatus.Finished
+												? ' bg-state-success-bright hover:bg-state-success-normal '
+												: dailyStatus === DailyStatus.Pending
+												? ' bg-state-error-bright hover:bg-state-error-normal '
+												: ' hover:bg-neutral-gray-4 '
+									  }`
+							} ${hasRightBorder && 'border-r'} ${
+								hasBottomBorder && 'border-b'
+							}`}
 							onClick={isWeekend ? undefined : () => handleChooseDay(day)}
 						>
 							{day.date()}

@@ -187,7 +187,10 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 								<EmptyText />
 							)}
 						</p>
-						<p>Trạng thái: {Status ? getStatusLabel(Status) : <EmptyText />}</p>
+						<p>
+							Trạng thái:{' '}
+							{Status !== undefined ? getStatusLabel(Status) : <EmptyText />}
+						</p>
 					</div>
 					<div className='flex flex-col gap-2'>
 						<CheckIcon

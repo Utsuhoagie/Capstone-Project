@@ -14,7 +14,7 @@ export interface UpdateApplicantFormIntermediateValues {
 	BirthDate?: string;
 	Address: string;
 	Phone: string;
-	Email?: string;
+	Email: string;
 	ExperienceYears: string;
 	AppliedPositionName: string;
 	AppliedDate: string;
@@ -56,10 +56,7 @@ export const updateApplicantFormSchema = z.object({
 		.string()
 		.regex(/^\d{10,11}$/, { message: 'Số điện thoại phải có 10 hoặc 11 số.' }),
 
-	Email: z.preprocess(
-		preprocessStringToOptionalString,
-		z.string().email({ message: 'Email không hợp lệ.' }).optional()
-	),
+	Email: z.string().email({ message: 'Email không hợp lệ.' }),
 
 	ExperienceYears: z.custom(
 		(val) => {

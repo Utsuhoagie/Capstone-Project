@@ -7,7 +7,7 @@ export interface Applicant {
 	BirthDate?: Date;
 	Address: string;
 	Phone: string;
-	Email?: string;
+	Email: string;
 	ExperienceYears: number;
 	AppliedPositionName: string;
 	AppliedDate: Date;
@@ -22,7 +22,7 @@ export interface Applicant_API_Request {
 	BirthDate?: Date;
 	Address: string;
 	Phone: string;
-	Email?: string;
+	Email: string;
 	ExperienceYears: number;
 	AppliedPositionName: string;
 	AppliedDate: Date;
@@ -37,7 +37,7 @@ export interface Applicant_API_Response {
 	BirthDate: string | null;
 	Address: string;
 	Phone: string;
-	Email: string | null;
+	Email: string;
 	ExperienceYears: number;
 	AppliedPositionName: string;
 	AppliedDate: string;
@@ -49,7 +49,6 @@ export function mapToApplicant(res: Applicant_API_Response): Applicant {
 	return {
 		...res,
 		BirthDate: res.BirthDate ? dayjs(res.BirthDate).toDate() : undefined,
-		Email: res.Email ?? undefined,
 		AppliedDate: dayjs(res.AppliedDate).toDate(),
 		ImageFileName: res.ImageFileName ? res.ImageFileName : undefined,
 	};

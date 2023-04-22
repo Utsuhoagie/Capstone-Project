@@ -215,6 +215,7 @@ export const EmployApplicantForm = () => {
 								/>
 								<TextInput
 									disabled
+									required
 									name='Email'
 									placeholder='Nhập địa chỉ email.'
 									width='medium'
