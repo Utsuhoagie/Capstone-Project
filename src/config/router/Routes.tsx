@@ -25,6 +25,7 @@ import { JWT_Claims } from '../../modules/auth/Auth.interface';
 import dayjs from 'dayjs';
 import { AttendanceModule } from '../../modules/app/attendance/AttendanceModule';
 import { DailyAttendanceList } from '../../modules/app/attendance/daily-attendance-list/DailyAttendanceList';
+import { FeedbackModule } from '../../modules/app/feedback/FeedbackModule';
 
 export const Routes = () => {
 	const { accessToken } = useAuthStore();
@@ -78,6 +79,8 @@ export const Routes = () => {
 				<Route path='positions' element={<PositionModule />} />
 				<Route path='positions/create' element={<CreatePositionForm />} />
 				<Route path='positions/update/:Name' element={<UpdatePositionForm />} />
+
+				<Route path='feedbacks' element={<FeedbackModule />} />
 
 				<Route path='ex' element={<Example />} />
 				<Route path='ex-form' element={<ExampleForm />} />

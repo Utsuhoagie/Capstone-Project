@@ -25,6 +25,8 @@ export const AppNavbar = () => {
 				<NavItem onClick={() => navigate('employees')}>Nhân viên</NavItem>
 
 				<NavItem onClick={() => navigate('positions')}>Vị trí</NavItem>
+
+				<NavItem onClick={() => navigate('feedbacks')}>Góp ý</NavItem>
 			</ul>
 		</nav>
 	);
