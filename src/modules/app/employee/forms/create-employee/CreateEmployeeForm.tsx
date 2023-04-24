@@ -5,6 +5,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
 import { IS_DEBUG_MODE } from '../../../../../app/App';
+import { convertFromDomainObjToFormData } from '../../../../../app/App.form';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -36,8 +37,10 @@ export const CreateEmployeeForm = () => {
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
 		'employees/create',
-		async (formData: Employee) => {
-			const res = await API.post('Employees/Create', formData);
+		async (formData: FormData) => {
+			const res = await API.post('Employees/Create', formData, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+			});
 
 			if (res.status <= 299) {
 				showToast({ state: 'success' });
@@ -48,6 +51,7 @@ export const CreateEmployeeForm = () => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries('employees');
+				queryClient.invalidateQueries('files');
 			},
 		}
 	);
@@ -66,6 +70,7 @@ export const CreateEmployeeForm = () => {
 			PositionName: '',
 			EmployedDate: dayjs().toISOString(),
 			Salary: '',
+			Image: undefined,
 		},
 		resolver: zodResolver(createEmployeeFormSchema),
 	});
@@ -75,7 +80,7 @@ export const CreateEmployeeForm = () => {
 	) => {
 		console.log(rawData);
 
-		const formData: Employee_API_Request = {
+		const req: Employee_API_Request = {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
@@ -93,6 +98,7 @@ export const CreateEmployeeForm = () => {
 			Image: rawData.Image,
 		};
 
+		const formData = convertFromDomainObjToFormData(req);
 		// console.log({ formData });
 		openConfirmDialog({
 			isClosable: true,

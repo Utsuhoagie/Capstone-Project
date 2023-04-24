@@ -21,6 +21,9 @@ export const DetailSection = () => {
 			);
 
 			return createImageUrl(res.data);
+		},
+		{
+			enabled: hasImage,
 		}
 	);
 

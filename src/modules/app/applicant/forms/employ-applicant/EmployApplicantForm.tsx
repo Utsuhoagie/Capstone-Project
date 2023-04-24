@@ -4,6 +4,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IS_DEBUG_MODE } from '../../../../../app/App';
+import { convertFromDomainObjToFormData } from '../../../../../app/App.form';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -44,8 +45,10 @@ export const EmployApplicantForm = () => {
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
 		'applicants/employ',
-		async (formData: Employee) => {
-			const res = await API.post(`Applicants/Employ/${NationalId}`, formData);
+		async (formData: FormData) => {
+			const res = await API.post(`Applicants/Employ/${NationalId}`, formData, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+			});
 
 			if (res.status <= 299) {
 				showToast({ state: 'success' });
@@ -56,6 +59,7 @@ export const EmployApplicantForm = () => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries('applicants');
+				queryClient.invalidateQueries('employees');
 			},
 		}
 	);
@@ -104,7 +108,9 @@ export const EmployApplicantForm = () => {
 				PositionName: selectedApplicant.AppliedPositionName,
 				EmployedDate: dayjs().toISOString(),
 				Salary: `${selectedApplicant.AskingSalary}`,
-				Image: imageRes.data ? imageRes.data : undefined,
+				Image: imageRes.data
+					? new File([imageRes.data], 'Image.jpeg')
+					: undefined,
 			};
 		},
 		resolver: zodResolver(employApplicantFormSchema),
@@ -117,7 +123,7 @@ export const EmployApplicantForm = () => {
 	) => {
 		console.table(rawData);
 
-		const formData: Employee_API_Request = {
+		const req: Employee_API_Request = {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
@@ -135,6 +141,7 @@ export const EmployApplicantForm = () => {
 			Image: rawData.Image,
 		};
 
+		const formData = convertFromDomainObjToFormData(req);
 		// console.log({ formData });
 		openConfirmDialog({
 			isClosable: true,

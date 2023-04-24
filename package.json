@@ -9,6 +9,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@files-ui/react": "^1.0.8",
 		"@headlessui/react": "^1.7.7",
 		"@headlessui/tailwindcss": "^0.1.2",
 		"@hookform/resolvers": "^2.9.10",

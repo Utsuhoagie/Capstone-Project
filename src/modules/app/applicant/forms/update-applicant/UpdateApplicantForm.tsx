@@ -4,6 +4,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { IS_DEBUG_MODE } from '../../../../../app/App';
+import { convertFromDomainObjToFormData } from '../../../../../app/App.form';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -38,8 +39,10 @@ export const UpdateApplicantForm = () => {
 	const positionOptions = useSelectOptions({ module: 'Positions' });
 	const mutation = useMutation(
 		'applicants/update',
-		async (formData: Applicant) => {
-			const res = await API.put(`Applicants/Update/${NationalId}`, formData);
+		async (formData: FormData) => {
+			const res = await API.put(`Applicants/Update/${NationalId}`, formData, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+			});
 
 			if (res.status <= 299) {
 				showToast({ state: 'success' });
@@ -50,6 +53,7 @@ export const UpdateApplicantForm = () => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries('applicants');
+				queryClient.invalidateQueries('files');
 			},
 		}
 	);
@@ -77,6 +81,7 @@ export const UpdateApplicantForm = () => {
 					AppliedPositionName: '',
 					AppliedDate: dayjs().toISOString(),
 					AskingSalary: '',
+					Image: undefined,
 				};
 			}
 
@@ -104,7 +109,9 @@ export const UpdateApplicantForm = () => {
 				AppliedPositionName: selectedApplicant.AppliedPositionName,
 				AppliedDate: dayjs(selectedApplicant.AppliedDate).toISOString(),
 				AskingSalary: `${selectedApplicant.AskingSalary}`,
-				Image: imageRes.data ? imageRes.data : undefined,
+				Image: imageRes.data
+					? new File([imageRes.data], 'Image.jpeg')
+					: undefined,
 			};
 		},
 		resolver: zodResolver(updateApplicantFormSchema),
@@ -115,7 +122,7 @@ export const UpdateApplicantForm = () => {
 	) => {
 		console.log(rawData);
 
-		const formData: Applicant_API_Request = {
+		const req: Applicant_API_Request = {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
@@ -131,6 +138,8 @@ export const UpdateApplicantForm = () => {
 			AskingSalary: parseInt(rawData.AskingSalary),
 			Image: rawData.Image,
 		};
+
+		const formData = convertFromDomainObjToFormData(req);
 
 		// console.log({ formData });
 		openConfirmDialog({

@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import { z } from 'zod';
 import {
 	isIntValid,
-	preprocessFileListToFirstFile,
 	preprocessStringToOptionalDate,
 	preprocessStringToOptionalString,
 } from '../../../../../app/App.form';
@@ -97,13 +96,10 @@ export const updateApplicantFormSchema = z.object({
 		}
 	),
 
-	Image: z.preprocess(
-		preprocessFileListToFirstFile,
-		z.custom((val) => {
-			if (val instanceof File || val === undefined) {
-				return true;
-			}
-			return false;
-		})
-	),
+	Image: z.custom((val) => {
+		if (val instanceof File || val === undefined) {
+			return true;
+		}
+		return false;
+	}),
 });

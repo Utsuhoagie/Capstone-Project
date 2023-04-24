@@ -4,6 +4,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { IS_DEBUG_MODE } from '../../../../../app/App';
+import { convertFromDomainObjToFormData } from '../../../../../app/App.form';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -40,8 +41,10 @@ export const UpdateEmployeeForm = () => {
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
 		'employees/update',
-		async (formData: Employee) => {
-			const res = await API.put(`/Employees/Update/${NationalId}`, formData);
+		async (formData: FormData) => {
+			const res = await API.put(`/Employees/Update/${NationalId}`, formData, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+			});
 
 			if (res.status <= 299) {
 				showToast({ state: 'success' });
@@ -52,6 +55,7 @@ export const UpdateEmployeeForm = () => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries('employees');
+				queryClient.invalidateQueries('files');
 			},
 		}
 	);
@@ -114,7 +118,7 @@ export const UpdateEmployeeForm = () => {
 	) => {
 		console.log(rawData);
 
-		const formData: Employee_API_Request = {
+		const req: Employee_API_Request = {
 			NationalId: rawData.NationalId,
 			FullName: rawData.FullName,
 			Gender: rawData.Gender,
@@ -132,6 +136,7 @@ export const UpdateEmployeeForm = () => {
 			Image: rawData.Image,
 		};
 
+		const formData = convertFromDomainObjToFormData(req);
 		// console.log({ formData });
 		openConfirmDialog({
 			isClosable: true,

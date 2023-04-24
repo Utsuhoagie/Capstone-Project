@@ -1,5 +1,7 @@
+import { ExtFile, FileInputButton } from '@files-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import dayjs from 'dayjs';
+import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +20,7 @@ import { TextInput } from '../../../../../components/atoms/Input/TextInput';
 import { PagedResult } from '../../../../../components/organisms/Table/Pagination/Pagination.interface';
 import { API } from '../../../../../config/axios/axios.config';
 import { useAuthStore } from '../../../../auth/Auth.store';
+import { createImageUrl } from '../../../file/File.utils';
 import {
 	Position,
 	Position_API_Response,
@@ -30,6 +33,7 @@ import {
 	CreateApplicantFormIntermediateValues,
 	createApplicantFormSchema,
 } from './CreateApplicantForm.form';
+import PLACEHOLDER_PERSON_IMAGE from '../../../../../assets/img/PLACEHOLDER_PERSON_IMAGE.png';
 
 export const CreateApplicantForm = () => {
 	const navigate = useNavigate();
@@ -76,6 +80,7 @@ export const CreateApplicantForm = () => {
 			AppliedPositionName: '',
 			AppliedDate: dayjs().toISOString(),
 			AskingSalary: '',
+			Image: undefined,
 		},
 		resolver: zodResolver(createApplicantFormSchema),
 	});
