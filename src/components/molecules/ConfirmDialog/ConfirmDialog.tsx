@@ -55,7 +55,7 @@ export const ConfirmDialog = () => {
 								Xác nhận
 							</Button>
 							<Button
-								secondary
+								variant='secondary'
 								width='medium'
 								onClick={() => closeConfirmDialog()}
 							>

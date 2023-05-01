@@ -34,6 +34,7 @@ import {
 	createApplicantFormSchema,
 } from './CreateApplicantForm.form';
 import PLACEHOLDER_PERSON_IMAGE from '../../../../../assets/img/PLACEHOLDER_PERSON_IMAGE.png';
+import { FileInput } from '../../../../../components/atoms/Input/FileInput/FileInput';
 
 export const CreateApplicantForm = () => {
 	const navigate = useNavigate();
@@ -81,6 +82,7 @@ export const CreateApplicantForm = () => {
 			AppliedDate: dayjs().toISOString(),
 			AskingSalary: '',
 			Image: undefined,
+			Resume: undefined,
 		},
 		resolver: zodResolver(createApplicantFormSchema),
 	});
@@ -105,6 +107,7 @@ export const CreateApplicantForm = () => {
 			AppliedDate: dayjs(rawData.AppliedDate).toDate(),
 			AskingSalary: parseInt(rawData.AskingSalary),
 			Image: rawData.Image,
+			Resume: rawData.Resume,
 		};
 
 		console.table(req);
@@ -224,6 +227,7 @@ export const CreateApplicantForm = () => {
 						</div>
 
 						<ImageInput name='Image' />
+						<FileInput name='Resume' />
 					</div>
 
 					<Button type='submit' width='medium'>
@@ -240,7 +244,7 @@ export const CreateApplicantForm = () => {
 					)}
 					<Button
 						type='button'
-						secondary
+						variant='secondary'
 						width='medium'
 						onClick={() => navigate('/app/applicants')}
 					>

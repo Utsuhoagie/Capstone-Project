@@ -109,7 +109,7 @@ export const EmployApplicantForm = () => {
 				EmployedDate: dayjs().toISOString(),
 				Salary: `${selectedApplicant.AskingSalary}`,
 				Image: imageRes.data
-					? new File([imageRes.data], 'Image.jpeg')
+					? new File([imageRes.data], `${selectedApplicant.NationalId}.jpeg`)
 					: undefined,
 			};
 		},
@@ -278,7 +278,7 @@ export const EmployApplicantForm = () => {
 						)}
 						<Button
 							type='button'
-							secondary
+							variant='secondary'
 							width='medium'
 							onClick={() => navigate('/app/applicants')}
 						>

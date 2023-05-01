@@ -142,7 +142,7 @@ export const ExampleForm = () => {
 				>
 					Submit
 				</Button>
-				<Button width='full' secondary type='button'>
+				<Button width='full' variant='secondary' type='button'>
 					Secondary
 				</Button>
 			</form>

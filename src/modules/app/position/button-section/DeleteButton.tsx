@@ -55,7 +55,7 @@ export const DeleteButton = () => {
 	}
 
 	return (
-		<Button secondary width='big' onClick={handleDelete}>
+		<Button variant='secondary' width='big' onClick={handleDelete}>
 			Xóa vị trí
 		</Button>
 	);

@@ -3,21 +3,21 @@ import { buttonStyleMapping } from './ButtonStyleMapping';
 interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
 	children: React.ReactNode;
 	width: 'full' | 'small' | 'medium' | 'big';
-	secondary?: boolean;
+	variant?: 'primary' | 'secondary' | 'success' | 'error';
 	ref?: React.RefObject<HTMLButtonElement>;
 }
 
 export const Button = ({
 	children,
 	width,
-	secondary,
+	variant,
 	className,
 	...props
 }: ButtonProps) => {
 	const classes =
 		className +
 		buttonStyleMapping.all +
-		(secondary ? buttonStyleMapping.secondary : buttonStyleMapping.primary) +
+		buttonStyleMapping[variant ?? 'primary'] +
 		buttonStyleMapping[width].width;
 
 	return (

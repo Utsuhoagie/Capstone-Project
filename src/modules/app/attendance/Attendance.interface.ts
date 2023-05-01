@@ -5,7 +5,7 @@ export type AttendanceType = 'Start' | 'End';
 export interface Attendance {
 	EmployeeNationalId: string;
 	EmployeeFullName: string;
-	Status: StatusEnum;
+	AttendanceStatus: AttendanceStatusEnum;
 	StartTimestamp: Date;
 	StartImageFileName: string;
 	EndTimestamp?: Date;
@@ -15,7 +15,7 @@ export interface Attendance {
 export interface Attendance_API_Response {
 	EmployeeNationalId: string;
 	EmployeeFullName: string;
-	Status: StatusEnum;
+	AttendanceStatus: AttendanceStatusEnum;
 	StartTimestamp: string;
 	StartImageFileName: string;
 	EndTimestamp: string | null;
@@ -33,7 +33,7 @@ export function mapToAttendance(res: Attendance_API_Response): Attendance {
 	};
 }
 
-export enum StatusEnum {
+export enum AttendanceStatusEnum {
 	Pending = 0,
 	Accepted = 1,
 	Rejected = -1,
@@ -47,12 +47,12 @@ export enum DailyStatus {
 
 export type DailyStatus_API_Response = DailyStatus[];
 
-export function getStatusLabel(status: StatusEnum): string {
-	if (status === StatusEnum.Pending) {
+export function getStatusLabel(attendanceStatus: AttendanceStatusEnum): string {
+	if (attendanceStatus === AttendanceStatusEnum.Pending) {
 		return 'Chưa xác nhận';
-	} else if (status === StatusEnum.Accepted) {
+	} else if (attendanceStatus === AttendanceStatusEnum.Accepted) {
 		return 'Đã xác nhận';
-	} else if (status === StatusEnum.Rejected) {
+	} else if (attendanceStatus === AttendanceStatusEnum.Rejected) {
 		return 'Đã từ chối';
 	}
 

@@ -22,9 +22,9 @@ export const Toast = () => {
 				`${isOpen ? '' : ' hidden '}` +
 				`${
 					isSuccess
-						? ' border-state-success-dark bg-state-success-bright '
+						? ' border-state-success-dark bg-state-success-bright-1 '
 						: isError
-						? ' border-state-error-dark bg-state-error-bright '
+						? ' border-state-error-dark bg-state-error-bright-1 '
 						: ''
 				}`
 			}

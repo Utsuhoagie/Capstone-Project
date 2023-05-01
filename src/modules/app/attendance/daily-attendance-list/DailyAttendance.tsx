@@ -14,7 +14,7 @@ import {
 	Attendance_API_Response,
 	getStatusLabel,
 	mapToAttendance,
-	StatusEnum,
+	AttendanceStatusEnum,
 } from '../Attendance.interface';
 import QueryString from 'query-string';
 
@@ -24,8 +24,11 @@ interface DailyAttendanceProps {
 }
 
 export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
+	const queryClient = useQueryClient();
+
 	const [searchParams, setSearchParams] = useSearchParams();
 	const queryParams = QueryString.parse(searchParams.toString());
+
 	const getAttendanceOfEmployeeQuery = useQuery(
 		[
 			'AttendanceOfEmployee',
@@ -41,7 +44,7 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 				`Attendances/AttendanceOfEmployee?${allQueryParams}`
 			);
 
-			if (res.status > 299) {
+			if (res.status >= 400) {
 				window.alert(res.status);
 				return;
 			}
@@ -54,7 +57,7 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 	const {
 		EmployeeNationalId,
 		EmployeeFullName,
-		Status,
+		AttendanceStatus,
 		StartTimestamp,
 		StartImageFileName,
 		EndTimestamp,
@@ -67,9 +70,8 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 	);
 
 	const canStatusUpdate =
-		Status === StatusEnum.Pending && Boolean(EndTimestamp);
+		AttendanceStatus === AttendanceStatusEnum.Pending && Boolean(EndTimestamp);
 
-	const queryClient = useQueryClient();
 	const startImageQuery = useQuery(
 		['files', { StartImageFileName: StartImageFileName }],
 		async () => {
@@ -80,7 +82,7 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 				}
 			);
 
-			if (res.status > 299) {
+			if (res.status >= 400) {
 				window.alert(res.status);
 				return;
 			}
@@ -89,6 +91,9 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 
 			// console.log({ imageResData: res.data, headers: res.headers });
 			return createImageUrl(res.data);
+		},
+		{
+			enabled: Boolean(StartImageFileName),
 		}
 	);
 
@@ -99,7 +104,7 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 				responseType: 'blob',
 			});
 
-			if (res.status > 299) {
+			if (res.status >= 400) {
 				window.alert(res.status);
 				return;
 			}
@@ -108,19 +113,22 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 
 			// console.log({ imageResData: res.data, headers: res.headers });
 			return createImageUrl(res.data);
+		},
+		{
+			enabled: Boolean(EndImageFileName),
 		}
 	);
 
 	const updateStatusMutation = useMutation(
 		'UpdateStatus',
-		async (status: StatusEnum) => {
+		async (status: AttendanceStatusEnum) => {
 			const res = await API.put('Attendances/UpdateStatus', {
 				EmployeeNationalId: EmployeeNationalId,
 				StartTimestamp: dayjs(StartTimestamp).toDate(),
 				Status: status,
 			});
 
-			if (res.status > 299) {
+			if (res.status >= 400) {
 				window.alert(res.status);
 				return;
 			}
@@ -132,10 +140,7 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 		}
 	);
 
-	function handleStatus(status: StatusEnum) {
-		updateStatusMutation.mutate(status);
-	}
-
+	// Render
 	if (
 		getAttendanceOfEmployeeQuery.isLoading ||
 		getAttendanceOfEmployeeQuery.isError
@@ -148,11 +153,12 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 			<Disclosure.Button
 				className={
 					' w-w-attendance-item cursor-pointer rounded-sm border border-primary-dark-2 px-2 py-1 text-left ' +
-					(Status === StatusEnum.Pending || Status === undefined
+					(AttendanceStatus === AttendanceStatusEnum.Pending ||
+					AttendanceStatus === undefined
 						? ' bg-neutral-white hover:bg-primary-bright-4 ui-open:bg-primary-bright-4 '
-						: Status === StatusEnum.Accepted
-						? ' bg-state-success-bright hover:bg-state-success-normal ui-open:bg-state-success-bright '
-						: ' bg-state-error-bright hover:bg-state-error-normal ui-open:bg-state-error-bright ')
+						: AttendanceStatus === AttendanceStatusEnum.Accepted
+						? ' bg-state-success-bright-1 hover:bg-state-success-normal ui-open:bg-state-success-bright-1 '
+						: ' bg-state-error-bright-1 hover:bg-state-error-normal ui-open:bg-state-error-bright-1 ')
 				}
 			>
 				{employee.FullName}
@@ -161,11 +167,12 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 			<Disclosure.Panel
 				className={
 					' w-w-attendance-item rounded-sm border border-primary-dark-2 px-4 py-2 ' +
-					(Status === StatusEnum.Pending || Status === undefined
+					(AttendanceStatus === AttendanceStatusEnum.Pending ||
+					AttendanceStatus === undefined
 						? ' bg-neutral-white '
-						: Status === StatusEnum.Accepted
-						? ' bg-state-success-bright '
-						: ' bg-state-error-bright ')
+						: AttendanceStatus === AttendanceStatusEnum.Accepted
+						? ' bg-state-success-bright-1 '
+						: ' bg-state-error-bright-1 ')
 				}
 			>
 				<div className='flex flex-row justify-between'>
@@ -189,30 +196,36 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 						</p>
 						<p>
 							Trạng thái:{' '}
-							{Status !== undefined ? getStatusLabel(Status) : <EmptyText />}
+							{AttendanceStatus !== undefined ? (
+								getStatusLabel(AttendanceStatus)
+							) : (
+								<EmptyText />
+							)}
 						</p>
 					</div>
 					<div className='flex flex-col gap-2'>
 						<CheckIcon
 							className={`rounded ${
 								canStatusUpdate
-									? 'cursor-pointer fill-state-success-normal hover:bg-state-success-bright hover:fill-state-success-dark'
+									? 'cursor-pointer fill-state-success-normal hover:bg-state-success-bright-1 hover:fill-state-success-dark'
 									: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
 							}`}
 							size={32}
 							onClick={() =>
-								canStatusUpdate && handleStatus(StatusEnum.Accepted)
+								canStatusUpdate &&
+								updateStatusMutation.mutate(AttendanceStatusEnum.Accepted)
 							}
 						/>
 						<CloseIcon
 							className={`rounded ${
 								canStatusUpdate
-									? 'cursor-pointer fill-state-error-normal hover:bg-state-error-bright hover:fill-state-error-dark'
+									? 'cursor-pointer fill-state-error-normal hover:bg-state-error-bright-1 hover:fill-state-error-dark'
 									: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
 							}`}
 							size={32}
 							onClick={() =>
-								canStatusUpdate && handleStatus(StatusEnum.Rejected)
+								canStatusUpdate &&
+								updateStatusMutation.mutate(AttendanceStatusEnum.Rejected)
 							}
 						/>
 					</div>

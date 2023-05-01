@@ -19,6 +19,7 @@ export interface CreateApplicantFormIntermediateValues {
 	AppliedDate: string;
 	AskingSalary: string;
 	Image?: File;
+	Resume?: File;
 }
 
 export const createApplicantFormSchema = z.object({
@@ -104,6 +105,13 @@ export const createApplicantFormSchema = z.object({
 	),
 
 	Image: z.custom((val) => {
+		if (val instanceof File || val === undefined) {
+			return true;
+		}
+		return false;
+	}),
+
+	Resume: z.custom((val) => {
 		if (val instanceof File || val === undefined) {
 			return true;
 		}

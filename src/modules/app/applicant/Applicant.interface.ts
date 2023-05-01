@@ -13,6 +13,7 @@ export interface Applicant {
 	AppliedDate: Date;
 	AskingSalary: number;
 	ImageFileName?: string;
+	ResumeFileName?: string;
 }
 
 export interface Applicant_API_Request {
@@ -28,6 +29,7 @@ export interface Applicant_API_Request {
 	AppliedDate: Date;
 	AskingSalary: number;
 	Image?: File;
+	Resume?: File;
 }
 
 export interface Applicant_API_Response {
@@ -43,6 +45,7 @@ export interface Applicant_API_Response {
 	AppliedDate: string;
 	AskingSalary: number;
 	ImageFileName: string | null;
+	ResumeFileName: string | null;
 }
 
 export function mapToApplicant(res: Applicant_API_Response): Applicant {
@@ -51,5 +54,6 @@ export function mapToApplicant(res: Applicant_API_Response): Applicant {
 		BirthDate: res.BirthDate ? dayjs(res.BirthDate).toDate() : undefined,
 		AppliedDate: dayjs(res.AppliedDate).toDate(),
 		ImageFileName: res.ImageFileName ? res.ImageFileName : undefined,
+		ResumeFileName: res.ResumeFileName ? res.ResumeFileName : undefined,
 	};
 }

@@ -34,7 +34,7 @@ export const Login = () => {
 
 			const data: Auth_API_Response = res.data;
 
-			if (res.status > 299) {
+			if (res.status >= 400) {
 				console.table(data);
 				// if (res.status === 404)
 				if (data && data.Errors)

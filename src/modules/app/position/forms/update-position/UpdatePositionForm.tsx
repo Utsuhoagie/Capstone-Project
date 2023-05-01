@@ -40,7 +40,7 @@ export const UpdatePositionForm = () => {
 		async () => {
 			const res = await API.get(`Positions/${Name}`);
 
-			if (res.status > 299) {
+			if (res.status >= 400) {
 				return undefined;
 			}
 
@@ -135,7 +135,7 @@ export const UpdatePositionForm = () => {
 					)}
 					<Button
 						type='button'
-						secondary
+						variant='secondary'
 						width='medium'
 						onClick={() => navigate('/app/positions')}
 					>

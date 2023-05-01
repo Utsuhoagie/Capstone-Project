@@ -45,7 +45,11 @@ export const DataTable = () => {
 				<Button width='small' onClick={handleClickCreate}>
 					Thêm
 				</Button>
-				<Button secondary width='small' onClick={handleOpenFilterDialog}>
+				<Button
+					variant='secondary'
+					width='small'
+					onClick={handleOpenFilterDialog}
+				>
 					Bộ Lọc
 				</Button>
 			</div>

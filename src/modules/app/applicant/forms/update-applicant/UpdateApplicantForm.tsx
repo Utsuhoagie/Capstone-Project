@@ -11,6 +11,7 @@ import {
 } from '../../../../../app/App.store';
 import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
+import { FileInput } from '../../../../../components/atoms/Input/FileInput/FileInput';
 import { ImageInput } from '../../../../../components/atoms/Input/ImageInput/ImageInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
@@ -82,18 +83,28 @@ export const UpdateApplicantForm = () => {
 					AppliedDate: dayjs().toISOString(),
 					AskingSalary: '',
 					Image: undefined,
+					Resume: undefined,
 				};
 			}
 
 			const selectedApplicant = mapToApplicant(res.data);
 
-			const imageRes = await API.get(
-				`Files/Image/Applicants/${selectedApplicant.ImageFileName}`,
-				{ responseType: 'blob' }
-			);
+			const imageRes = selectedApplicant.ImageFileName
+				? await API.get(
+						`Files/Image/Applicants/${selectedApplicant.ImageFileName}`,
+						{ responseType: 'blob' }
+				  )
+				: undefined;
+
+			const resumeRes = selectedApplicant.ResumeFileName
+				? await API.get(
+						`Files/Document/Applicants/${selectedApplicant.ResumeFileName}`,
+						{ responseType: 'blob' }
+				  )
+				: undefined;
 			// const image = createImageUrl(imageRes);
 
-			console.log('OK', selectedApplicant, imageRes);
+			console.log('OK', selectedApplicant, imageRes, resumeRes);
 
 			return {
 				NationalId: selectedApplicant.NationalId,
@@ -109,8 +120,11 @@ export const UpdateApplicantForm = () => {
 				AppliedPositionName: selectedApplicant.AppliedPositionName,
 				AppliedDate: dayjs(selectedApplicant.AppliedDate).toISOString(),
 				AskingSalary: `${selectedApplicant.AskingSalary}`,
-				Image: imageRes.data
-					? new File([imageRes.data], 'Image.jpeg')
+				Image: imageRes?.data
+					? new File([imageRes.data], `${selectedApplicant.NationalId}.jpeg`)
+					: undefined,
+				Resume: resumeRes?.data
+					? new File([resumeRes.data], `${selectedApplicant.NationalId}.pdf`)
 					: undefined,
 			};
 		},
@@ -137,6 +151,7 @@ export const UpdateApplicantForm = () => {
 			AppliedDate: dayjs(rawData.AppliedDate).toDate(),
 			AskingSalary: parseInt(rawData.AskingSalary),
 			Image: rawData.Image,
+			Resume: rawData.Resume,
 		};
 
 		const formData = convertFromDomainObjToFormData(req);
@@ -254,7 +269,10 @@ export const UpdateApplicantForm = () => {
 							/>
 						</div>
 
-						<ImageInput name='Image' />
+						<div className='flex flex-col gap-2'>
+							<ImageInput name='Image' />
+							<FileInput name='Resume' />
+						</div>
 					</div>
 
 					<Button type='submit' width='medium'>
@@ -271,7 +289,7 @@ export const UpdateApplicantForm = () => {
 					)}
 					<Button
 						type='button'
-						secondary
+						variant='secondary'
 						width='medium'
 						onClick={() => navigate('/app/applicants')}
 					>

@@ -270,7 +270,7 @@ export const UpdateEmployeeForm = () => {
 					)}
 					<Button
 						type='button'
-						secondary
+						variant='secondary'
 						width='medium'
 						onClick={() => navigate('/app/employees')}
 					>

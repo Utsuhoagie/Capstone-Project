@@ -8,7 +8,7 @@ export const UpdateButton = () => {
 
 	return (
 		<Button
-			secondary
+			variant='secondary'
 			width='big'
 			onClick={() =>
 				navigate(`/app/positions/update/${selectedPosition?.Name}`)

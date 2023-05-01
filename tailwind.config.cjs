@@ -101,7 +101,7 @@ module.exports = {
 					success: {
 						dark: colors.green[700],
 						normal: colors.green[500],
-						bright: colors.green[200],
+						bright: { 1: colors.green[200], 2: colors.green[50] },
 					},
 					warning: {
 						dark: colors.yellow[700],
@@ -111,7 +111,7 @@ module.exports = {
 					error: {
 						dark: colors.red[800],
 						normal: colors.red[600],
-						bright: colors.red[200],
+						bright: { 1: colors.red[200], 2: colors.red[50] },
 					},
 				},
 			},

@@ -30,7 +30,7 @@ export const DailyAttendanceList = () => {
 				`Attendances/EmployeesNotOnLeave?${allQueryParams}`
 			);
 
-			if (res.status > 299) {
+			if (res.status >= 400) {
 				window.alert(res.status);
 				return;
 			}
@@ -53,7 +53,10 @@ export const DailyAttendanceList = () => {
 
 	return (
 		<div>
-			Các nhân viên có lịch làm hôm nay
+			Các nhân viên có lịch làm ngày{' '}
+			{queryParams.date
+				? dayjs(queryParams.date as string).format('DD/MM/YYYY')
+				: ''}
 			<div className='flex flex-col items-start justify-start gap-2'>
 				{getEmployeesNotOnLeaveQuery.data?.map((employee) => {
 					return (

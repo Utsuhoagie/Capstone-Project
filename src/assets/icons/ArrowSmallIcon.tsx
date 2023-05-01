@@ -9,6 +9,8 @@ export const ArrowSmallIcon = ({
 	size,
 	direction,
 	className,
+	disabled,
+	onClick,
 	...props
 }: DirectionalIconProps) => {
 	return (
@@ -18,9 +20,13 @@ export const ArrowSmallIcon = ({
 			viewBox='0 0 24 24'
 			fill='none'
 			className={
-				getTailwindRotateClassFromDirection(direction) + ' ' + className
+				getTailwindRotateClassFromDirection(direction) +
+				' ' +
+				className +
+				(disabled ? ' cursor-not-allowed bg-neutral-gray-4 opacity-50 ' : '')
 			}
 			xmlns='http://www.w3.org/2000/svg'
+			onClick={disabled ? undefined : onClick}
 			{...props}
 		>
 			<g clipPath='url(#clip0_406_12677)'>

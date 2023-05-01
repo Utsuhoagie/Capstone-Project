@@ -22,11 +22,12 @@ export const ImageInput = ({ name }: ImageInputProps) => {
 		: PLACEHOLDER_PERSON_IMAGE;
 
 	return (
-		<div className='flex w-w-image-input flex-col items-center gap-2'>
+		<div className='flex w-w-image-input flex-col items-center gap-1'>
 			<img className='w-w-image-input' src={defaultImageSrc} />
 
 			<FileInputButton
 				maxFiles={1}
+				maxFileSize={512_000} /* 500 KB */
 				accept='image/jpeg'
 				behaviour='replace'
 				label='Chọn ảnh'
@@ -36,6 +37,8 @@ export const ImageInput = ({ name }: ImageInputProps) => {
 				}}
 				value={files}
 			/>
+
+			<p>Chọn 1 ảnh có đuôi .jpeg, tối đa 500 KB.</p>
 		</div>
 	);
 };

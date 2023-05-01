@@ -59,7 +59,7 @@ export const Example = () => {
 			<div className='flex flex-col'>
 				{widths[index]}
 				<Button
-					secondary
+					variant='secondary'
 					width={widths[index]}
 					onClick={() => {
 						setIndex((index) => (index + 1) % 4);
