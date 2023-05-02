@@ -26,6 +26,7 @@ import dayjs from 'dayjs';
 import { AttendanceModule } from '../../modules/app/attendance/AttendanceModule';
 import { DailyAttendanceList } from '../../modules/app/attendance/daily-attendance-list/DailyAttendanceList';
 import { FeedbackModule } from '../../modules/app/feedback/FeedbackModule';
+import { RequestModule } from '../../modules/app/request/RequestModule';
 
 export const Routes = () => {
 	const { accessToken } = useAuthStore();
@@ -79,6 +80,8 @@ export const Routes = () => {
 				<Route path='positions' element={<PositionModule />} />
 				<Route path='positions/create' element={<CreatePositionForm />} />
 				<Route path='positions/update/:Name' element={<UpdatePositionForm />} />
+
+				<Route path='requests' element={<RequestModule />} />
 
 				<Route path='feedbacks' element={<FeedbackModule />} />
 

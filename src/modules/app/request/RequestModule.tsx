@@ -7,21 +7,22 @@ import {
 } from '../../../components/organisms/Table/Pagination/Pagination.interface';
 import { useTableStore } from '../../../components/organisms/Table/Table.store';
 import {
-	mapToFeedback,
-	Feedback,
-	Feedback_API_Response,
-} from './Feedback.interface';
-import { useFeedbackStore } from './Feedback.store';
+	mapToRequest,
+	Request,
+	Request_API_Response,
+} from './Request.interface';
+import { useRequestStore } from './Request.store';
 import { DataTable } from './data-table/DataTable';
 import { DetailSection } from './detail-section/DetailSection';
 import { API } from '../../../config/axios/axios.config';
 import { useSearchParams } from 'react-router-dom';
 import QueryString from 'query-string';
+import { ButtonSection } from './button-section/ButtonSection';
 
-export const FeedbackModule = () => {
+export const RequestModule = () => {
 	const { selectedRowIndex, pagination, setPagination } = useTableStore();
-	const { visibleFeedbacks, setVisibleFeedbacks, setSelectedFeedback } =
-		useFeedbackStore();
+	const { visibleRequests, setVisibleRequests, setSelectedRequest } =
+		useRequestStore();
 
 	const [searchParams, setSearchParams] = useSearchParams();
 	const currentQueryParams = QueryString.parse(searchParams.toString());
@@ -32,21 +33,21 @@ export const FeedbackModule = () => {
 	};
 
 	const { isLoading, error, data } = useQuery(
-		['feedbacks', allQueryParams],
+		['requests', allQueryParams],
 		async () => {
 			const allQueryParamsAsQueryString = QueryString.stringify(allQueryParams);
-			const res = await API.get(`Feedbacks?${allQueryParamsAsQueryString}`);
+			const res = await API.get(`Requests?${allQueryParamsAsQueryString}`);
 
-			const pagedResponse: PagedResult<Feedback_API_Response> = await res.data;
+			const pagedResponse: PagedResult<Request_API_Response> = await res.data;
 			console.log('Paged API response: ', pagedResponse);
 
 			const responsePagination: Pagination = omit(['Items'], pagedResponse);
 			setPagination(responsePagination);
 
-			const responseVisibleFeedbacks: Feedback[] = pagedResponse.Items.map(
-				(Item) => mapToFeedback(Item)
+			const responseVisibleRequests: Request[] = pagedResponse.Items.map(
+				(Item) => mapToRequest(Item)
 			);
-			setVisibleFeedbacks(responseVisibleFeedbacks);
+			setVisibleRequests(responseVisibleRequests);
 		},
 		{ keepPreviousData: true, staleTime: 0, refetchOnWindowFocus: false }
 	);
@@ -54,11 +55,11 @@ export const FeedbackModule = () => {
 	// Whenever clicking a table row
 	useEffect(() => {
 		if (selectedRowIndex === undefined) {
-			setSelectedFeedback(undefined);
+			setSelectedRequest(undefined);
 			return;
 		}
-		const selectedFeedback = visibleFeedbacks[selectedRowIndex];
-		setSelectedFeedback(selectedFeedback);
+		const selectedRequest = visibleRequests[selectedRowIndex];
+		setSelectedRequest(selectedRequest);
 	}, [selectedRowIndex]);
 
 	// Whenever query params change
@@ -86,9 +87,12 @@ export const FeedbackModule = () => {
 
 	return (
 		<div className='flex flex-col gap-4'>
-			<h1 className='text-h1'>Hòm thư góp ý</h1>
+			<h1 className='text-h1'>Quản lý yêu cầu</h1>
 			<DataTable />
-			<DetailSection />
+			<div className='flex flex-row gap-4'>
+				<DetailSection />
+				<ButtonSection />
+			</div>
 		</div>
 	);
 };

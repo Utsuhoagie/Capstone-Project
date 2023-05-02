@@ -90,7 +90,7 @@ export const Table = ({
 
 	useEffect(() => {
 		setSelectedRowIndex(undefined);
-	}, [searchParams]);
+	}, [searchParams, sortingState]);
 
 	return (
 		<div>
