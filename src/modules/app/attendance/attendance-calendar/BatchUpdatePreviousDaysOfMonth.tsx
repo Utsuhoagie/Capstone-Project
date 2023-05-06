@@ -2,7 +2,10 @@ import { Dayjs } from 'dayjs';
 import QueryString from 'query-string';
 import React from 'react';
 import { useMutation } from 'react-query';
-import { useToastStore } from '../../../../app/App.store';
+import {
+	useConfirmDialogStore,
+	useToastStore,
+} from '../../../../app/App.store';
 import { Button } from '../../../../components/atoms/Button/Button';
 import { API } from '../../../../config/axios/axios.config';
 
@@ -16,6 +19,7 @@ export const BatchUpdatePreviousDaysOfMonth = ({
 	days,
 }: BatchUpdatePreviousDaysOfMonthProps) => {
 	const { showToast } = useToastStore();
+	const { openConfirmDialog } = useConfirmDialogStore();
 	const hasDays = days > 0;
 
 	const batchUpdatePreviousDaysOfMonthMutation = useMutation(
@@ -38,7 +42,14 @@ export const BatchUpdatePreviousDaysOfMonth = ({
 	);
 
 	function handleBatchUpdatePreviousDaysOfMonth(type: 'Accept' | 'Reject') {
-		batchUpdatePreviousDaysOfMonthMutation.mutate(type);
+		openConfirmDialog({
+			isClosable: true,
+			message: `Bạn có chắc muốn ${
+				type === 'Accept' ? 'duyệt' : 'từ chối'
+			} tất cả các buổi chấm công trong tháng?`,
+			onConfirm: () => batchUpdatePreviousDaysOfMonthMutation.mutate(type),
+			onSuccess: () => {},
+		});
 	}
 
 	return (
@@ -49,7 +60,7 @@ export const BatchUpdatePreviousDaysOfMonth = ({
 					: 'border-state-success-normal bg-state-success-bright-2'
 			}`}
 		>
-			<p>Còn {days} ngày cần từ chối.</p>
+			<p>Còn {days} ngày cần duyệt/từ chối trong tháng này.</p>
 
 			<Button
 				disabled={!hasDays}

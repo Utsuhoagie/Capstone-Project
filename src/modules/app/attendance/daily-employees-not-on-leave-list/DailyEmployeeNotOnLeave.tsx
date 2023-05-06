@@ -23,7 +23,7 @@ interface DailyAttendanceProps {
 	employee: Employee;
 }
 
-export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
+export const DailyEmployeeNotOnLeave = ({ employee }: DailyAttendanceProps) => {
 	const queryClient = useQueryClient();
 
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -70,7 +70,24 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 	);
 
 	const canStatusUpdate =
-		AttendanceStatus === AttendanceStatusEnum.Pending && Boolean(EndTimestamp);
+		AttendanceStatus === AttendanceStatusEnum.Pending &&
+		(Boolean(EndTimestamp) || dayjs(StartTimestamp).isBefore(dayjs(), 'day'));
+
+	let attendanceStatusBracketLabel: string;
+	switch (AttendanceStatus) {
+		case AttendanceStatusEnum.Accepted:
+			attendanceStatusBracketLabel = 'Đã duyệt';
+			break;
+		case AttendanceStatusEnum.Pending:
+			attendanceStatusBracketLabel = 'Chưa duyệt';
+			break;
+		case AttendanceStatusEnum.Rejected:
+			attendanceStatusBracketLabel = 'Đã từ chối';
+			break;
+		case undefined:
+			attendanceStatusBracketLabel = 'Chưa có';
+			break;
+	}
 
 	const startImageQuery = useQuery(
 		['files', { StartImageFileName: StartImageFileName }],
@@ -152,89 +169,100 @@ export const DailyAttendance = ({ employee }: DailyAttendanceProps) => {
 		<Disclosure as='div'>
 			<Disclosure.Button
 				className={
-					' w-w-attendance-item cursor-pointer rounded-sm border border-primary-dark-2 px-2 py-1 text-left ' +
-					(AttendanceStatus === AttendanceStatusEnum.Pending ||
-					AttendanceStatus === undefined
+					' flex w-w-attendance-item cursor-pointer flex-row items-center justify-between rounded-sm border border-primary-dark-2 px-2 py-1 ' +
+					(AttendanceStatus === undefined
 						? ' bg-neutral-white hover:bg-primary-bright-4 ui-open:bg-primary-bright-4 '
+						: AttendanceStatus === AttendanceStatusEnum.Pending
+						? ' bg-state-warning-bright-3 hover:bg-state-warning-bright-1 ui-open:bg-state-warning-bright-3 '
 						: AttendanceStatus === AttendanceStatusEnum.Accepted
 						? ' bg-state-success-bright-1 hover:bg-state-success-normal ui-open:bg-state-success-bright-1 '
 						: ' bg-state-error-bright-1 hover:bg-state-error-normal ui-open:bg-state-error-bright-1 ')
 				}
 			>
-				{employee.FullName}
+				<span>{employee.FullName}</span>
+				<span className='text-tag text-neutral-gray-7'>
+					({attendanceStatusBracketLabel})
+				</span>
 			</Disclosure.Button>
 
 			<Disclosure.Panel
 				className={
 					' w-w-attendance-item rounded-sm border border-primary-dark-2 px-4 py-2 ' +
-					(AttendanceStatus === AttendanceStatusEnum.Pending ||
-					AttendanceStatus === undefined
+					(AttendanceStatus === undefined
 						? ' bg-neutral-white '
+						: AttendanceStatus === AttendanceStatusEnum.Pending
+						? ' bg-state-warning-bright-3 '
 						: AttendanceStatus === AttendanceStatusEnum.Accepted
 						? ' bg-state-success-bright-1 '
 						: ' bg-state-error-bright-1 ')
 				}
 			>
-				<div className='flex flex-row justify-between'>
-					<div>
-						<p>CMND: {employee.NationalId}</p>
-						<p>
-							Bắt đầu:{' '}
-							{StartTimestamp ? (
-								dayjs(StartTimestamp).format('H:mm D/MM/YYYY')
-							) : (
-								<EmptyText />
-							)}
-						</p>
-						<p>
-							Kết thúc:{' '}
-							{EndTimestamp ? (
-								dayjs(EndTimestamp).format('H:mm D/MM/YYYY')
-							) : (
-								<EmptyText />
-							)}
-						</p>
-						<p>
-							Trạng thái:{' '}
-							{AttendanceStatus !== undefined ? (
-								getStatusLabel(AttendanceStatus)
-							) : (
-								<EmptyText />
-							)}
-						</p>
-					</div>
-					<div className='flex flex-col gap-2'>
-						<CheckIcon
-							className={`rounded ${
-								canStatusUpdate
-									? 'cursor-pointer fill-state-success-normal hover:bg-state-success-bright-1 hover:fill-state-success-dark'
-									: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
-							}`}
-							size={32}
-							onClick={() =>
-								canStatusUpdate &&
-								updateStatusMutation.mutate(AttendanceStatusEnum.Accepted)
-							}
-						/>
-						<CloseIcon
-							className={`rounded ${
-								canStatusUpdate
-									? 'cursor-pointer fill-state-error-normal hover:bg-state-error-bright-1 hover:fill-state-error-dark'
-									: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
-							}`}
-							size={32}
-							onClick={() =>
-								canStatusUpdate &&
-								updateStatusMutation.mutate(AttendanceStatusEnum.Rejected)
-							}
-						/>
-					</div>
-				</div>
+				{getAttendanceOfEmployeeQuery.data ? (
+					<>
+						<div className='flex flex-row justify-between'>
+							<div>
+								<p>CMND: {employee.NationalId}</p>
+								<p>
+									Bắt đầu:{' '}
+									{StartTimestamp ? (
+										dayjs(StartTimestamp).format('H:mm DD/MM/YYYY')
+									) : (
+										<EmptyText />
+									)}
+								</p>
+								<p>
+									Kết thúc:{' '}
+									{EndTimestamp ? (
+										dayjs(EndTimestamp).format('H:mm DD/MM/YYYY')
+									) : (
+										<EmptyText />
+									)}
+								</p>
+								<p>
+									Trạng thái:{' '}
+									{AttendanceStatus !== undefined ? (
+										getStatusLabel(AttendanceStatus)
+									) : (
+										<EmptyText />
+									)}
+								</p>
+							</div>
+							<div className='flex flex-col gap-2'>
+								<CheckIcon
+									className={`rounded ${
+										canStatusUpdate
+											? 'cursor-pointer fill-state-success-normal hover:bg-state-success-bright-1 hover:fill-state-success-dark'
+											: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
+									}`}
+									size={32}
+									onClick={() =>
+										canStatusUpdate &&
+										updateStatusMutation.mutate(AttendanceStatusEnum.Accepted)
+									}
+								/>
+								<CloseIcon
+									className={`rounded ${
+										canStatusUpdate
+											? 'cursor-pointer fill-state-error-normal hover:bg-state-error-bright-1 hover:fill-state-error-dark'
+											: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
+									}`}
+									size={32}
+									onClick={() =>
+										canStatusUpdate &&
+										updateStatusMutation.mutate(AttendanceStatusEnum.Rejected)
+									}
+								/>
+							</div>
+						</div>
 
-				<div className='mt-4 mb-2 flex flex-row justify-between'>
-					<img className='w-36' src={startImageQuery.data} />
-					<img className='w-36' src={endImageQuery.data} />
-				</div>
+						<div className='mt-4 mb-2 flex flex-row justify-between'>
+							<img className='w-36' src={startImageQuery.data} />
+							<img className='w-36' src={endImageQuery.data} />
+						</div>
+					</>
+				) : (
+					<EmptyText />
+				)}
 			</Disclosure.Panel>
 		</Disclosure>
 	);

@@ -41,7 +41,7 @@ export const ConfirmDialog = () => {
 					/>
 				</HuiDialog.Title>
 
-				<div className='max-h-[75vh] max-w-[75vw] divide-y divide-neutral-gray-6 overflow-auto p-2'>
+				<div className='max-h-[25vh] max-w-[25vw] divide-y divide-neutral-gray-6 overflow-auto p-2'>
 					<div className='flex flex-col items-center gap-4 '>
 						<h4 className='text-h4'>{message}</h4>
 						<div className='flex flex-row justify-center gap-2'>

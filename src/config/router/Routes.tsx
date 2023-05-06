@@ -24,7 +24,7 @@ import jwtDecode from 'jwt-decode';
 import { JWT_Claims } from '../../modules/auth/Auth.interface';
 import dayjs from 'dayjs';
 import { AttendanceModule } from '../../modules/app/attendance/AttendanceModule';
-import { DailyAttendanceList } from '../../modules/app/attendance/daily-attendance-list/DailyAttendanceList';
+import { DailyEmployeesNotOnLeaveList } from '../../modules/app/attendance/daily-employees-not-on-leave-list/DailyEmployeesNotOnLeaveList';
 import { FeedbackModule } from '../../modules/app/feedback/FeedbackModule';
 import { RequestModule } from '../../modules/app/request/RequestModule';
 
@@ -75,7 +75,10 @@ export const Routes = () => {
 				<Route path='qr' element={<QrDisplay />} />
 
 				<Route path='attendances' element={<AttendanceModule />} />
-				<Route path='attendances/daily' element={<DailyAttendanceList />} />
+				<Route
+					path='attendances/daily'
+					element={<DailyEmployeesNotOnLeaveList />}
+				/>
 
 				<Route path='positions' element={<PositionModule />} />
 				<Route path='positions/create' element={<CreatePositionForm />} />

@@ -8,14 +8,14 @@ import {
 	Attendance_API_Response,
 	mapToAttendance,
 } from '../Attendance.interface';
-import { DailyAttendance } from './DailyAttendance';
+import { DailyEmployeeNotOnLeave } from './DailyEmployeeNotOnLeave';
 import { useSearchParams } from 'react-router-dom';
 import {
 	Employee_API_Response,
 	mapToEmployee,
 } from '../../employee/Employee.interface';
 
-export const DailyAttendanceList = () => {
+export const DailyEmployeesNotOnLeaveList = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const queryParams = QueryString.parse(searchParams.toString());
 	const getEmployeesNotOnLeaveQuery = useQuery(
@@ -60,7 +60,10 @@ export const DailyAttendanceList = () => {
 			<div className='flex flex-col items-start justify-start gap-2'>
 				{getEmployeesNotOnLeaveQuery.data?.map((employee) => {
 					return (
-						<DailyAttendance key={employee.NationalId} employee={employee} />
+						<DailyEmployeeNotOnLeave
+							key={employee.NationalId}
+							employee={employee}
+						/>
 					);
 				})}
 			</div>

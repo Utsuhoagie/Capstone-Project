@@ -93,12 +93,12 @@ export const Login = () => {
 					<Button className='my-2 self-center' type='submit' width='medium'>
 						Đăng nhập
 					</Button>
-					<Link
+					{/* <Link
 						className='text-center text-body text-primary-dark-2 underline'
 						to='/auth/register-employee'
 					>
 						Là nhân viên mới?
-					</Link>
+					</Link> */}
 				</div>
 			</form>
 		</FormProvider>

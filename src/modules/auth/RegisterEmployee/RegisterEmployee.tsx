@@ -33,7 +33,7 @@ export const RegisterEmployee = () => {
 
 			const data: Auth_API_Response = res.data;
 
-			if (res.status >= 300) {
+			if (res.status >= 400) {
 				if (data)
 					setError(data.Errors.map((error) => error.Description).join('. '));
 				else setError('Có lỗi xảy ra.');
@@ -48,7 +48,7 @@ export const RegisterEmployee = () => {
 		}
 	);
 
-	function handleLogin(data) {
+	function handleRegister(data) {
 		console.table(data);
 		setError('');
 		mutation.mutate(data);
@@ -62,7 +62,7 @@ export const RegisterEmployee = () => {
 		<FormProvider {...methods}>
 			<form
 				className='flex flex-col items-stretch'
-				onSubmit={methods.handleSubmit(handleLogin, handleError)}
+				onSubmit={methods.handleSubmit(handleRegister, handleError)}
 			>
 				<h2 className='bg-primary-dark-1 py-2 text-center text-h2 text-neutral-gray-1'>
 					Đăng kí nhân viên

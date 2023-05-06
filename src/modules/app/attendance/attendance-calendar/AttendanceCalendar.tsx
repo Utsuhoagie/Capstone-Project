@@ -79,8 +79,6 @@ export const AttendanceCalendar = () => {
 			const iterDateOfMonth = index + 1;
 			const currentDateOfMonth = dayjs().date();
 
-			console.table({ iterDateOfMonth, currentDateOfMonth });
-
 			return (
 				dailyStatus === DailyStatus.Pending &&
 				iterDateOfMonth !== currentDateOfMonth
@@ -184,8 +182,10 @@ export const AttendanceCalendar = () => {
 					const day = currentDate.startOf('month').add(index, 'day');
 
 					const isWeekend = day.day() === 0 || day.day() === 6;
-					const isInactiveDay = dailyStatus === DailyStatus.Empty || isWeekend;
+					const isClickableDay = !isWeekend;
+					/* dailyStatus === DailyStatus.Empty || isWeekend */
 					const isToday = day.isSame(dayjs(), 'day');
+					const isDayNeedAction = dailyStatus === DailyStatus.Pending;
 
 					const hasRightBorder = day.day() === 6;
 					const hasBottomBorder = day.isAfter(
@@ -197,20 +197,24 @@ export const AttendanceCalendar = () => {
 						<div
 							key={index}
 							className={` h-10 w-10 border-t border-l border-black text-center ${
-								isInactiveDay
-									? ' bg-primary-bright-7 '
-									: ` cursor-pointer ${
-											dailyStatus === DailyStatus.Finished
-												? ' bg-state-success-bright-1 hover:bg-state-success-normal '
-												: dailyStatus === DailyStatus.Pending
-												? ' bg-state-error-bright-1 hover:bg-state-error-normal '
-												: ''
-											// : ' hover:bg-neutral-gray-4 ' NOTE: This doesn't happen?
+								isClickableDay
+									? ` cursor-pointer ${
+											isDayNeedAction
+												? ' bg-state-warning-bright-3 hover:bg-state-warning-bright-1 '
+												: ' bg-primary-bright-5 hover:bg-primary-bright-3 '
+											// dailyStatus === DailyStatus.Finished
+											// 	? ' bg-primary-bright-4 hover:bg-primary-bright-1 '
+											// 	: dailyStatus === DailyStatus.Pending
+											// 	? ' bg-accent-bright-1 hover:bg-accent-normal '
+											// 	: dailyStatus === DailyStatus.Empty
+											// 	? ' bg-primary-bright-7 hover:bg-primary-bright-5 '
+											// 	: 'THIS-IS-WRONG!!! bg-yellow-700'
 									  }`
+									: ' bg-primary-bright-7 '
 							} ${isToday && ' font-bold '} ${hasRightBorder && 'border-r'} ${
 								hasBottomBorder && 'border-b'
 							}`}
-							onClick={isInactiveDay ? undefined : () => handleChooseDay(day)}
+							onClick={isClickableDay ? () => handleChooseDay(day) : undefined}
 						>
 							{day.date()}
 						</div>
