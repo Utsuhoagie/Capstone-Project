@@ -13,6 +13,7 @@ import {
 import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { TimeInput } from '../../../../../components/atoms/Input/DateTimeInput/TimeInput';
+import { FileInput } from '../../../../../components/atoms/Input/FileInput/FileInput';
 import { ImageInput } from '../../../../../components/atoms/Input/ImageInput/ImageInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
@@ -71,6 +72,7 @@ export const CreateEmployeeForm = () => {
 			EmployedDate: dayjs().toISOString(),
 			Salary: '',
 			Image: undefined,
+			Resume: undefined,
 		},
 		resolver: zodResolver(createEmployeeFormSchema),
 	});
@@ -96,6 +98,7 @@ export const CreateEmployeeForm = () => {
 			Salary: parseInt(rawData.Salary),
 			HasUser: false,
 			Image: rawData.Image,
+			Resume: rawData.Resume,
 		};
 
 		const formData = convertFromDomainObjToFormData(req);
@@ -211,7 +214,10 @@ export const CreateEmployeeForm = () => {
 							/>
 						</div>
 
-						<ImageInput name='Image' />
+						<div className='flex flex-col gap-2'>
+							<ImageInput name='Image' />
+							<FileInput name='Resume' />
+						</div>
 					</div>
 
 					<Button type='submit' width='medium'>

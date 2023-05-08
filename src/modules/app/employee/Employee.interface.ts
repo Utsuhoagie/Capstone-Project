@@ -14,6 +14,7 @@ export interface Employee {
 	Salary: number;
 	HasUser: boolean;
 	ImageFileName?: string;
+	ResumeFileName?: string;
 }
 
 export interface Employee_API_Request {
@@ -30,6 +31,7 @@ export interface Employee_API_Request {
 	Salary: number;
 	HasUser: boolean;
 	Image?: File;
+	Resume?: File;
 }
 
 export interface Employee_API_Response {
@@ -46,6 +48,7 @@ export interface Employee_API_Response {
 	Salary: number;
 	HasUser: boolean;
 	ImageFileName: string | null;
+	ResumeFileName: string | null;
 }
 
 export function mapToEmployee(res: Employee_API_Response): Employee {
@@ -54,5 +57,6 @@ export function mapToEmployee(res: Employee_API_Response): Employee {
 		BirthDate: res.BirthDate ? dayjs(res.BirthDate).toDate() : undefined,
 		EmployedDate: dayjs(res.EmployedDate).toDate(),
 		ImageFileName: res.ImageFileName ? res.ImageFileName : undefined,
+		ResumeFileName: res.ResumeFileName ? res.ResumeFileName : undefined,
 	};
 }

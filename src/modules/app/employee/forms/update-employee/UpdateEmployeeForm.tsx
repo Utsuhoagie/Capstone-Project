@@ -12,6 +12,8 @@ import {
 import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { TimeInput } from '../../../../../components/atoms/Input/DateTimeInput/TimeInput';
+import { FileInput } from '../../../../../components/atoms/Input/FileInput/FileInput';
+import { ImageInput } from '../../../../../components/atoms/Input/ImageInput/ImageInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
@@ -89,6 +91,12 @@ export const UpdateEmployeeForm = () => {
 						{ responseType: 'blob' }
 				  )
 				: undefined;
+			const resumeRes = selectedEmployee.ResumeFileName
+				? await API.get(
+						`Files/Document/Employees/${selectedEmployee.ResumeFileName}`,
+						{ responseType: 'blob' }
+				  )
+				: undefined;
 
 			console.log('OK', selectedEmployee);
 			return {
@@ -105,7 +113,12 @@ export const UpdateEmployeeForm = () => {
 				PositionName: selectedEmployee.PositionName,
 				EmployedDate: dayjs(selectedEmployee.EmployedDate).toISOString(),
 				Salary: `${selectedEmployee.Salary}`,
-				Image: imageRes && imageRes.data ? imageRes.data : undefined,
+				Image: imageRes?.data
+					? new File([imageRes.data], `${selectedEmployee.NationalId}.jpeg`)
+					: undefined,
+				Resume: resumeRes?.data
+					? new File([resumeRes.data], `${selectedEmployee.NationalId}.pdf`)
+					: undefined,
 			};
 		},
 		resolver: zodResolver(updateEmployeeFormSchema),
@@ -134,6 +147,7 @@ export const UpdateEmployeeForm = () => {
 			Salary: parseInt(rawData.Salary),
 			HasUser: false,
 			Image: rawData.Image,
+			Resume: rawData.Resume,
 		};
 
 		const formData = convertFromDomainObjToFormData(req);
@@ -163,98 +177,97 @@ export const UpdateEmployeeForm = () => {
 					className='flex flex-col gap-2 p-2'
 					onSubmit={methods.handleSubmit(handleSubmit, handleError)}
 				>
-					<TextInput
-						required
-						name='NationalId'
-						placeholder='Nhập 9 hoặc 12 số.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
+					<div className='flex flex-row justify-between'>
+						<div className='flex flex-col gap-2'>
+							<TextInput
+								required
+								name='NationalId'
+								placeholder='Nhập 9 hoặc 12 số.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='FullName'
+								placeholder='Nhập họ tên đầy đủ.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<SelectInput
+								required
+								name='Gender'
+								placeholder='Chọn 1.'
+								width='medium'
+								optionPairs={EMPLOYEE_MAPPERS['Gender']}
+								displayConfigs={displayConfigs}
+							/>
+							<DateInput
+								name='BirthDate'
+								placeholder='Chọn ngày sinh.'
+								width='medium'
+								maxDate={dayjs().subtract(18, 'year').toDate()}
+								openToDate={dayjs().year(2000).startOf('year').toDate()}
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='Address'
+								placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='Phone'
+								placeholder='Nhập số điện thoại.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='Email'
+								placeholder='Nhập địa chỉ email.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='ExperienceYears'
+								type='number'
+								placeholder='Nhập số năm kinh nghiệm.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<SelectInput
+								required
+								name='PositionName'
+								placeholder='Nhập vị trí.'
+								width='medium'
+								optionPairs={positionOptions}
+								displayConfigs={displayConfigs}
+							/>
+							<DateInput
+								required
+								name='EmployedDate'
+								placeholder='Chọn ngày bắt đầu làm việc.'
+								width='medium'
+								displayConfigs={displayConfigs}
+							/>
+							<TextInput
+								required
+								name='Salary'
+								type='number'
+								width='medium'
+								placeholder='Nhập mức lương.'
+								displayConfigs={displayConfigs}
+							/>
+						</div>
 
-					<TextInput
-						required
-						name='FullName'
-						placeholder='Nhập họ tên đầy đủ.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<SelectInput
-						required
-						name='Gender'
-						placeholder='Chọn 1.'
-						width='medium'
-						optionPairs={EMPLOYEE_MAPPERS['Gender']}
-						displayConfigs={displayConfigs}
-					/>
-
-					<DateInput
-						name='BirthDate'
-						placeholder='Chọn ngày sinh.'
-						width='medium'
-						maxDate={dayjs().subtract(18, 'year').toDate()}
-						openToDate={dayjs().year(2000).startOf('year').toDate()}
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						name='Address'
-						placeholder='Số nhà, Đường, Phường/Xã, Tỉnh/Thành phố'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						name='Phone'
-						placeholder='Nhập số điện thoại.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						name='Email'
-						placeholder='Nhập địa chỉ email.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						name='ExperienceYears'
-						type='number'
-						placeholder='Nhập số năm kinh nghiệm.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<SelectInput
-						required
-						name='PositionName'
-						placeholder='Nhập vị trí.'
-						width='medium'
-						optionPairs={positionOptions}
-						displayConfigs={displayConfigs}
-					/>
-
-					<DateInput
-						required
-						name='EmployedDate'
-						placeholder='Chọn ngày bắt đầu làm việc.'
-						width='medium'
-						displayConfigs={displayConfigs}
-					/>
-
-					<TextInput
-						required
-						name='Salary'
-						type='number'
-						width='medium'
-						placeholder='Nhập mức lương.'
-						displayConfigs={displayConfigs}
-					/>
+						<div className='flex flex-col gap-2'>
+							<ImageInput name='Image' />
+							<FileInput name='Resume' />
+						</div>
+					</div>
 
 					<Button type='submit' width='medium'>
 						Cập nhật

@@ -121,13 +121,13 @@ export const FilterDialog = () => {
 				<TextInput
 					name='ExperienceYearsFrom'
 					label='Năm kinh nghiệm từ...'
-					width='small'
+					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 				<TextInput
 					name='ExperienceYearsTo'
 					label='...đến'
-					width='small'
+					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 

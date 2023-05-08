@@ -36,18 +36,20 @@ export const DetailSection = () => {
 			</h3>
 
 			{selectedApplicant && (
-				<div className='flex flex-row items-stretch gap-4 p-2'>
+				<div className='flex flex-row items-start justify-between gap-4 p-2'>
 					<div className='w-w-list-section rounded-lg border border-neutral-gray-5 bg-neutral-white px-4 py-2'>
 						<List
+							module='Applicants'
 							data={selectedApplicant}
 							displayConfigs={displayConfigs}
 							listItemConfigs={APPLICANT_LIST_ITEM_CONFIGS}
 						/>
 					</div>
 
-					<div className='flex flex-1 flex-row justify-center rounded-lg border border-neutral-gray-5 bg-neutral-white p-4'>
+					<div className='rounded-lg border border-neutral-gray-5 bg-neutral-white p-4'>
 						<img
-							className='h-h-image-section'
+							// className='h-h-image-section'
+							className='w-[400px]'
 							src={
 								hasImage ? applicantImageQuery.data : PLACEHOLDER_PERSON_IMAGE
 							}

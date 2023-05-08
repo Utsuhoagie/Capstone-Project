@@ -29,6 +29,7 @@ export const APPLICANT_FIELDS: string[] = [
 	'AppliedPositionName',
 	'AppliedDate',
 	'AskingSalary',
+	'ResumeFileName',
 ];
 
 export const APPLICANT_LABELLERS: Labellers = {
@@ -43,6 +44,7 @@ export const APPLICANT_LABELLERS: Labellers = {
 	AppliedPositionName: 'Vị trí ứng tuyển',
 	AppliedDate: 'Ngày ứng tuyển',
 	AskingSalary: 'Mức lương đề nghị',
+	ResumeFileName: 'CV',
 };
 
 export const APPLICANT_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
@@ -57,6 +59,7 @@ export const APPLICANT_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
 	AppliedPositionName: 'normal',
 	AppliedDate: 'formatted',
 	AskingSalary: 'formatted',
+	ResumeFileName: 'normal',
 };
 
 export const APPLICANT_MAPPERS: Mappers = {

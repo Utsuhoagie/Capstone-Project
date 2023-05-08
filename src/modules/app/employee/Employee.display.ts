@@ -29,6 +29,7 @@ export const EMPLOYEE_FIELDS: string[] = [
 	'PositionName',
 	'Salary',
 	'EmployedDate',
+	'ResumeFileName',
 ];
 
 export const EMPLOYEE_LABELLERS: Labellers = {
@@ -43,6 +44,7 @@ export const EMPLOYEE_LABELLERS: Labellers = {
 	PositionName: 'Vị trí',
 	Salary: 'Mức lương',
 	EmployedDate: 'Ngày được tuyển',
+	ResumeFileName: 'CV',
 };
 
 export const EMPLOYEE_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
@@ -57,6 +59,7 @@ export const EMPLOYEE_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
 	PositionName: 'normal',
 	Salary: 'formatted',
 	EmployedDate: 'formatted',
+	ResumeFileName: 'normal',
 };
 
 export const EMPLOYEE_MAPPERS: Mappers = {

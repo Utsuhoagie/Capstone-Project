@@ -12,6 +12,7 @@ import {
 import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { TimeInput } from '../../../../../components/atoms/Input/DateTimeInput/TimeInput';
+import { FileInput } from '../../../../../components/atoms/Input/FileInput/FileInput';
 import { ImageInput } from '../../../../../components/atoms/Input/ImageInput/ImageInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
 import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
@@ -84,14 +85,26 @@ export const EmployApplicantForm = () => {
 					PositionName: '',
 					EmployedDate: dayjs().toISOString(),
 					Salary: '',
+					Image: undefined,
+					Resume: undefined,
 				};
 			}
 
 			const selectedApplicant = mapToApplicant(res.data);
-			const imageRes = await API.get(
-				`Files/Image/Applicants/${selectedApplicant.ImageFileName}`,
-				{ responseType: 'blob' }
-			);
+
+			const imageRes = selectedApplicant.ImageFileName
+				? await API.get(
+						`Files/Image/Applicants/${selectedApplicant.ImageFileName}`,
+						{ responseType: 'blob' }
+				  )
+				: undefined;
+
+			const resumeRes = selectedApplicant.ResumeFileName
+				? await API.get(
+						`Files/Document/Applicants/${selectedApplicant.ResumeFileName}`,
+						{ responseType: 'blob' }
+				  )
+				: undefined;
 
 			console.log('OK', selectedApplicant);
 			return {
@@ -108,8 +121,11 @@ export const EmployApplicantForm = () => {
 				PositionName: selectedApplicant.AppliedPositionName,
 				EmployedDate: dayjs().toISOString(),
 				Salary: `${selectedApplicant.AskingSalary}`,
-				Image: imageRes.data
+				Image: imageRes?.data
 					? new File([imageRes.data], `${selectedApplicant.NationalId}.jpeg`)
+					: undefined,
+				Resume: resumeRes?.data
+					? new File([resumeRes.data], `${selectedApplicant.NationalId}.pdf`)
 					: undefined,
 			};
 		},
@@ -139,6 +155,7 @@ export const EmployApplicantForm = () => {
 			Salary: parseInt(rawData.Salary),
 			HasUser: false,
 			Image: rawData.Image,
+			Resume: rawData.Resume,
 		};
 
 		const formData = convertFromDomainObjToFormData(req);
@@ -261,7 +278,10 @@ export const EmployApplicantForm = () => {
 								/>
 							</div>
 
-							<ImageInput name='Image' />
+							<div className='flex flex-col gap-2'>
+								<ImageInput name='Image' />
+								<FileInput name='Resume' />
+							</div>
 						</div>
 
 						<Button type='submit' width='medium'>

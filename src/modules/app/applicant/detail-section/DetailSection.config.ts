@@ -11,4 +11,5 @@ export const APPLICANT_LIST_ITEM_CONFIGS: ListItemConfigs = {
 	AppliedPositionName: {},
 	AppliedDate: {},
 	AskingSalary: {},
+	ResumeFileName: {},
 };

@@ -226,8 +226,10 @@ export const CreateApplicantForm = () => {
 							/>
 						</div>
 
-						<ImageInput name='Image' />
-						<FileInput name='Resume' />
+						<div className='flex flex-col gap-2'>
+							<ImageInput name='Image' />
+							<FileInput name='Resume' />
+						</div>
 					</div>
 
 					<Button type='submit' width='medium'>

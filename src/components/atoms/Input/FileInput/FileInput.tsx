@@ -50,21 +50,20 @@ export const FileInput = ({ name }: FileInputProps) => {
 							isClosable: true,
 							title: defaultFormFile?.name,
 							content: (
-								<div>
-									<Document
-										file={defaultFormFile}
-										onLoadSuccess={({ numPages }) => {
-											setNumPages(numPages);
-										}}
-									>
-										<Page
-											pageNumber={page}
-											renderAnnotationLayer={false}
-											renderTextLayer={false}
-											renderInteractiveForms={false}
-										/>
-									</Document>
-								</div>
+								<Document
+									file={defaultFormFile}
+									onLoadSuccess={({ numPages }) => {
+										setNumPages(numPages);
+									}}
+								>
+									<Page
+										width={750}
+										pageNumber={page}
+										renderAnnotationLayer={false}
+										renderTextLayer={false}
+										renderInteractiveForms={false}
+									/>
+								</Document>
 							),
 						});
 					}}

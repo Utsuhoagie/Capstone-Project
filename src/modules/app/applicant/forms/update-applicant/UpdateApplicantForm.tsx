@@ -104,8 +104,6 @@ export const UpdateApplicantForm = () => {
 				: undefined;
 			// const image = createImageUrl(imageRes);
 
-			console.log('OK', selectedApplicant, imageRes, resumeRes);
-
 			return {
 				NationalId: selectedApplicant.NationalId,
 				FullName: selectedApplicant.FullName,
