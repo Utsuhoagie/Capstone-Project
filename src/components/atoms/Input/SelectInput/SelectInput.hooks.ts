@@ -1,12 +1,12 @@
 import { useQuery } from 'react-query';
 import { Module } from '../../../../app/App.modules';
 import { API } from '../../../../config/axios/axios.config';
-import { useAuthStore } from '../../../../modules/auth/Auth.store';
 import { PagedResult } from '../../../organisms/Table/Pagination/Pagination.interface';
 import { SelectOptionPair } from './SelectInput.interface';
 
 interface useSelectOptionsProps {
 	module: Module;
+	isEmptyable?: boolean;
 }
 
 type useSelectOptionsReturn = (
@@ -15,13 +15,12 @@ type useSelectOptionsReturn = (
 
 export const useSelectOptions: useSelectOptionsReturn = ({
 	module,
+	isEmptyable,
 }: useSelectOptionsProps) => {
-	const { accessToken } = useAuthStore();
-
 	const { data } = useQuery(module, async () => {
-		const res = await API.get(module);
+		const res = await API.get(`${module}`);
 
-		if (res.status >= 300) {
+		if (res.status >= 400) {
 			return [];
 		}
 
@@ -52,5 +51,8 @@ export const useSelectOptions: useSelectOptionsReturn = ({
 			break;
 	}
 
+	if (isEmptyable) {
+		return [{ value: '', display: '' }, ...selectOptions];
+	}
 	return selectOptions;
 };

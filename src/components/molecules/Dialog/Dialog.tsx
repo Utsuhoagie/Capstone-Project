@@ -18,7 +18,7 @@ export const Dialog = () => {
 			open={isOpen}
 			onClose={() => closeDialog()}
 		>
-			<HuiDialog.Panel className='HuiPanel flex flex-col divide-y divide-neutral-gray-6 rounded bg-neutral-white'>
+			<HuiDialog.Panel className='HuiPanel flex flex-col divide-y divide-neutral-gray-6 rounded bg-secondary-bright-2'>
 				<HuiDialog.Title
 					as='div'
 					className='HuiTitle relative flex flex-row items-center justify-center'

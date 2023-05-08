@@ -8,6 +8,7 @@ import { useDialogStore } from '../../../../../app/App.store';
 import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
+import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
 import { useTableStore } from '../../../../../components/organisms/Table/Table.store';
 import { APPLICANT_MAPPERS } from '../../Applicant.display';
@@ -26,37 +27,43 @@ export const FilterDialog = () => {
 	const methods = useForm<FilterApplicantFormIntermediateValues>({
 		resolver: zodResolver(filterApplicantDialogFormSchema),
 		defaultValues: {
-			SubName: searchParams.get('SubName') ?? '',
+			NamePart: searchParams.get('NamePart') ?? '',
 			Gender: (searchParams.get('Gender') as any) ?? '',
 			Address: searchParams.get('Address') ?? '',
-			ExperienceYears: searchParams.get('ExperienceYears') ?? '',
 			AppliedPositionName: searchParams.get('AppliedPositionName') ?? '',
+			ExperienceYearsFrom: searchParams.get('ExperienceYearsFrom') ?? '',
+			ExperienceYearsTo: searchParams.get('ExperienceYearsTo') ?? '',
 			AppliedDateFrom: searchParams.get('AppliedDateFrom') ?? '',
 			AppliedDateTo: searchParams.get('AppliedDateTo') ?? '',
-			AskingSalary: searchParams.get('AskingSalary') ?? '',
+			AskingSalaryFrom: searchParams.get('AskingSalaryFrom') ?? '',
+			AskingSalaryTo: searchParams.get('AskingSalaryTo') ?? '',
 		},
 	});
+	const positionOptions = useSelectOptions({
+		module: 'Positions',
+		isEmptyable: true,
+	});
 
-	const handleApplyFilter: SubmitHandler<
-		FilterApplicantFormIntermediateValues
-	> = async (rawData: any) => {
+	async function handleApplyFilter(rawData: any) {
 		/* NOTE: rawData is NOT FilterApplicantFormIntermediateValues
     Zod 'preprocess' changes some of it */
 		console.table(rawData);
 
 		const submitData: FilterApplicantFormSubmitValues = {
-			SubName: rawData.SubName,
+			NamePart: rawData.NamePart,
 			Gender: rawData.Gender,
 			Address: rawData.Address,
-			ExperienceYears: rawData.ExperienceYears,
 			AppliedPositionName: rawData.AppliedPositionName,
+			ExperienceYearsFrom: rawData.ExperienceYearsFrom,
+			ExperienceYearsTo: rawData.ExperienceYearsTo,
 			AppliedDateFrom: rawData.AppliedDateFrom
 				? dayjs(rawData.AppliedDateFrom).toISOString()
 				: undefined,
 			AppliedDateTo: rawData.AppliedDateTo
 				? dayjs(rawData.AppliedDateTo).toISOString()
 				: undefined,
-			AskingSalary: rawData.AskingSalary,
+			AskingSalaryFrom: rawData.AskingSalaryFrom,
+			AskingSalaryTo: rawData.AskingSalaryTo,
 		};
 
 		console.table(submitData);
@@ -70,7 +77,7 @@ export const FilterDialog = () => {
 
 		setSearchParams(queryString);
 		closeDialog();
-	};
+	}
 
 	function handleError(error: any) {
 		console.log(error);
@@ -79,11 +86,11 @@ export const FilterDialog = () => {
 	return (
 		<FormProvider {...methods}>
 			<form
-				className='flex h-[500px] w-[750px] flex-col items-start gap-2 p-4'
+				className='flex h-fit w-[750px] flex-col items-start gap-2 bg-primary-bright-7 p-4'
 				onSubmit={methods.handleSubmit(handleApplyFilter, handleError)}
 			>
 				<TextInput
-					name='SubName'
+					name='NamePart'
 					label='Tên'
 					width='medium'
 					displayConfigs={displayConfigs}
@@ -104,49 +111,77 @@ export const FilterDialog = () => {
 					displayConfigs={displayConfigs}
 				/>
 
-				<TextInput
-					name='ExperienceYears'
+				<SelectInput
+					name='AppliedPositionName'
 					width='medium'
 					displayConfigs={displayConfigs}
+					optionPairs={positionOptions}
 				/>
 
 				<TextInput
-					name='AppliedPositionName'
-					width='medium'
+					name='ExperienceYearsFrom'
+					label='Năm kinh nghiệm từ...'
+					width='small'
+					displayConfigs={displayConfigs}
+				/>
+				<TextInput
+					name='ExperienceYearsTo'
+					label='...đến'
+					width='small'
 					displayConfigs={displayConfigs}
 				/>
 
 				<DateInput
 					isClearable
 					name='AppliedDateFrom'
-					label='Từ'
+					label='Ngày nộp hồ sơ từ...'
 					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 				<DateInput
 					isClearable
 					name='AppliedDateTo'
-					label='Đến'
+					label='...đến'
 					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 
 				<TextInput
-					name='AskingSalary'
+					name='AskingSalaryFrom'
+					label='Mức lương từ...'
+					width='medium'
+					displayConfigs={displayConfigs}
+				/>
+				<TextInput
+					name='AskingSalaryTo'
+					label='...đến'
 					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 
-				<Button
-					type='submit'
-					// type='button'
-					width='medium'
-					onClick={() => {
-						console.table(methods.getValues());
-					}}
-				>
-					Lọc
-				</Button>
+				<div className='flex flex-row gap-4'>
+					<Button
+						type='submit'
+						// type='button'
+						width='medium'
+						onClick={() => {
+							console.table(methods.getValues());
+						}}
+					>
+						Lọc
+					</Button>
+
+					<Button
+						variant='secondary'
+						type='button'
+						width='medium'
+						onClick={() => {
+							handleApplyFilter({});
+						}}
+					>
+						Hủy bộ lọc
+					</Button>
+				</div>
 			</form>
 		</FormProvider>
 	);

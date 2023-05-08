@@ -7,7 +7,7 @@ interface TextInputProps extends React.ComponentPropsWithRef<'input'> {
 	name: string;
 	label?: string;
 	isVertical?: boolean;
-	width: 'full' | 'medium';
+	width: 'full' | 'medium' | 'small';
 	displayConfigs?: DisplayConfigs;
 }
 
@@ -50,7 +50,13 @@ export const TextInput = ({
 			<input
 				className={
 					' h-h-input rounded border bg-neutral-white px-2 py-1.5 text-neutral-gray-9 outline-none ' +
-					` ${width === 'full' ? 'w-full' : 'w-w-input-medium'} ` +
+					` ${
+						width === 'full'
+							? 'w-full'
+							: width === 'small'
+							? ' w-[180px] '
+							: 'w-w-input-medium'
+					} ` +
 					` ${error ? 'border-state-error-normal' : 'border-primary-normal'} ` +
 					' hover:shadow focus:shadow ' +
 					' disabled:cursor-not-allowed disabled:bg-neutral-gray-3 disabled:opacity-75 '

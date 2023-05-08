@@ -8,6 +8,7 @@ import { useDialogStore } from '../../../../../app/App.store';
 import { Button } from '../../../../../components/atoms/Button/Button';
 import { DateInput } from '../../../../../components/atoms/Input/DateTimeInput/DateInput';
 import { SelectInput } from '../../../../../components/atoms/Input/SelectInput/SelectInput';
+import { useSelectOptions } from '../../../../../components/atoms/Input/SelectInput/SelectInput.hooks';
 import { TextInput } from '../../../../../components/atoms/Input/TextInput';
 import { useTableStore } from '../../../../../components/organisms/Table/Table.store';
 import { EMPLOYEE_MAPPERS } from '../../Employee.display';
@@ -26,37 +27,43 @@ export const FilterDialog = () => {
 	const methods = useForm<FilterEmployeeFormIntermediateValues>({
 		resolver: zodResolver(filterEmployeeDialogFormSchema),
 		defaultValues: {
-			SubName: searchParams.get('SubName') ?? '',
+			NamePart: searchParams.get('NamePart') ?? '',
 			Gender: (searchParams.get('Gender') as any) ?? '',
 			Address: searchParams.get('Address') ?? '',
-			ExperienceYears: searchParams.get('ExperienceYears') ?? '',
-			AppliedPositionName: searchParams.get('AppliedPosition') ?? '',
-			AppliedDateFrom: searchParams.get('AppliedDateFrom') ?? '',
-			AppliedDateTo: searchParams.get('AppliedDateTo') ?? '',
-			AskingSalary: searchParams.get('AskingSalary') ?? '',
+			PositionName: searchParams.get('PositionName') ?? '',
+			ExperienceYearsFrom: searchParams.get('ExperienceYearsFrom') ?? '',
+			ExperienceYearsTo: searchParams.get('ExperienceYearsTo') ?? '',
+			EmployedDateFrom: searchParams.get('EmployedDateFrom') ?? '',
+			EmployedDateTo: searchParams.get('EmployedDateTo') ?? '',
+			SalaryFrom: searchParams.get('SalaryFrom') ?? '',
+			SalaryTo: searchParams.get('SalaryTo') ?? '',
 		},
 	});
+	const positionOptions = useSelectOptions({
+		module: 'Positions',
+		isEmptyable: true,
+	});
 
-	const handleApplyFilter: SubmitHandler<
-		FilterEmployeeFormIntermediateValues
-	> = async (rawData: any) => {
+	async function handleApplyFilter(rawData: any) {
 		/* NOTE: rawData is NOT FilterEmployeeFormIntermediateValues
     Zod 'preprocess' changes some of it */
 		console.table(rawData);
 
 		const submitData: FilterEmployeeFormSubmitValues = {
-			SubName: rawData.SubName,
+			NamePart: rawData.NamePart,
 			Gender: rawData.Gender,
 			Address: rawData.Address,
-			ExperienceYears: rawData.ExperienceYears,
-			AppliedPositionName: rawData.AppliedPosition,
-			AppliedDateFrom: rawData.AppliedDateFrom
-				? dayjs(rawData.AppliedDateFrom).toISOString()
+			PositionName: rawData.Position,
+			ExperienceYearsFrom: rawData.ExperienceYearsFrom,
+			ExperienceYearsTo: rawData.ExperienceYearsTo,
+			EmployedDateFrom: rawData.EmployedDateFrom
+				? dayjs(rawData.EmployedDateFrom).toISOString()
 				: undefined,
-			AppliedDateTo: rawData.AppliedDateTo
-				? dayjs(rawData.AppliedDateTo).toISOString()
+			EmployedDateTo: rawData.EmployedDateTo
+				? dayjs(rawData.EmployedDateTo).toISOString()
 				: undefined,
-			AskingSalary: rawData.AskingSalary,
+			SalaryFrom: rawData.SalaryFrom,
+			SalaryTo: rawData.SalaryTo,
 		};
 
 		console.table(submitData);
@@ -70,7 +77,7 @@ export const FilterDialog = () => {
 
 		setSearchParams(queryString);
 		closeDialog();
-	};
+	}
 
 	function handleError(error: any) {
 		console.log(error);
@@ -79,11 +86,11 @@ export const FilterDialog = () => {
 	return (
 		<FormProvider {...methods}>
 			<form
-				className='flex h-[450px] w-[600px] flex-col items-start gap-2 p-4'
+				className='flex h-fit w-[750px] flex-col items-start gap-2 bg-primary-bright-7 p-4'
 				onSubmit={methods.handleSubmit(handleApplyFilter, handleError)}
 			>
 				<TextInput
-					name='SubName'
+					name='NamePart'
 					label='Tên'
 					width='medium'
 					displayConfigs={displayConfigs}
@@ -104,47 +111,79 @@ export const FilterDialog = () => {
 					displayConfigs={displayConfigs}
 				/>
 
+				<SelectInput
+					name='PositionName'
+					width='medium'
+					optionPairs={positionOptions}
+					displayConfigs={displayConfigs}
+				/>
+
 				<TextInput
-					name='ExperienceYears'
+					name='ExperienceYearsFrom'
+					label='Số năm kinh nghiệm từ...'
 					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 
 				<TextInput
-					name='AppliedPosition'
+					name='ExperienceYearsTo'
+					label='...đến'
 					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 
 				<DateInput
-					name='AppliedDateFrom'
-					label='Từ'
+					isClearable
+					name='EmployedDateFrom'
+					label='Bắt đầu làm việc từ ngày...'
 					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 				<DateInput
-					name='AppliedDateTo'
-					label='Đến'
+					isClearable
+					name='EmployedDateTo'
+					label='...đến'
 					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 
 				<TextInput
-					name='AskingSalary'
+					name='SalaryFrom'
+					label='Mức lương từ...'
 					width='medium'
 					displayConfigs={displayConfigs}
 				/>
 
-				<Button
-					type='submit'
-					// type='button'
+				<TextInput
+					name='SalaryTo'
+					label='...đến'
 					width='medium'
-					onClick={() => {
-						console.table(methods.getValues());
-					}}
-				>
-					Lọc
-				</Button>
+					displayConfigs={displayConfigs}
+				/>
+
+				<div className='flex flex-row gap-4'>
+					<Button
+						type='submit'
+						// type='button'
+						width='medium'
+						onClick={() => {
+							console.table(methods.getValues());
+						}}
+					>
+						Lọc
+					</Button>
+
+					<Button
+						variant='secondary'
+						type='button'
+						width='medium'
+						onClick={() => {
+							handleApplyFilter({});
+						}}
+					>
+						Hủy bộ lọc
+					</Button>
+				</div>
 			</form>
 		</FormProvider>
 	);

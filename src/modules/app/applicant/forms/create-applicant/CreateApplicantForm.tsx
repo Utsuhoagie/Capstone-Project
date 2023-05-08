@@ -43,7 +43,7 @@ export const CreateApplicantForm = () => {
 	const { showToast } = useToastStore();
 	const { openConfirmDialog } = useConfirmDialogStore();
 	const { displayConfigs } = useApplicantStore();
-	const allPositionOptions = useSelectOptions({ module: 'Positions' });
+	const positionOptions = useSelectOptions({ module: 'Positions' });
 
 	const queryClient = useQueryClient();
 	const mutation = useMutation(
@@ -206,7 +206,7 @@ export const CreateApplicantForm = () => {
 								name='AppliedPositionName'
 								placeholder='Nhập vị trí ứng tuyển.'
 								width='medium'
-								optionPairs={allPositionOptions}
+								optionPairs={positionOptions}
 								displayConfigs={displayConfigs}
 							/>
 							<DateInput
