@@ -176,7 +176,9 @@ export const FilterDialog = () => {
 						type='button'
 						width='medium'
 						onClick={() => {
-							handleApplyFilter({});
+							// handleApplyFilter({});
+							setSearchParams();
+							closeDialog();
 						}}
 					>
 						Hủy bộ lọc

@@ -11,5 +11,6 @@ export const EMPLOYEE_LIST_ITEM_CONFIGS: ListItemConfigs = {
 	PositionName: {},
 	EmployedDate: {},
 	Salary: {},
+	HasUser: {},
 	ResumeFileName: {},
 };

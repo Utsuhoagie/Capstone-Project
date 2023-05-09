@@ -9,10 +9,11 @@ import { Button } from '../../../../components/atoms/Button/Button';
 import { useNavigate } from 'react-router';
 import { useDialogStore } from '../../../../app/App.store';
 import { FilterDialog } from './filter-dialog/FilterDialog';
+import { useSearchParams } from 'react-router-dom';
 
 export const DataTable = () => {
 	const navigate = useNavigate();
-
+	const [searchParams, setSearchParams] = useSearchParams();
 	const { openDialog } = useDialogStore();
 
 	const { visibleApplicants, displayConfigs } = useApplicantStore();
@@ -27,31 +28,33 @@ export const DataTable = () => {
 		APPLICANT_COLUMN_CONFIGS
 	);
 
-	function handleClickCreate() {
-		navigate('create');
-	}
-
-	function handleOpenFilterDialog() {
-		openDialog({
-			isClosable: true,
-			title: 'Bộ lọc',
-			content: <FilterDialog />,
-		});
-	}
-
 	return (
 		<div className='flex flex-col gap-4'>
-			<div className='flex flex-row gap-4'>
-				<Button width='small' onClick={handleClickCreate}>
+			<div className='flex flex-row items-center gap-4'>
+				<Button width='small' onClick={() => navigate('create')}>
 					Thêm
 				</Button>
 				<Button
 					variant='secondary'
 					width='small'
-					onClick={handleOpenFilterDialog}
+					onClick={() =>
+						openDialog({
+							isClosable: true,
+							title: 'Bộ lọc',
+							content: <FilterDialog />,
+						})
+					}
 				>
 					Bộ Lọc
 				</Button>
+				{searchParams.toString() ? (
+					<p
+						className='cursor-pointer text-state-error-normal underline'
+						onClick={() => setSearchParams()}
+					>
+						Xóa bộ lọc
+					</p>
+				) : undefined}
 			</div>
 			<Table
 				data={filledApplicants}

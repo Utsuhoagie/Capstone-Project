@@ -29,6 +29,7 @@ export const EMPLOYEE_FIELDS: string[] = [
 	'PositionName',
 	'Salary',
 	'EmployedDate',
+	'HasUser',
 	'ResumeFileName',
 ];
 
@@ -44,6 +45,7 @@ export const EMPLOYEE_LABELLERS: Labellers = {
 	PositionName: 'Vị trí',
 	Salary: 'Mức lương',
 	EmployedDate: 'Ngày được tuyển',
+	HasUser: 'Có tài khoản?',
 	ResumeFileName: 'CV',
 };
 
@@ -59,6 +61,7 @@ export const EMPLOYEE_DISPLAY_MODE_MAPPERS: DisplayModeMappers = {
 	PositionName: 'normal',
 	Salary: 'formatted',
 	EmployedDate: 'formatted',
+	HasUser: 'normal',
 	ResumeFileName: 'normal',
 };
 

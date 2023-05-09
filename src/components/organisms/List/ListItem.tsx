@@ -34,6 +34,8 @@ export const ListItem = ({
 		field,
 	});
 
+	const isHasUser = field === 'HasUser';
+
 	const isFile =
 		typeof value === 'string' && value.slice(value.length - 4) === '.pdf';
 
@@ -58,6 +60,10 @@ export const ListItem = ({
 
 	const displayValue = isFile
 		? value
+		: isHasUser
+		? value
+			? 'Có'
+			: undefined
 		: getDisplayForFieldValue({
 				displayConfigs,
 				field,

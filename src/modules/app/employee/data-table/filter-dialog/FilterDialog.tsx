@@ -53,7 +53,7 @@ export const FilterDialog = () => {
 			NamePart: rawData.NamePart,
 			Gender: rawData.Gender,
 			Address: rawData.Address,
-			PositionName: rawData.Position,
+			PositionName: rawData.PositionName,
 			ExperienceYearsFrom: rawData.ExperienceYearsFrom,
 			ExperienceYearsTo: rawData.ExperienceYearsTo,
 			EmployedDateFrom: rawData.EmployedDateFrom
@@ -178,7 +178,9 @@ export const FilterDialog = () => {
 						type='button'
 						width='medium'
 						onClick={() => {
-							handleApplyFilter({});
+							// handleApplyFilter({});
+							setSearchParams();
+							closeDialog();
 						}}
 					>
 						Hủy bộ lọc
