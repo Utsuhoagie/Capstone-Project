@@ -121,11 +121,18 @@ export const useConfirmDialogStore = create<ConfirmDialogStore>()(
 interface ToastStore {
 	isOpen: boolean;
 	state?: 'success' | 'error';
+	message?: string;
 	timeoutId?: number;
 	// title?: string;
 	// content: React.ReactNode;
 
-	showToast: ({ state }: { state: 'success' | 'error' }) => void;
+	showToast: ({
+		state,
+		message,
+	}: {
+		state: 'success' | 'error';
+		message?: string;
+	}) => void;
 	hideToast: () => void;
 	setTimeoutId: (timeoutId: number) => void;
 }
@@ -134,15 +141,23 @@ export const useToastStore = create<ToastStore>()(
 	devtools((set) => ({
 		isOpen: false,
 		state: undefined,
+		message: undefined,
 		timeoutId: undefined,
 		// title: undefined,
 		// content: undefined,
 
-		showToast: ({ state }: { state: 'success' | 'error' }) =>
+		showToast: ({
+			state,
+			message,
+		}: {
+			state: 'success' | 'error';
+			message?: string;
+		}) =>
 			set((prev) => {
 				let next = clone(prev);
 				next.isOpen = true;
 				next.state = state;
+				next.message = message;
 				return next;
 			}),
 		hideToast: () =>

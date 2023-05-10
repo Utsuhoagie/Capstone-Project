@@ -1,3 +1,4 @@
+import QueryString from 'query-string';
 import { useSearchParams } from 'react-router-dom';
 import { useTableStore } from '../Table.store';
 import {
@@ -29,12 +30,16 @@ export const Pagination = () => {
 			<PaginationButton
 				content='prev'
 				disabled={!pagination.HasPrevious}
-				onClick={() =>
-					setSearchParams((prev) => ({
-						...prev,
-						page: `${pagination.CurrentPage - 1}`,
-					}))
-				}
+				onClick={() => {
+					const currentParams = QueryString.parse(searchParams.toString());
+					const nextParams = {
+						...currentParams,
+						page: pagination.CurrentPage - 1,
+					};
+
+					console.log(nextParams);
+					setSearchParams(QueryString.stringify(nextParams));
+				}}
 			/>
 
 			{!hasPaginationInput &&
@@ -46,7 +51,18 @@ export const Pagination = () => {
 							key={pageIndex}
 							active={pagination.CurrentPage === pageIndex}
 							content={pageIndex}
-							onClick={() => setSearchParams({ page: `${pageIndex}` })}
+							onClick={() => {
+								const currentParams = QueryString.parse(
+									searchParams.toString()
+								);
+								const nextParams = {
+									...currentParams,
+									page: pageIndex,
+								};
+
+								console.log(nextParams);
+								setSearchParams(QueryString.stringify(nextParams));
+							}}
 						/>
 					);
 				})}
@@ -60,7 +76,17 @@ export const Pagination = () => {
 								key={pageIndex}
 								active={pagination.CurrentPage === pageIndex}
 								content={pageIndex}
-								onClick={() => setSearchParams({ page: `${pageIndex}` })}
+								onClick={() => {
+									const currentParams = QueryString.parse(
+										searchParams.toString()
+									);
+									const nextParams = {
+										...currentParams,
+										page: pageIndex,
+									};
+
+									setSearchParams(QueryString.stringify(nextParams));
+								}}
 							/>
 						);
 					})}
@@ -75,7 +101,17 @@ export const Pagination = () => {
 								key={pageIndex}
 								active={pagination.CurrentPage === pageIndex}
 								content={pageIndex}
-								onClick={() => setSearchParams({ page: `${pageIndex}` })}
+								onClick={() => {
+									const currentParams = QueryString.parse(
+										searchParams.toString()
+									);
+									const nextParams = {
+										...currentParams,
+										page: pageIndex,
+									};
+
+									setSearchParams(QueryString.stringify(nextParams));
+								}}
 							/>
 						);
 					})}
@@ -85,12 +121,16 @@ export const Pagination = () => {
 			<PaginationButton
 				content='next'
 				disabled={!pagination.HasNext}
-				onClick={() =>
-					setSearchParams((prev) => ({
-						...prev,
-						page: `${pagination.CurrentPage + 1}`,
-					}))
-				}
+				onClick={() => {
+					const currentParams = QueryString.parse(searchParams.toString());
+					const nextParams = {
+						...currentParams,
+						page: pagination.CurrentPage + 1,
+					};
+
+					console.log(nextParams);
+					setSearchParams(QueryString.stringify(nextParams));
+				}}
 			/>
 		</div>
 	);

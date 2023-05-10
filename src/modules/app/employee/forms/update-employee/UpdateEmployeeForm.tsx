@@ -48,11 +48,7 @@ export const UpdateEmployeeForm = () => {
 				headers: { 'Content-Type': 'multipart/form-data' },
 			});
 
-			if (res.status <= 299) {
-				showToast({ state: 'success' });
-			} else {
-				showToast({ state: 'error' });
-			}
+			showToast({ state: 'success' });
 		},
 		{
 			onSuccess: () => {
@@ -181,6 +177,7 @@ export const UpdateEmployeeForm = () => {
 						<div className='flex flex-col gap-2'>
 							<TextInput
 								required
+								disabled
 								name='NationalId'
 								placeholder='Nhập 9 hoặc 12 số.'
 								width='medium'
@@ -225,6 +222,7 @@ export const UpdateEmployeeForm = () => {
 							/>
 							<TextInput
 								required
+								disabled
 								name='Email'
 								placeholder='Nhập địa chỉ email.'
 								width='medium'

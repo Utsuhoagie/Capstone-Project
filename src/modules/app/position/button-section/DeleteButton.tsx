@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
+import { ServiceResult } from '../../../../app/App.interface';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -27,15 +28,15 @@ export const DeleteButton = () => {
 
 			if (res.status <= 299) {
 				showToast({ state: 'success' });
-			} else {
-				showToast({ state: 'error' });
 			}
 		},
 		{
-			onSuccess: () => {
-				queryClient.invalidateQueries('positions');
+			onMutate: () => {
 				setSelectedPosition(undefined);
 				setSelectedRowIndex(undefined);
+			},
+			onSuccess: () => {
+				queryClient.invalidateQueries('positions');
 			},
 		}
 	);

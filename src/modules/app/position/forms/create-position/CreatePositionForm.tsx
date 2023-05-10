@@ -35,11 +35,7 @@ export const CreatePositionForm = () => {
 		async (formData: Position) => {
 			const res = await API.post('Positions/Create', formData);
 
-			if (res.status <= 299) {
-				showToast({ state: 'success' });
-			} else {
-				showToast({ state: 'error' });
-			}
+			showToast({ state: 'success' });
 		},
 		{
 			onSuccess: () => {

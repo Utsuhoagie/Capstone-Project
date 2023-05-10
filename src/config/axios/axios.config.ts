@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useToastStore } from '../../app/App.store';
 import { Auth_API_Response } from '../../modules/auth/Auth.interface';
 import { useAuthStore } from '../../modules/auth/Auth.store';
 
@@ -53,7 +54,7 @@ API.interceptors.response.use(
 					// AsyncStorage.setItem('AccessToken', AccessToken);
 					API.defaults.headers.common[
 						'Authorization'
-					] = `Bearer ${accessToken}`;
+					] = `Bearer ${AccessToken}`;
 
 					return API(originalConfig);
 				} catch (_error: any) {
@@ -71,6 +72,18 @@ API.interceptors.response.use(
 			}
 		}
 
-		return Promise.reject('axios interceptor error' + error);
+		const { showToast } = useToastStore.getState();
+		const data = error.response.data;
+
+		showToast({
+			state: 'error',
+			message:
+				typeof data.ErrorMessage === 'string'
+					? data.ErrorMessage
+					: typeof data === 'string'
+					? data
+					: 'Có lỗi xảy ra.',
+		});
+		return Promise.reject(error.response.data);
 	}
 );

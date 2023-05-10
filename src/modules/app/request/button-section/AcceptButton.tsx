@@ -24,11 +24,7 @@ export const AcceptButton = () => {
 		async (req: UpdateRequestStatusRequest) => {
 			const res = await API.put(`Requests/UpdateRequestStatus`, req);
 
-			if (res.status >= 400) {
-				showToast({ state: 'error' });
-			} else {
-				showToast({ state: 'success' });
-			}
+			showToast({ state: 'success' });
 		},
 		{
 			onSuccess: () => queryClient.invalidateQueries(),

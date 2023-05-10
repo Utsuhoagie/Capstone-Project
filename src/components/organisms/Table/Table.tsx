@@ -2,11 +2,10 @@ import {
 	createColumnHelper,
 	flexRender,
 	getCoreRowModel,
-	getSortedRowModel,
-	SortingState,
 	useReactTable,
 } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
+import QueryString from 'query-string';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
 	DisplayConfigs,
@@ -39,10 +38,7 @@ export const Table = ({
 	const firstIndexWithoutData = data.findIndex((row) => row === undefined);
 
 	// Search params
-	const [searchParams, _] = useSearchParams();
-
-	// Sorting
-	const [sortingState, setSortingState] = useState<SortingState>([]);
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	// Display configs
 	const { labellers } = displayConfigs;
@@ -79,18 +75,18 @@ export const Table = ({
 	const table = useReactTable({
 		data: data,
 		columns: columns,
-		state: {
-			sorting: sortingState,
-		},
-		onSortingChange: setSortingState,
+		// state: {
+		// 	sorting: sortingState,
+		// },
+		// onSortingChange: setSortingState,
 		getCoreRowModel: getCoreRowModel(),
-		getSortedRowModel: getSortedRowModel(),
+		// getSortedRowModel: getSortedRowModel(),
 		// debugAll: true,
 	});
 
 	useEffect(() => {
 		setSelectedRowIndex(undefined);
-	}, [searchParams, sortingState]);
+	}, [searchParams /* , sortingState */]);
 
 	return (
 		<div>
@@ -102,26 +98,56 @@ export const Table = ({
 					<thead>
 						<tr className='flex flex-row bg-primary-dark-1'>
 							{table.getFlatHeaders().map((header) => {
-								const columnConfig = columnConfigs[header.id];
+								const field = header.id;
+								const columnConfig = columnConfigs[field];
+
+								const currentParams = QueryString.parse(
+									searchParams.toString()
+								);
+
+								const currentSortDirection = currentParams.SortDirection;
+								const currentSortByField = currentParams.SortByField;
 
 								const isSortable = columnConfig.isSortable;
-								const isSortedDirection = isSortable
-									? header.column.getIsSorted()
-									: false;
+								// ? header.column.getIsSorted()
 
 								return (
 									<th
-										key={header.id}
+										key={field}
 										className={
 											' relative flex flex-col justify-center border-x border-neutral-gray-5 px-1.5 py-1 text-left font-medium text-neutral-gray-1 ' +
 											' first:border-l-0 ' +
 											' last:border-r-0 ' +
-											` ${isSortable ? ' cursor-pointer ' : ''} `
+											` ${
+												isSortable
+													? ' cursor-pointer hover:bg-secondary-dark-1 '
+													: ''
+											} `
 										}
 										style={{ width: columnConfig?.width ?? undefined }}
 										onClick={
 											isSortable
-												? header.column.getToggleSortingHandler()
+												? // ? header.column.getToggleSortingHandler()
+												  () => {
+														const newSortDirection =
+															currentSortDirection === undefined
+																? 1
+																: currentSortDirection === '1'
+																? -1
+																: undefined;
+														const newSortByField =
+															newSortDirection === undefined
+																? undefined
+																: field;
+
+														const newParams = {
+															...currentParams,
+															SortDirection: newSortDirection,
+															SortByField: newSortByField,
+														};
+
+														setSearchParams(QueryString.stringify(newParams));
+												  }
 												: undefined
 										}
 									>
@@ -129,16 +155,18 @@ export const Table = ({
 											header.column.columnDef.header,
 											header.getContext()
 										)}
-										{isSortable && isSortedDirection && (
-											<div className='absolute right-1'>
-												<ArrowBigIcon
-													size={16}
-													direction={
-														isSortedDirection === 'asc' ? 'up' : 'down'
-													}
-												/>
-											</div>
-										)}
+										{isSortable &&
+											currentSortDirection &&
+											currentSortByField === field && (
+												<div className='absolute right-1'>
+													<ArrowBigIcon
+														size={16}
+														direction={
+															currentSortDirection === '1' ? 'up' : 'down'
+														}
+													/>
+												</div>
+											)}
 									</th>
 								);
 							})}

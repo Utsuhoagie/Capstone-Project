@@ -184,6 +184,7 @@ export const UpdateApplicantForm = () => {
 						<div className='flex flex-col gap-2'>
 							<TextInput
 								required
+								disabled
 								name='NationalId'
 								placeholder='Nhập 9 hoặc 12 số.'
 								width='medium'
@@ -229,6 +230,7 @@ export const UpdateApplicantForm = () => {
 							/>
 							<TextInput
 								required
+								disabled
 								name='Email'
 								placeholder='Nhập địa chỉ email.'
 								width='medium'

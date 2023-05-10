@@ -4,6 +4,7 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { IS_DEBUG_MODE } from '../../../../../app/App';
+import { ServiceResult } from '../../../../../app/App.interface';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -52,12 +53,15 @@ export const UpdatePositionForm = () => {
 	const mutation = useMutation(
 		'positions/update',
 		async (formData: Position) => {
-			const res = await API.put(`Positions/Update/${Name}`, formData);
+			try {
+				const res = await API.put(`Positions/Update/${Name}`, formData);
 
-			if (res.status <= 299) {
 				showToast({ state: 'success' });
-			} else {
-				showToast({ state: 'error' });
+			} catch (error) {
+				showToast({
+					state: 'error',
+					message: (error as ServiceResult).ErrorMessage,
+				});
 			}
 		},
 		{

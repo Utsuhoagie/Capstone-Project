@@ -10,10 +10,16 @@ import { useNavigate } from 'react-router';
 import { useDialogStore } from '../../../../app/App.store';
 import { FilterDialog } from './filter-dialog/FilterDialog';
 import { useSearchParams } from 'react-router-dom';
+import QueryString from 'query-string';
 
 export const DataTable = () => {
 	const navigate = useNavigate();
 	const [searchParams, setSearchParams] = useSearchParams();
+	const paramsWithoutPagination = omit(
+		['page', 'pageSize'],
+		QueryString.parse(searchParams.toString())
+	);
+	const hasFiltersOrSorts = Object.keys(paramsWithoutPagination).length > 0;
 
 	const { openDialog } = useDialogStore();
 
@@ -48,7 +54,7 @@ export const DataTable = () => {
 				>
 					Bộ Lọc
 				</Button>
-				{searchParams.toString() ? (
+				{hasFiltersOrSorts ? (
 					<p
 						className='cursor-pointer text-state-error-normal underline'
 						onClick={() => setSearchParams()}
