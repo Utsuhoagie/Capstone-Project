@@ -70,20 +70,20 @@ API.interceptors.response.use(
 			if (error.response.status === 403 && error.response.data) {
 				return Promise.reject(error.response.data);
 			}
+
+			const { showToast } = useToastStore.getState();
+			const data = error.response.data;
+
+			showToast({
+				state: 'error',
+				message:
+					typeof data.ErrorMessage === 'string'
+						? data.ErrorMessage
+						: typeof data === 'string'
+						? data
+						: 'Có lỗi xảy ra.',
+			});
+			return Promise.reject(error.response.data);
 		}
-
-		const { showToast } = useToastStore.getState();
-		const data = error.response.data;
-
-		showToast({
-			state: 'error',
-			message:
-				typeof data.ErrorMessage === 'string'
-					? data.ErrorMessage
-					: typeof data === 'string'
-					? data
-					: 'Có lỗi xảy ra.',
-		});
-		return Promise.reject(error.response.data);
 	}
 );

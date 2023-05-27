@@ -18,7 +18,7 @@ export const Toast = () => {
 	return (
 		<div
 			className={
-				' fixed right-4 bottom-4 max-h-h-toast max-w-[240px] rounded border-2 p-2 ' +
+				' fixed right-8 bottom-8 max-h-h-toast max-w-[240px] rounded border-2 p-4 ' +
 				`${isOpen ? ' flex flex-col items-start ' : ' hidden '}` +
 				`${
 					isSuccess
@@ -29,8 +29,8 @@ export const Toast = () => {
 				}`
 			}
 		>
-			{isSuccess && <p className='font-semibold'>Thành công</p>}
-			{isError && <p className='font-semibold'>Thất bại</p>}
+			{isSuccess && <p className='text-h3 font-semibold'>Thành công</p>}
+			{isError && <p className='text-h3 font-semibold'>Thất bại</p>}
 			{message && <p>{message}</p>}
 		</div>
 	);

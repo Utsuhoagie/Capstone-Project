@@ -17,7 +17,7 @@ export const ArrowSmallIcon = ({
 		<svg
 			width={size}
 			height={size}
-			viewBox='0 0 24 24'
+			viewBox={`0 0 24 24`}
 			fill='none'
 			className={
 				getTailwindRotateClassFromDirection(direction) +

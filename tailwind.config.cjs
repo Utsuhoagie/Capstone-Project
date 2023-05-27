@@ -25,7 +25,9 @@ module.exports = {
 				'w-navbar': 240,
 				'h-dialog-title': 40,
 				'h-image-section': 250,
-				'w-attendance-item': 350,
+
+				'w-attendance-item': 295,
+				'w-attendance-image': 132,
 
 				'w-auth': 450,
 				'h-auth': 450,

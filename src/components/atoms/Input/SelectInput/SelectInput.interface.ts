@@ -8,6 +8,7 @@ export interface SelectOptionPair {
 export interface SelectInputProps
 	extends React.ComponentPropsWithRef<'select'> {
 	name: string;
+	label?: string;
 	width: 'full' | 'medium';
 	optionPairs: SelectOptionPair[];
 	displayConfigs: DisplayConfigs;

@@ -8,6 +8,7 @@ export const EMPLOYEE_LIST_ITEM_CONFIGS: ListItemConfigs = {
 	Address: {},
 	Phone: {},
 	Email: {},
+	ExperienceYears: {},
 	PositionName: {},
 	EmployedDate: {},
 	Salary: {},

@@ -50,7 +50,7 @@ export const ViewLeavesButton = () => {
 										);
 										const EndDate = dayjs(leave.EndDate).format('DD/MM/YYYY');
 										const diff =
-											dayjs(leave.StartDate).diff(dayjs(leave.EndDate), 'day') +
+											dayjs(leave.EndDate).diff(dayjs(leave.StartDate), 'day') +
 											1;
 										return (
 											<p className='rounded border border-primary-normal bg-neutral-white p-2 text-neutral-gray-9 shadow'>

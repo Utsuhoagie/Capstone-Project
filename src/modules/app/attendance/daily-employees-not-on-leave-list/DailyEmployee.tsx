@@ -1,6 +1,6 @@
 import { Disclosure } from '@headlessui/react';
 import dayjs from 'dayjs';
-import React from 'react';
+import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSearchParams } from 'react-router-dom';
 import { CheckIcon } from '../../../../assets/icons/CheckIcon';
@@ -17,17 +17,29 @@ import {
 	AttendanceStatusEnum,
 } from '../Attendance.interface';
 import QueryString from 'query-string';
+import { EyeIcon } from '../../../../assets/icons/EyeIcon';
+import { DailyEmployeePopup } from './DailyEmployeePopup';
+import {
+	useConfirmDialogStore,
+	useToastStore,
+} from '../../../../app/App.store';
 
 interface DailyAttendanceProps {
 	// attendance: Attendance;
 	employee: Employee;
+	isOpen?: boolean;
 }
 
-export const DailyEmployeeNotOnLeave = ({ employee }: DailyAttendanceProps) => {
+export const DailyEmployee = ({ employee, isOpen }: DailyAttendanceProps) => {
+	const { showToast } = useToastStore();
+	const { openConfirmDialog } = useConfirmDialogStore();
+
 	const queryClient = useQueryClient();
 
 	const [searchParams, setSearchParams] = useSearchParams();
 	const queryParams = QueryString.parse(searchParams.toString());
+
+	const [isHover, setIsHover] = useState<boolean>(false);
 
 	const getAttendanceOfEmployeeQuery = useQuery(
 		[
@@ -69,7 +81,10 @@ export const DailyEmployeeNotOnLeave = ({ employee }: DailyAttendanceProps) => {
 		getAttendanceOfEmployeeQuery.data
 	);
 
-	const canStatusUpdate =
+	const canStatusAccept =
+		AttendanceStatus === AttendanceStatusEnum.Pending && Boolean(EndTimestamp);
+
+	const canStatusReject =
 		AttendanceStatus === AttendanceStatusEnum.Pending &&
 		(Boolean(EndTimestamp) || dayjs(StartTimestamp).isBefore(dayjs(), 'day'));
 
@@ -169,14 +184,14 @@ export const DailyEmployeeNotOnLeave = ({ employee }: DailyAttendanceProps) => {
 		<Disclosure as='div'>
 			<Disclosure.Button
 				className={
-					' flex w-w-attendance-item cursor-pointer flex-row items-center justify-between rounded-sm border border-primary-dark-2 px-2 py-1 ' +
+					' flex w-w-attendance-item flex-row items-center justify-between rounded-sm border border-primary-dark-2 px-2 py-1 ' +
 					(AttendanceStatus === undefined
-						? ' bg-neutral-white hover:bg-primary-bright-4 ui-open:bg-primary-bright-4 '
+						? ' cursor-not-allowed bg-neutral-white '
 						: AttendanceStatus === AttendanceStatusEnum.Pending
-						? ' bg-state-warning-bright-3 hover:bg-state-warning-bright-1 ui-open:bg-state-warning-bright-3 '
+						? 'cursor-pointer bg-state-warning-bright-3 hover:bg-state-warning-bright-1 ui-open:bg-state-warning-bright-3 '
 						: AttendanceStatus === AttendanceStatusEnum.Accepted
-						? ' bg-state-success-bright-1 hover:bg-state-success-normal ui-open:bg-state-success-bright-1 '
-						: ' bg-state-error-bright-1 hover:bg-state-error-normal ui-open:bg-state-error-bright-1 ')
+						? 'cursor-pointer bg-state-success-bright-1 hover:bg-state-success-normal ui-open:bg-state-success-bright-1 '
+						: 'cursor-pointer bg-state-error-bright-1 hover:bg-state-error-normal ui-open:bg-state-error-bright-1 ')
 				}
 			>
 				<span>{employee.FullName}</span>
@@ -186,8 +201,10 @@ export const DailyEmployeeNotOnLeave = ({ employee }: DailyAttendanceProps) => {
 			</Disclosure.Button>
 
 			<Disclosure.Panel
+				static={isOpen}
 				className={
-					' w-w-attendance-item rounded-sm border border-primary-dark-2 px-4 py-2 ' +
+					' w-w-attendance-item rounded-sm border border-primary-dark-2 px-2 py-2 ' +
+					(getAttendanceOfEmployeeQuery.data ? '' : ' hidden ') +
 					(AttendanceStatus === undefined
 						? ' bg-neutral-white '
 						: AttendanceStatus === AttendanceStatusEnum.Pending
@@ -197,72 +214,100 @@ export const DailyEmployeeNotOnLeave = ({ employee }: DailyAttendanceProps) => {
 						: ' bg-state-error-bright-1 ')
 				}
 			>
-				{getAttendanceOfEmployeeQuery.data ? (
-					<>
-						<div className='flex flex-row justify-between'>
-							<div>
-								<p>CMND: {employee.NationalId}</p>
-								<p>
-									Bắt đầu:{' '}
-									{StartTimestamp ? (
-										dayjs(StartTimestamp).format('H:mm DD/MM/YYYY')
-									) : (
-										<EmptyText />
-									)}
-								</p>
-								<p>
-									Kết thúc:{' '}
-									{EndTimestamp ? (
-										dayjs(EndTimestamp).format('H:mm DD/MM/YYYY')
-									) : (
-										<EmptyText />
-									)}
-								</p>
-								<p>
-									Trạng thái:{' '}
-									{AttendanceStatus !== undefined ? (
-										getStatusLabel(AttendanceStatus)
-									) : (
-										<EmptyText />
-									)}
-								</p>
-							</div>
-							<div className='flex flex-col gap-2'>
-								<CheckIcon
-									className={`rounded ${
-										canStatusUpdate
-											? 'cursor-pointer fill-state-success-normal hover:bg-state-success-bright-1 hover:fill-state-success-dark'
-											: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
-									}`}
-									size={32}
-									onClick={() =>
-										canStatusUpdate &&
-										updateStatusMutation.mutate(AttendanceStatusEnum.Accepted)
-									}
-								/>
-								<CloseIcon
-									className={`rounded ${
-										canStatusUpdate
-											? 'cursor-pointer fill-state-error-normal hover:bg-state-error-bright-1 hover:fill-state-error-dark'
-											: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
-									}`}
-									size={32}
-									onClick={() =>
-										canStatusUpdate &&
-										updateStatusMutation.mutate(AttendanceStatusEnum.Rejected)
-									}
-								/>
-							</div>
-						</div>
+				{
+					getAttendanceOfEmployeeQuery.data ? (
+						<>
+							<div className='flex flex-row justify-between'>
+								<div>
+									{/* <p>CMND: {employee.NationalId}</p> */}
+									<div
+										className={
+											'relative flex w-fit flex-row items-center gap-1 p-1 ' +
+											(employee.ImageFileName
+												? ' cursor-default '
+												: ' cursor-not-allowed ')
+										}
+										onMouseEnter={() => setIsHover(true)}
+										onMouseLeave={() => setIsHover(false)}
+									>
+										{employee.ImageFileName && (
+											<EyeIcon size={16} className='fill-primary-normal' />
+										)}
+										<p className='text-tag'>
+											{employee.ImageFileName ? 'Xem ảnh' : 'Không có ảnh'}
+										</p>
+										{employee.ImageFileName && isHover && (
+											<DailyEmployeePopup employee={employee} />
+										)}
+									</div>
 
-						<div className='mt-4 mb-2 flex flex-row justify-between'>
-							<img className='w-36' src={startImageQuery.data} />
-							<img className='w-36' src={endImageQuery.data} />
-						</div>
-					</>
-				) : (
-					<EmptyText />
-				)}
+									<p>
+										Bắt đầu:{' '}
+										{StartTimestamp ? (
+											dayjs(StartTimestamp).format('H:mm DD/MM/YYYY')
+										) : (
+											<EmptyText />
+										)}
+									</p>
+									<p>
+										Kết thúc:{' '}
+										{EndTimestamp ? (
+											dayjs(EndTimestamp).format('H:mm DD/MM/YYYY')
+										) : (
+											<EmptyText />
+										)}
+									</p>
+									<p>
+										Trạng thái:{' '}
+										{AttendanceStatus !== undefined ? (
+											getStatusLabel(AttendanceStatus)
+										) : (
+											<EmptyText />
+										)}
+									</p>
+								</div>
+								<div className='flex flex-col gap-2'>
+									<CheckIcon
+										className={`rounded ${
+											canStatusAccept
+												? 'cursor-pointer fill-state-success-normal hover:bg-state-success-bright-1 hover:fill-state-success-dark'
+												: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
+										}`}
+										size={32}
+										onClick={() =>
+											canStatusAccept &&
+											updateStatusMutation.mutate(AttendanceStatusEnum.Accepted)
+										}
+									/>
+									<CloseIcon
+										className={`rounded ${
+											canStatusReject
+												? 'cursor-pointer fill-state-error-normal hover:bg-state-error-bright-1 hover:fill-state-error-dark'
+												: 'cursor-not-allowed bg-neutral-gray-5 fill-neutral-gray-8 opacity-50'
+										}`}
+										size={32}
+										onClick={() =>
+											canStatusReject &&
+											updateStatusMutation.mutate(AttendanceStatusEnum.Rejected)
+										}
+									/>
+								</div>
+							</div>
+
+							<div className='mt-4 mb-2 flex flex-row justify-between'>
+								<img
+									className='w-w-attendance-image'
+									src={startImageQuery.data}
+								/>
+								<img
+									className='w-w-attendance-image'
+									src={endImageQuery.data}
+								/>
+							</div>
+						</>
+					) : undefined
+					// <EmptyText />
+				}
 			</Disclosure.Panel>
 		</Disclosure>
 	);

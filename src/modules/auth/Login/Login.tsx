@@ -30,31 +30,40 @@ export const Login = () => {
 	const [error, setError] = useState<string>('');
 
 	const mutation = useMutation('login', async (formData: LoginModel) => {
-		const res = await AuthAPI.post('Login', formData);
+		try {
+			const res = await AuthAPI.post('Login', formData);
 
-		const data: Auth_API_Response = res.data;
+			const data: Auth_API_Response = res.data;
 
-		if (res.status >= 400) {
+			if (res.status >= 400) {
+				console.table(data);
+				// if (res.status === 404)
+				if (data && data.Errors)
+					setError(data.Errors.map((error) => error.Description).join('. '));
+				else setError('Có lỗi xảy ra.');
+				// if (res.status === 401) setError('Email hoặc mật khẩu sai.');
+				return;
+			}
+
+			const claims: JWT_Claims = jwtDecode(data.AccessToken);
+			if (claims.Role === 'Employee') {
+				showToast({
+					state: 'error',
+					message: 'Hãy đăng nhập bằng tài khoản admin!',
+				});
+				return;
+			}
+
 			console.table(data);
-			// if (res.status === 404)
-			if (data && data.Errors)
-				setError(data.Errors.map((error) => error.Description).join('. '));
+			setTokens(data.AccessToken, data.RefreshToken);
+		} catch (error) {
+			const Errors = (error as any).response.data.Errors ?? undefined;
+
+			if (Errors) setError(Errors.map((error) => error.Description).join('. '));
 			else setError('Có lỗi xảy ra.');
 			// if (res.status === 401) setError('Email hoặc mật khẩu sai.');
 			return;
 		}
-
-		const claims: JWT_Claims = jwtDecode(data.AccessToken);
-		if (claims.Role === 'Employee') {
-			showToast({
-				state: 'error',
-				message: data.Errors[0].Description,
-			});
-			return;
-		}
-
-		console.table(data);
-		setTokens(data.AccessToken, data.RefreshToken);
 	});
 
 	function handleLogin(data) {

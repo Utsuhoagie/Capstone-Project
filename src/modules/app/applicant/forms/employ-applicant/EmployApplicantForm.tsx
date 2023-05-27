@@ -287,11 +287,11 @@ export const EmployApplicantForm = () => {
 						<Button type='submit' width='medium'>
 							Tuyển
 						</Button>
-						{IS_DEBUG_MODE && (
+						{IS_DEBUG_MODE || (
 							<Button
 								type='button'
 								width='medium'
-								onClick={() => console.table(methods.getValues())}
+								onClick={() => console.log(methods.getValues())}
 							>
 								Xem form
 							</Button>

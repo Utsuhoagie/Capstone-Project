@@ -79,6 +79,7 @@ export const SelectInput = ({
 
 const SelectInputSingle = ({
 	name,
+	label,
 	hasError,
 	optionPairs,
 	width,
@@ -110,10 +111,13 @@ const SelectInputSingle = ({
 				>
 					<Listbox.Label className='block'>
 						<Label
-							label={getLabelForField({
-								labellers: displayConfigs.labellers,
-								field: name,
-							})}
+							label={
+								label ??
+								getLabelForField({
+									labellers: displayConfigs.labellers,
+									field: name,
+								})
+							}
 							required={required}
 						/>
 					</Listbox.Label>
@@ -178,6 +182,7 @@ const SelectInputSingle = ({
 
 const SelectInputMultiple = ({
 	name,
+	label,
 	hasError,
 	optionPairs,
 	width,
@@ -204,10 +209,13 @@ const SelectInputMultiple = ({
 				>
 					<Listbox.Label className='block'>
 						<Label
-							label={getLabelForField({
-								labellers: displayConfigs.labellers,
-								field: name,
-							})}
+							label={
+								label ??
+								getLabelForField({
+									labellers: displayConfigs.labellers,
+									field: name,
+								})
+							}
 							required={required}
 						/>
 					</Listbox.Label>

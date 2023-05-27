@@ -2,7 +2,7 @@ import { QueryClientProvider } from 'react-query';
 import { QueryClient } from 'react-query';
 import { Routes } from '../config/router/Routes';
 
-export const IS_DEBUG_MODE = true;
+export const IS_DEBUG_MODE = false;
 
 const queryClient = new QueryClient({
 	defaultOptions: {

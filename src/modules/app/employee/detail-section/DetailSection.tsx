@@ -12,7 +12,7 @@ export const DetailSection = () => {
 	const hasImage = Boolean(selectedEmployee && selectedEmployee.ImageFileName);
 
 	const employeeImageQuery = useQuery(
-		['files', { applicant: selectedEmployee }],
+		['files', { employeeNationalId: selectedEmployee?.NationalId }],
 		async () => {
 			const res = await API.get(
 				`Files/Image/Employees/${selectedEmployee?.ImageFileName}`,
@@ -45,10 +45,10 @@ export const DetailSection = () => {
 						/>
 					</div>
 
-					<div className='rounded-lg border border-neutral-gray-5 bg-neutral-white p-4'>
+					<div className='flex h-fit flex-1 flex-row justify-center rounded-lg border border-neutral-gray-5 bg-neutral-white p-4'>
 						<img
 							// className='h-h-image-section'
-							className='w-[400px]'
+							className='h-[400px] object-contain'
 							src={
 								hasImage ? employeeImageQuery.data : PLACEHOLDER_PERSON_IMAGE
 							}

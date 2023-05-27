@@ -1,7 +1,7 @@
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import QueryString from 'query-string';
 import React from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import {
 	useConfirmDialogStore,
 	useToastStore,
@@ -9,45 +9,44 @@ import {
 import { Button } from '../../../../components/atoms/Button/Button';
 import { API } from '../../../../config/axios/axios.config';
 
-interface BatchUpdatePreviousDaysOfMonthProps {
-	currentDate: Dayjs;
+interface BatchUpdateMonthSectionProps {
 	days: number;
 }
 
-export const BatchUpdatePreviousDaysOfMonth = ({
-	currentDate,
+export const BatchUpdateMonthSection = ({
 	days,
-}: BatchUpdatePreviousDaysOfMonthProps) => {
+}: BatchUpdateMonthSectionProps) => {
 	const { showToast } = useToastStore();
 	const { openConfirmDialog } = useConfirmDialogStore();
-	const hasDays = days > 0;
-
-	const batchUpdatePreviousDaysOfMonthMutation = useMutation(
-		['BatchUpdatePreviousDaysOfMonth', { date: currentDate.toISOString() }],
+	const queryClient = useQueryClient();
+	const batchUpdateMutation = useMutation(
+		['BatchUpdate', { date: dayjs().toISOString() }],
 		async (type: 'Accept' | 'Reject') => {
 			const queryParams = QueryString.stringify({
 				type,
-				date: currentDate.toISOString(),
+				dayOrMonth: 'month',
+				date: dayjs().toISOString(),
 			});
 			const res = await API.put(
-				`Attendances/BatchUpdatePreviousDaysOfMonth?${queryParams}`
+				`Attendances/BatchUpdateStatuses?${queryParams}`
 			);
 
-			if (res.status >= 400) {
-				showToast({ state: 'error' });
-			} else {
-				showToast({ state: 'success' });
-			}
+			showToast({ state: 'success' });
+		},
+		{
+			onSuccess: () => queryClient.invalidateQueries(),
 		}
 	);
 
-	function handleBatchUpdatePreviousDaysOfMonth(type: 'Accept' | 'Reject') {
+	const hasDays = days > 0;
+
+	function handleBatchUpdate(type: 'Accept' | 'Reject') {
 		openConfirmDialog({
 			isClosable: true,
 			message: `Bạn có chắc muốn ${
 				type === 'Accept' ? 'duyệt' : 'từ chối'
-			} tất cả các buổi chấm công trong tháng?`,
-			onConfirm: () => batchUpdatePreviousDaysOfMonthMutation.mutate(type),
+			} tất cả các buổi chấm công trong tháng? Việc này sẽ đồng thời từ chối các buổi chấm công không hợp lệ.`,
+			onConfirm: () => batchUpdateMutation.mutate(type),
 			onSuccess: () => {},
 		});
 	}
@@ -66,11 +65,7 @@ export const BatchUpdatePreviousDaysOfMonth = ({
 				disabled={!hasDays}
 				variant='success'
 				width='big'
-				onClick={
-					hasDays
-						? () => handleBatchUpdatePreviousDaysOfMonth('Accept')
-						: undefined
-				}
+				onClick={hasDays ? () => handleBatchUpdate('Accept') : undefined}
 			>
 				Duyệt tất cả
 			</Button>
@@ -79,11 +74,7 @@ export const BatchUpdatePreviousDaysOfMonth = ({
 				disabled={!hasDays}
 				variant='error'
 				width='big'
-				onClick={
-					hasDays
-						? () => handleBatchUpdatePreviousDaysOfMonth('Reject')
-						: undefined
-				}
+				onClick={hasDays ? () => handleBatchUpdate('Reject') : undefined}
 			>
 				Từ chối tất cả
 			</Button>
