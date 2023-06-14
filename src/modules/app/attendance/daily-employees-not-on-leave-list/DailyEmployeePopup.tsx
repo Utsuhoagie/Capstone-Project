@@ -30,7 +30,7 @@ export const DailyEmployeePopup = ({ employee }: DailyEmployeePopupProps) => {
 	}
 
 	return (
-		<div className='absolute -bottom-36 z-50 w-[250px]'>
+		<div className='absolute -bottom-36 z-50 max-w-[250px]'>
 			<img
 				// className='h-h-image-section'
 				className='w-full'
